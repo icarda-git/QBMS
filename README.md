@@ -21,7 +21,7 @@ The Breeding API ([BrAPI](https://brapi.org/)) project is an effort to enable in
 install.packages("devtools")
 Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS="true")
 
-devtools::install_github("khaled-alshamaa/QBMS")
+devtools::install_github("icarda-git/QBMS")
 ```
 
 > _If you are not already an active BMS user, you can contact [IBP support](https://ibplatform.atlassian.net/servicedesk/customer/portal/4/group/30/create/60) to get access to a trial BMS server._
