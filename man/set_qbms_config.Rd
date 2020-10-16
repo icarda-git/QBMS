@@ -5,19 +5,13 @@
 \title{Configure BMS server settings}
 \usage{
 set_qbms_config(
-  server = "localhost",
-  port = 80,
-  protocol = "http://",
+  url = "http://localhost/ibpworkbench/controller/auth/login",
   path = "bmsapi",
   page_size = 1000
 )
 }
 \arguments{
-\item{server}{BMS server domain name or IP address (default is "localhost")}
-
-\item{port}{Connection port (default is 48080)}
-
-\item{protocol}{Connection protocol (default is "http://")}
+\item{url}{URL of the BMS login page (default is "http://localhost/ibpworkbench/")}
 
 \item{path}{BMS API path (default is "bmsapi")}
 
@@ -27,7 +21,7 @@ set_qbms_config(
 Set the connection configuration of the BMS server
 }
 \examples{
-set_qbms_config(server = "bms.icarda.org", port = 18443, protocol = "https://")
+set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

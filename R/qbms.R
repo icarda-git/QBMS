@@ -16,7 +16,7 @@
 #           v0.3 - 2 Jun 2020
 #                * Call BrAPI directly (i.e. not required "CIP-RIU/brapi" from GitHub anymore).
 #                * Add a function to get all data of the current active trial (combined all studies).
-#                * Add a function to get a list of studies where a given germplasm has been used.
+#                * Add a function to get a list of studies where given germplasm has been used.
 #                * Add a function to get a specific germplasm data from all program trials.
 #                * Handle BrAPI pagination in a proper way.
 #
@@ -27,10 +27,15 @@
 #                * Deprecate the "list_all_studies" function in favor of "get_program_studies" function.
 #
 #           v0.4 - 3 Jul 2020
-#                * Convert it into R package.
+#                * Convert it into an R package.
 #                * Add set_qbms_config function to setup connection configuration variables.
 #                * Use the double colon approach for functions from external packages.
 #                * Fix the deprecated API call in the get_trial_obs_ontology function.
+#
+#           v0.4.1 - 16 Oct 2020
+#                * Simplify configuration by required only the URL of the BMS login page.
+#                * Improve the performance of the internal get_program_trials function by passing the programDbId in the /trials GET call.
+#                * Add debug_qbms function to get the internal config/state object.
 #
 # License:  GPLv3
 
@@ -47,30 +52,41 @@ qbms_globals <- new.env()
 qbms_globals$config <- list(crop = NULL)
 qbms_globals$state  <- list(token = NULL)
 
+
+#' Debug internal QBMS status object
+#' 
+#' @description
+#' Return the internal QBMS status object for debuging 
+#' 
+#' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' @examples
+#' View(debug_qbms())
+#' @export
+
+debug_qbms <- function(){
+  return(qbms_globals)
+}
+
 #' Configure BMS server settings
 #' 
 #' @description
 #' Set the connection configuration of the BMS server 
 #' 
-#' @param server    BMS server domain name or IP address (default is "localhost")
-#' @param port      Connection port (default is 48080)
-#' @param protocol  Connection protocol (default is "http://")
+#' @param url       URL of the BMS login page (default is "http://localhost/ibpworkbench/")
 #' @param path      BMS API path (default is "bmsapi")
 #' @param page_size Page size (default is 1000)
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @examples
-#' set_qbms_config(server = "bms.icarda.org", port = 18443, protocol = "https://")
+#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
 #' @export
 
-set_qbms_config <- function(server = "localhost", port = 80, protocol = "http://",
+set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth/login",
                             path = "bmsapi", page_size = 1000){
 
-  qbms_globals$config$server    <- server
-  qbms_globals$config$port      <- port
-  qbms_globals$config$protocol  <- protocol
+  qbms_globals$config$server    <- strsplit(url, "ibpworkbench")[[1]][1]
   qbms_globals$config$path      <- path
   qbms_globals$config$page_size <- page_size
-  qbms_globals$config$base_url  <- paste0(qbms_globals$config$protocol, qbms_globals$config$server, ":", qbms_globals$config$port, "/", qbms_globals$config$path)
+  qbms_globals$config$base_url  <- paste0(qbms_globals$config$server, qbms_globals$config$path)
 }
 
 
@@ -165,7 +181,7 @@ get_login_details <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config(server = "bms.icarda.org", port = 18443, protocol = "https://")
+#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -173,7 +189,7 @@ get_login_details <- function() {
 #' @export
 
 login_bms <- function(username = NULL, password = NULL) {
-  qbms_globals$config$base_url <- paste0(qbms_globals$config$protocol, qbms_globals$config$server, ":", qbms_globals$config$port, "/", qbms_globals$config$path)
+  qbms_globals$config$base_url <- paste0(qbms_globals$config$server, qbms_globals$config$path)
   
   if (is.null(username) || is.null(password)) {
     credentials <- get_login_details()
@@ -203,7 +219,7 @@ login_bms <- function(username = NULL, password = NULL) {
 #' @seealso \code{\link{login_bms}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config(server = "bms.icarda.org", port = 18443, protocol = "https://")
+#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -236,7 +252,7 @@ list_crops <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{list_crops}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config(server = "bms.icarda.org", port = 18443, protocol = "https://")
+#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -268,7 +284,7 @@ set_crop <- function(crop_name) {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config(server = "bms.icarda.org", port = 18443, protocol = "https://")
+#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -309,7 +325,7 @@ list_programs <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{list_programs}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config(server = "bms.icarda.org", port = 18443, protocol = "https://")
+#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -351,17 +367,17 @@ set_program <- function(program_name) {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}}
 
 get_program_trials <- function() {
-  call_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/trials")
+  call_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/trials?programDbId=", qbms_globals$state$program_db_id)
   
   bms_crop_trials <- brapi_get_call(call_url, 0, FALSE)
   
-  bms_program_trials <- subset(bms_crop_trials$data, programDbId == qbms_globals$state$program_db_id)
+  bms_program_trials <- bms_crop_trials$data
   
   if (qbms_globals$state$total_pages > 1 && is.null(qbms_globals$state$errors)) {
     last_page <- qbms_globals$state$total_pages - 1
     for (n in 1:last_page) {
       bms_crop_trials    <- brapi_get_call(call_url, n, FALSE)
-      bms_program_trials <- plyr::rbind.fill(bms_program_trials, subset(bms_crop_trials$data, programDbId == qbms_globals$state$program_db_id))
+      bms_program_trials <- plyr::rbind.fill(bms_program_trials, bms_crop_trials$data)
     }
   }
   
@@ -382,7 +398,7 @@ get_program_trials <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config(server = "bms.icarda.org", port = 18443, protocol = "https://")
+#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -442,7 +458,7 @@ list_trials <- function(year = NULL) {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config(server = "bms.icarda.org", port = 18443, protocol = "https://")
+#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -483,7 +499,7 @@ set_trial <- function(trial_name) {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config(server = "bms.icarda.org", port = 18443, protocol = "https://")
+#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -528,7 +544,7 @@ list_studies <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{list_studies}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config(server = "bms.icarda.org", port = 18443, protocol = "https://")
+#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -576,7 +592,7 @@ set_study <- function(study_name) {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config(server = "bms.icarda.org", port = 18443, protocol = "https://")
+#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -623,7 +639,7 @@ get_study_info <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config(server = "bms.icarda.org", port = 18443, protocol = "https://")
+#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -673,7 +689,7 @@ get_study_data <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config(server = "bms.icarda.org", port = 18443, protocol = "https://")
+#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -731,7 +747,7 @@ get_germplasm_list <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config(server = "bms.icarda.org", port = 18443, protocol = "https://")
+#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -777,7 +793,7 @@ get_trial_data <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config(server = "bms.icarda.org", port = 18443, protocol = "https://")
+#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -858,7 +874,7 @@ get_crop_locations <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config(server = "bms.icarda.org", port = 18443, protocol = "https://")
+#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -913,7 +929,7 @@ get_program_studies <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config(server = "bms.icarda.org", port = 18443, protocol = "https://")
+#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -930,6 +946,9 @@ get_program_studies <- function() {
 
 get_germplasm_data <- function(germplasm_name) {
   crop_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1")
+  
+  # DEPRECATED in BMS API v16: https://app.swaggerhub.com/apis/ibp_bms/BMSAPI/16.0#/germplasm-resource-brapi/searchGermplasmsUsingGET
+  # Use /search/germplasm: https://app.swaggerhub.com/apis/ibp_bms/BMSAPI/16.0#/germplasm-resource-brapi/postSearchGermplasmUsingPOST
   call_url <- paste0(crop_url, "/germplasm-search?germplasmName=", germplasm_name)
   
   germplasm_db_id <- brapi_get_call(call_url)$data$germplasmDbId

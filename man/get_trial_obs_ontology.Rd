@@ -15,7 +15,7 @@ trial as configured in the internal state object using `set_trial()` function.
 }
 \examples{
 # config your BMS connection
-set_qbms_config(server = "bms.icarda.org", port = 18443, protocol = "https://")
+set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
 
 # login using your BMS account (interactive mode)
 # you can pass BMS username and password as parameters (batch mode)
