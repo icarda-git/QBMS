@@ -32,7 +32,7 @@ devtools::install_github("icarda-git/QBMS")
 library(QBMS)
 
 # config your BMS connection
-set_qbms_config("bms.example.com", 443, "https://")
+set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
 
 # login using your BMS account (interactive mode)
 # or pass your BMS username and password as parameters (batch mode)
