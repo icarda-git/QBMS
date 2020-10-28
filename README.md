@@ -18,10 +18,10 @@ The Breeding API ([BrAPI](https://brapi.org/)) project is an effort to enable in
 
 ## _Install_
 ```r
-install.packages("devtools")
-Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS="true")
+install.packages("remotes")
+library(remotes)
 
-devtools::install_github("icarda-git/QBMS")
+install_github("icarda-git/QBMS")
 ```
 
 > _If you are not already an active BMS user, you can contact [IBP support](https://ibplatform.atlassian.net/servicedesk/customer/portal/4/group/30/create/60) to get access to a trial BMS server._
@@ -80,4 +80,15 @@ germplasm_observations <- get_germplasm_data("FLIP10-3C")
 # retrieve all environments/locations information in the selected program
 program_studies <- get_program_studies()
 
+```
+## _Troubleshooting the installation_
+
+1. If the installation of QBMS generates errors saying that some of the existing packages cannot be removed, you can try to quit any R session, and try to start R in administrator (Windows) or SUDO mode (Linux/Ubuntu) then try installing again.
+
+2. If you get an error related to packages built under a current version of R, and updating your packages doesn’t help, you can consider overriding the error with the following code. _Note: This might help you install QBMS but may result in other problems. If possible, it’s best to resolve the errors rather than ignoring them._
+
+```r
+Sys.setenv("R_REMOTES_NO_ERRORS_FROM_WARNINGS"=TRUE)
+
+remotes::install_github("icarda-git/QBMS", upgrade = "always")
 ```
