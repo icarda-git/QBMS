@@ -2,9 +2,9 @@
 <!-- https://shields.io/ -->
 R package to Query the [Breeding Management System](https://bmspro.io/) database (using [BrAPI](https://brapi.org/) calls) in favor of scientists/researchers as targeted end-users who want to retrieve their experiments data directly into R statistical analyzing environment.
 
-> ___Package Author and Maintainer:__ Khaled Al-Shamaa <k.el-shamaa (at) cgiar (dot) org>_
+> ___Package Author and Maintainer:__ [Khaled Al-Shamaa](https://github.com/khaled-alshamaa) <k.el-shamaa (at) cgiar (dot) org>_
 >
-> ___Package Contributor:__ Mariano Omar CRIMI <m.crimi (at) cgiar (dot) org>_
+> ___Package Contributor:__ [Mariano Omar CRIMI](https://github.com/mcrimi) <m.crimi (at) cgiar (dot) org>_
 >
 > ___Package Contributor:__ Zakaria Kehel <z.kehel (at) cgiar (dot) org>_
 >
