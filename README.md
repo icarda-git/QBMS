@@ -50,9 +50,8 @@ list_programs()
 # select a breeding program by name
 set_program("Training Breeding Program")
 
-# list all studies/trials in the selected program (optional, filter by year)
+# list all studies/trials in the selected program
 list_trials()
-list_trials(2017)
 
 # select a specific study/trial by name
 set_trial("CIDTN-2016")
