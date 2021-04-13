@@ -986,6 +986,7 @@ get_germplasm_data <- function(germplasm_name) {
   
   for(i in 1:ncol(flatten_results)){
     temp <- flatten_results[,i]
+    temp[sapply(temp, function(x){return(length(x)==0)})] <- NA
     temp[sapply(temp, is.null)] <- NA
     results_df[,i] <- unlist(temp)
   }
