@@ -37,6 +37,11 @@
 #                * Improve the performance of the internal get_program_trials function by passing the programDbId in the /trials GET call.
 #                * Add debug_qbms function to get the internal config/state object.
 #
+#           v0.5 - 8 Jul 2021
+#                * Fix the issue of empty list in get_germplasm_data returned results.
+#                * Fix retrieving error when the study has no data!
+#                * Enhance returned info by the get_program_studies function to include study settings and number of test/check entries.
+#
 # License:  GPLv3
 
 # Load/install required packages
@@ -897,8 +902,10 @@ get_program_studies <- function() {
   all_trials <- get_program_trials()
   program_trials <- subset(all_trials, programDbId == qbms_globals$state$program_db_id)
   
+  colnames(program_trials) <- gsub('additionalInfo.', '', colnames(program_trials))
+  
   for (row in 1:nrow(program_trials)) {
-    trial <- program_trials[row, 1:5]
+    trial <- program_trials[row, -7]
     trial_studies <- data.table::rbindlist(program_trials[row, "studies"])
     if (nrow(trial_studies) > 0) {
       if (row == 1) {
@@ -912,6 +919,20 @@ get_program_studies <- function() {
   crop_locations <- get_crop_locations()
   
   studies <- merge(studies, crop_locations, by = "locationDbId", all.x = TRUE, all.y = FALSE)
+  
+  studies$testEntriesCount <- 0
+  
+  crop_url <- paste0(qbms_globals$config$base_url, "/crops/", qbms_globals$config$crop)
+
+  for(i in unique(studies$trialDbId)){
+    call_url <- paste0(crop_url, "/programs/", qbms_globals$state$program_db_id, "/studies/", i, "/entries/metadata")
+    
+    response <- httr::GET(url = call_url, httr::add_headers("X-Auth-Token" = qbms_globals$state$token))
+    metadata <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+    
+    studies[studies$trialDbId == i, 'testEntriesCount'] <- metadata$testEntriesCount
+    studies[studies$trialDbId == i, 'checkEntriesCount'] <- metadata$checkEntriesCount
+  }
   
   return(studies)
 }
