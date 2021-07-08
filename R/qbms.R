@@ -672,7 +672,7 @@ get_study_data <- function() {
   
   study_data <- as.data.frame(study_result$data)
   study_header <- c(study_result$headerRow, study_result$observationVariableNames)
-  colnames(study_data) <- study_header
+  if (nrow(study_data) > 0) { colnames(study_data) <- study_header }
   
   return(study_data)
 }
