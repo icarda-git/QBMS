@@ -1,7 +1,7 @@
 # Name:     qbms.R
 # Purpose:  Set of functions to query BMS by a wrapper using BrAPI calls
 # Author:   Khaled Al-Shamaa <k.el-shamaa@cgiar.org>
-# Version:  0.3
+# Version:  0.6
 #
 # Revision: 
 #           v0.1 - 24 Jul 2019 
@@ -151,8 +151,11 @@ brapi_get_call <- function(call_url, page = 0, nested = TRUE){
   result_object <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = !nested)
   result_info   <- result_object$result
   
-  qbms_globals$state$total_pages <- result_object$metadata$pagination$totalPages
-  qbms_globals$state$errors      <- result_object$errors
+  qbms_globals$state$current_page <- result_object$metadata$pagination$currentPage
+  qbms_globals$state$page_size    <- result_object$metadata$pagination$pageSize
+  qbms_globals$state$total_count  <- result_object$metadata$pagination$totalCount
+  qbms_globals$state$total_pages  <- result_object$metadata$pagination$totalPages
+  qbms_globals$state$errors       <- result_object$errors
 
   return(result_info)
 }
@@ -449,7 +452,7 @@ get_program_trials <- function() {
 #' list_trials()
 #' 
 #' # filter listed studies/trials by year
-#' list_trials(2017)
+#' list_trials(2020)
 #' @export
 
 list_trials <- function(year = NULL) {
@@ -459,16 +462,13 @@ list_trials <- function(year = NULL) {
   
   bms_trials <- get_program_trials()
 
-  # startDate format in bms_trials is yyyymmdd
+  # startDate format in bms_trials is "yyyy-mm-dd"
   if (!is.null(year)) {
     if (!is.numeric(year)) {
       stop("Year parameter if exists should be numeric")
     }
     
-    from_date <- year * 10000
-    to_date   <- year * 10000 + 1231
-    
-    bms_trials <- subset(bms_trials, startDate >= from_date & startDate <= to_date)
+    bms_trials <- bms_trials[gsub("-\\d{2}-\\d{2}", "", bms_trials$startDate) == year,]
   }
   
   trials <- unique(bms_trials[c("trialName")])
