@@ -43,7 +43,7 @@
 #                * Enhance returned info by the get_program_studies function to include study settings and number of test/check entries.
 #
 #           v0.6 - 8 Oct 2021
-#                * Minimise package dependencies (rbindx replaced plyr::rbind.fill, rbindlistx replaced data.table::rbindlist).
+#                * Minimise package dependencies (rbindx replaced plyr::rbind.fill, rbindlistx replaced data.table::rbindlist, and use merge to replace dplyr::left_join).
 #
 # License:  GPLv3
 
@@ -51,7 +51,6 @@
 # if (!require(httr)) install.packages("httr")
 # if (!require(tcltk)) install.packages("tcltk")
 # if (!require(jsonlite)) install.packages("jsonlite")
-# if (!require(dplyr)) install.packages("dplyr")
 
 # Internal state variables/lists
 qbms_globals <- new.env()
@@ -1026,7 +1025,8 @@ get_germplasm_data <- function(germplasm_name) {
   flatten_results$id <- seq.int(nrow(flatten_results))
   
   # join data frame with unlisted list
-  flatten_results <- dplyr::left_join(flatten_results, unlisted_observations, by = "id")
+  # flatten_results <- dplyr::left_join(flatten_results, unlisted_observations, by = "id")
+  flatten_results <- merge(flatten_results, unlisted_observations, by = "id", all.x = TRUE)
   
   # get rid of unnecessary columns
   flatten_results$observations <- NULL

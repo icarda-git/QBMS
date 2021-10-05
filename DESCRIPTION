@@ -23,4 +23,3 @@ Imports:
 	httr (>= 1.4.1),
 	tcltk (>= 3.6.1),
 	jsonlite (>= 1.7.0),
-	dplyr (>= 1.0.0)
