@@ -30,7 +30,7 @@ remotes::install_github("icarda-git/QBMS")
 library(QBMS)
 
 # config your BMS connection
-set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+set_qbms_config("https://www.bms-uat-test.net/ibpworkbench/controller/auth/login")
 
 # login using your BMS account (interactive mode)
 # or pass your BMS username and password as parameters (batch mode)
@@ -40,19 +40,19 @@ login_bms()
 list_crops()
 
 # select a crop by name
-set_crop("Tutorial1")
+set_crop("maize")
 
 # list all breeding programs in the selected crop
 list_programs()
 
 # select a breeding program by name
-set_program("Training Breeding Program")
+set_program("MC Maize")
 
 # list all studies/trials in the selected program
 list_trials()
 
 # select a specific study/trial by name
-set_trial("CIDTN-2016")
+set_trial("2018 PVT")
 
 # get observation variable ontology in the selected study/trial
 ontology <- get_trial_obs_ontology()
@@ -61,7 +61,7 @@ ontology <- get_trial_obs_ontology()
 list_studies()
 
 # select a specific environment/location by name
-set_study("CIDTN-2016 Environment Number 1")
+set_study("2018 PVT Environment Number 1")
 
 # retrieve data, general information, and germplasm list of the selected environment/location
 data <- get_study_data()
@@ -71,11 +71,11 @@ germplasm <- get_germplasm_list()
 # retrieve multi-environment trial data of the selected study/trial
 MET <- get_trial_data()
 
-# retrieve observations data of given germplasm aggregated from all trials in the selected program
-germplasm_observations <- get_germplasm_data("FLIP10-3C")
-
 # retrieve all environments/locations information in the selected program
 program_studies <- get_program_studies()
+
+# retrieve observations data of given germplasm aggregated from all trials in the selected program
+germplasm_observations <- get_germplasm_data("CHALCO PR MZO")
 
 ```
 ## _Troubleshooting the installation_
