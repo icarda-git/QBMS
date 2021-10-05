@@ -43,7 +43,8 @@
 #                * Enhance returned info by the get_program_studies function to include study settings and number of test/check entries.
 #
 #           v0.6 - 8 Oct 2021
-#                * Minimise package dependencies (rbindx replaced plyr::rbind.fill, rbindlistx replaced data.table::rbindlist, and use merge to replace dplyr::left_join).
+#                * Minimize package dependencies (rbindx replaced plyr::rbind.fill, rbindlistx replaced data.table::rbindlist, and use merge to replace dplyr::left_join).
+#                * Resolve compatibility issues with BrAPI changes in BMS version 19.
 #
 # License:  GPLv3
 
@@ -945,6 +946,8 @@ get_program_studies <- function() {
       } 
     }
   }
+  
+  studies <- studies[,unique(colnames(studies))]
   
   crop_locations <- get_crop_locations()
   
