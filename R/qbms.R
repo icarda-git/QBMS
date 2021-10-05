@@ -42,21 +42,52 @@
 #                * Fix retrieving error when the study has no data!
 #                * Enhance returned info by the get_program_studies function to include study settings and number of test/check entries.
 #
+#           v0.6 - 8 Oct 2021
+#                * Minimise package dependencies (rbindx replaced plyr::rbind.fill, rbindlistx replaced data.table::rbindlist).
+#
 # License:  GPLv3
 
 # Load/install required packages
 # if (!require(httr)) install.packages("httr")
 # if (!require(tcltk)) install.packages("tcltk")
 # if (!require(jsonlite)) install.packages("jsonlite")
-# if (!require(plyr)) install.packages("plyr")
 # if (!require(dplyr)) install.packages("dplyr")
-# if (!require(data.table)) install.packages("data.table")
 
 # Internal state variables/lists
 qbms_globals <- new.env()
 qbms_globals$config <- list(crop = NULL)
 qbms_globals$state  <- list(token = NULL)
 
+#' Combine data.frames by row, filling in missing columns
+#' 
+#' @description
+#' rbinds a list of data frames filling missing columns with NA
+#' 
+#' @param ... input data frames to row bind together.
+#' @return a single data frame
+
+rbindx <- function(..., dfs=list(...)) {
+  ns <- unique(unlist(sapply(dfs, names)))
+  do.call(rbind, lapply(dfs, function(x) {
+    for(n in ns[! ns %in% names(x)]) {x[[n]] <- NA}; x }))
+}
+
+#' Makes one data.table from a list of many
+#' 
+#' @description
+#' Same as do.call("rbind", x) on data.frames, but much faster.
+#' 
+#' @param x A list containing data.table, data.frame or list objects.
+#' @return an unkeyed data.table containing a concatenation of all the items passed in.
+
+rbindlistx <- function(x) {
+  u  <- unlist(x, recursive = FALSE)
+  n  <- names(u)
+  un <- unique(n)
+  l  <- lapply(un, function(N) unlist(u[N == n], FALSE, FALSE))
+  names(l) <- un
+  d <- as.data.frame(l)
+}
 
 #' Debug internal QBMS status object
 #' 
@@ -382,7 +413,7 @@ get_program_trials <- function() {
     last_page <- qbms_globals$state$total_pages - 1
     for (n in 1:last_page) {
       bms_crop_trials    <- brapi_get_call(call_url, n, FALSE)
-      bms_program_trials <- plyr::rbind.fill(bms_program_trials, bms_crop_trials$data)
+      bms_program_trials <- rbindx(bms_program_trials, bms_crop_trials$data)
     }
   }
   
@@ -730,7 +761,7 @@ get_germplasm_list <- function() {
     last_page <- qbms_globals$state$total_pages - 1
     for (n in 1:last_page) {
       germplasms     <- brapi_get_call(call_url, n)
-      germplasm_list <- plyr::rbind.fill(germplasm_list, as.data.frame(germplasms$data))
+      germplasm_list <- rbindx(germplasm_list, as.data.frame(germplasms$data))
     }
   }
   
@@ -861,7 +892,7 @@ get_crop_locations <- function() {
     last_page <- qbms_globals$state$total_pages - 1
     for (n in 1:last_page) {
       locations     <- brapi_get_call(call_url, n, FALSE)
-      location_list <- plyr::rbind.fill(location_list, as.data.frame(locations$data))
+      location_list <- rbindx(location_list, as.data.frame(locations$data))
     }
   }
   
@@ -903,10 +934,10 @@ get_program_studies <- function() {
   program_trials <- subset(all_trials, programDbId == qbms_globals$state$program_db_id)
   
   colnames(program_trials) <- gsub('additionalInfo.', '', colnames(program_trials))
-  
+
   for (row in 1:nrow(program_trials)) {
     trial <- program_trials[row, -7]
-    trial_studies <- data.table::rbindlist(program_trials[row, "studies"])
+    trial_studies <- rbindlistx(program_trials[row, "studies"])
     if (nrow(trial_studies) > 0) {
       if (row == 1) {
         studies <- cbind(trial, trial_studies, row.names = NULL)
@@ -933,7 +964,7 @@ get_program_studies <- function() {
     studies[studies$trialDbId == i, 'testEntriesCount'] <- metadata$testEntriesCount
     studies[studies$trialDbId == i, 'checkEntriesCount'] <- metadata$checkEntriesCount
   }
-  
+
   return(studies)
 }
 
@@ -989,7 +1020,7 @@ get_germplasm_data <- function(germplasm_name) {
   flatten_results <- jsonlite::fromJSON(jsonlite::toJSON(results), flatten = TRUE)
   
   # unlist nested list with id
-  unlisted_observations <- data.table::rbindlist(flatten_results$observations, fill = TRUE, idcol = "id")
+  unlisted_observations <- rbindlistx(flatten_results$observations, fill = TRUE, idcol = "id")
   
   # create same id in remaining data frame
   flatten_results$id <- seq.int(nrow(flatten_results))

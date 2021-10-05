@@ -1,7 +1,7 @@
 Package: QBMS
 Type: Package
-Version: 0.4.1
-Date: 2020-10-18
+Version: 0.6
+Date: 2021-10-08
 Title: Query Breeding Management System (BMS)
 Authors@R: c(
   person("Khaled", "Al-Shamaa", role = c("aut", "cre"), email = "k.el-shamaa@cgiar.org"),
@@ -23,6 +23,4 @@ Imports:
 	httr (>= 1.4.1),
 	tcltk (>= 3.6.1),
 	jsonlite (>= 1.7.0),
-	plyr (>= 1.4.2),
-	dplyr (>= 1.0.0),
-	data.table (>= 1.12.8)
+	dplyr (>= 1.0.0)
