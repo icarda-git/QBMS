@@ -43,6 +43,7 @@
 #                * Enhance returned info by the get_program_studies function to include study settings and number of test/check entries.
 #
 #           v0.6 - 8 Oct 2021
+#                * Fix filter by year functionality in the list_trials function.
 #                * Minimize package dependencies (rbindx replaced plyr::rbind.fill, rbindlistx replaced data.table::rbindlist, and use merge to replace dplyr::left_join).
 #                * Resolve compatibility issues with BrAPI changes in BMS version 19.
 #
@@ -113,7 +114,7 @@ debug_qbms <- function(){
 #' @param page_size Page size (default is 1000)
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @examples
-#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' @export
 
 set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth/login",
@@ -220,7 +221,7 @@ get_login_details <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -258,7 +259,7 @@ login_bms <- function(username = NULL, password = NULL) {
 #' @seealso \code{\link{login_bms}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -291,13 +292,13 @@ list_crops <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{list_crops}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
 #' login_bms()
 #' 
-#' set_crop("Tutorial1")
+#' set_crop("maize")
 #' @export
 
 set_crop <- function(crop_name) {
@@ -323,13 +324,13 @@ set_crop <- function(crop_name) {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
 #' login_bms()
 #' 
-#' set_crop("Tutorial1")
+#' set_crop("maize")
 #' 
 #' # list existing breeding programs
 #' list_programs()
@@ -364,16 +365,16 @@ list_programs <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{list_programs}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
 #' login_bms()
 #' 
-#' set_crop("Tutorial1")
+#' set_crop("maize")
 #' 
 #' # select a breeding program by name
-#' set_program("Training Breeding Program")
+#' set_program("MC Maize")
 #' @export
 
 set_program <- function(program_name) {
@@ -437,16 +438,16 @@ get_program_trials <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
 #' login_bms()
 #' 
-#' set_crop("Tutorial1")
+#' set_crop("maize")
 #' 
 #' # select a breeding program by name
-#' set_program("Training Breeding Program")
+#' set_program("MC Maize")
 #' 
 #' # list all studies/trials in the selected program
 #' list_trials()
@@ -494,19 +495,19 @@ list_trials <- function(year = NULL) {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
 #' login_bms()
 #' 
-#' set_crop("Tutorial1")
+#' set_crop("maize")
 #' 
 #' # select a breeding program by name
-#' set_program("Training Breeding Program")
+#' set_program("MC Maize")
 #' 
 #' # select a specific study/trial by name
-#' set_trial("CIDTN-2016")
+#' set_trial("2018 PVT")
 #' @export
 
 set_trial <- function(trial_name) {
@@ -535,19 +536,19 @@ set_trial <- function(trial_name) {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
 #' login_bms()
 #' 
-#' set_crop("Tutorial1")
+#' set_crop("maize")
 #' 
 #' # select a breeding program by name
-#' set_program("Training Breeding Program")
+#' set_program("MC Maize")
 #' 
 #' # select a specific study/trial by name
-#' set_trial("CIDTN-2016")
+#' set_trial("2018 PVT")
 #' 
 #' # list all environments/locations information in the selected study/trial
 #' list_studies()
@@ -580,22 +581,22 @@ list_studies <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{list_studies}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
 #' login_bms()
 #' 
-#' set_crop("Tutorial1")
+#' set_crop("maize")
 #' 
 #' # select a breeding program by name
-#' set_program("Training Breeding Program")
+#' set_program("MC Maize")
 #' 
 #' # select a specific study/trial by name
-#' set_trial("CIDTN-2016")
+#' set_trial("2018 PVT")
 #' 
 #' # select a specific environment/location dataset
-#' set_study("CIDTN-2016 Environment Number 1")
+#' set_study("2018 PVT Environment Number 1")
 #' @export
 
 set_study <- function(study_name) {
@@ -628,22 +629,22 @@ set_study <- function(study_name) {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
 #' login_bms()
 #' 
-#' set_crop("Tutorial1")
+#' set_crop("maize")
 #' 
 #' # select a breeding program by name
-#' set_program("Training Breeding Program")
+#' set_program("MC Maize")
 #' 
 #' # select a specific study/trial by name
-#' set_trial("CIDTN-2016")
+#' set_trial("2018 PVT")
 #' 
 #' # select a specific environment/location dataset
-#' set_study("CIDTN-2016 Environment Number 1")
+#' set_study("2018 PVT Environment Number 1")
 #' 
 #' # retrieve the general information of the selected environment/location
 #' info <- get_study_info()
@@ -675,22 +676,22 @@ get_study_info <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
 #' login_bms()
 #' 
-#' set_crop("Tutorial1")
+#' set_crop("maize")
 #' 
 #' # select a breeding program by name
-#' set_program("Training Breeding Program")
+#' set_program("MC Maize")
 #' 
 #' # select a specific study/trial by name
-#' set_trial("CIDTN-2016")
+#' set_trial("2018 PVT")
 #' 
 #' # select a specific environment/location dataset
-#' set_study("CIDTN-2016 Environment Number 1")
+#' set_study("2018 PVT Environment Number 1")
 #' 
 #' # retrieve the data of the selected environment/location
 #' data <- get_study_data()
@@ -725,22 +726,22 @@ get_study_data <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
 #' login_bms()
 #' 
-#' set_crop("Tutorial1")
+#' set_crop("maize")
 #' 
 #' # select a breeding program by name
-#' set_program("Training Breeding Program")
+#' set_program("MC Maize")
 #' 
 #' # select a specific study/trial by name
-#' set_trial("CIDTN-2016")
+#' set_trial("2018 PVT")
 #' 
 #' # select a specific environment/location dataset
-#' set_study("CIDTN-2016 Environment Number 1")
+#' set_study("2018 PVT Environment Number 1")
 #' 
 #' # retrieve the germplasm list of the selected environment/location
 #' germplasm <- get_germplasm_list()
@@ -783,22 +784,22 @@ get_germplasm_list <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
 #' login_bms()
 #' 
-#' set_crop("Tutorial1")
+#' set_crop("maize")
 #' 
 #' # select a breeding program by name
-#' set_program("Training Breeding Program")
+#' set_program("MC Maize")
 #' 
 #' # select a specific study/trial by name
-#' set_trial("CIDTN-2016")
+#' set_trial("2018 PVT")
 #' 
 #' # select a specific environment/location dataset
-#' set_study("CIDTN-2016 Environment Number 1")
+#' set_study("2018 PVT Environment Number 1")
 #' 
 #' # retrive multi-environment trial data
 #' MET <- get_trial_data()
@@ -829,19 +830,19 @@ get_trial_data <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
 #' login_bms()
 #' 
-#' set_crop("Tutorial1")
+#' set_crop("maize")
 #' 
 #' # select a breeding program by name
-#' set_program("Training Breeding Program")
+#' set_program("MC Maize")
 #' 
 #' # select a specific study/trial by name
-#' set_trial("CIDTN-2016")
+#' set_trial("2018 PVT")
 #' 
 #' # get observation variable ontology
 #' ontology <- get_trial_obs_ontology()
@@ -910,16 +911,16 @@ get_crop_locations <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
 #' login_bms()
 #' 
-#' set_crop("Tutorial1")
+#' set_crop("maize")
 #' 
 #' # select a breeding program by name
-#' set_program("Training Breeding Program")
+#' set_program("MC Maize")
 #' 
 #' # retrive all environments/locations information in the selected program studies/trials
 #' program_studies <- get_program_studies()
@@ -983,16 +984,16 @@ get_program_studies <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}
 #' @examples
 #' # config your BMS connection
-#' set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
 #' login_bms()
 #' 
-#' set_crop("Tutorial1")
+#' set_crop("maize")
 #' 
 #' # select a breeding program by name
-#' set_program("Training Breeding Program")
+#' set_program("MC Maize")
 #' 
 #' # retrive observations data of a given germplasm aggregated from all trials
 #' germplasm_observations <- get_germplasm_data("FLIP10-3C")

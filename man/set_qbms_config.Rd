@@ -21,7 +21,7 @@ set_qbms_config(
 Set the connection configuration of the BMS server
 }
 \examples{
-set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

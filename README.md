@@ -59,6 +59,7 @@ ontology <- get_trial_obs_ontology()
 
 # list all environments/locations information in the selected study/trial
 list_studies()
+list_studies(2020)
 
 # select a specific environment/location by name
 set_study("2018 PVT Environment Number 1")

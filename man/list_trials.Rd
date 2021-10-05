@@ -19,22 +19,22 @@ function.
 }
 \examples{
 # config your BMS connection
-set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 
 # login using your BMS account (interactive mode)
 # you can pass BMS username and password as parameters (batch mode)
 login_bms()
 
-set_crop("Tutorial1")
+set_crop("maize")
 
 # select a breeding program by name
-set_program("Training Breeding Program")
+set_program("MC Maize")
 
 # list all studies/trials in the selected program
 list_trials()
 
 # filter listed studies/trials by year
-list_trials(2017)
+list_trials(2020)
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}

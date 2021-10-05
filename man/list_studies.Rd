@@ -15,19 +15,19 @@ as configured in the internal state object using `set_trial()` function.
 }
 \examples{
 # config your BMS connection
-set_qbms_config("https://bms.example.com/ibpworkbench/controller/auth/login")
+set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 
 # login using your BMS account (interactive mode)
 # you can pass BMS username and password as parameters (batch mode)
 login_bms()
 
-set_crop("Tutorial1")
+set_crop("maize")
 
 # select a breeding program by name
-set_program("Training Breeding Program")
+set_program("MC Maize")
 
 # select a specific study/trial by name
-set_trial("CIDTN-2016")
+set_trial("2018 PVT")
 
 # list all environments/locations information in the selected study/trial
 list_studies()
