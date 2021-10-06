@@ -14,6 +14,7 @@ This function will retrive the traits ontology/metadata of the current active
 trial as configured in the internal state object using `set_trial()` function.
 }
 \examples{
+if (interactive()) {
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 
@@ -31,6 +32,7 @@ set_trial("2018 PVT")
 
 # get observation variable ontology
 ontology <- get_trial_obs_ontology()
+}
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}

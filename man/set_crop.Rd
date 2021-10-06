@@ -6,11 +6,15 @@
 \usage{
 set_crop(crop_name)
 }
+\arguments{
+\item{crop_name}{the name of the crop}
+}
 \description{
 This function will update the current active crop in the internal 
 configuration object (including the brapi connection object).
 }
 \examples{
+if (interactive()) {
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 
@@ -19,6 +23,7 @@ set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 login_bms()
 
 set_crop("maize")
+}
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{list_crops}}

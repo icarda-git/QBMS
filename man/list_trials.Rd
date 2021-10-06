@@ -18,6 +18,7 @@ program as configured in the internal state object using `set_program()`
 function.
 }
 \examples{
+if (interactive()) {
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 
@@ -35,6 +36,7 @@ list_trials()
 
 # filter listed studies/trials by year
 list_trials(2020)
+}
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}

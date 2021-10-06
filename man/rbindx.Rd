@@ -7,7 +7,9 @@
 rbindx(..., dfs = list(...))
 }
 \arguments{
-\item{...}{input data frames to row bind together.}
+\item{...}{the first argument data frame.}
+
+\item{dfs}{input data frames to row bind together.}
 }
 \value{
 a single data frame

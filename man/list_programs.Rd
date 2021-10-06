@@ -15,6 +15,7 @@ crop as configured in the internal configuration object using `set_crop()`
 function.
 }
 \examples{
+if (interactive()) {
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 
@@ -26,6 +27,7 @@ set_crop("maize")
 
 # list existing breeding programs
 list_programs()
+}
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{set_crop}}

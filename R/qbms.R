@@ -66,10 +66,11 @@ qbms_globals$state  <- list(token = NULL)
 #' @description
 #' rbinds a list of data frames filling missing columns with NA
 #' 
-#' @param ... input data frames to row bind together.
+#' @param ... the first argument data frame.
+#' @param dfs input data frames to row bind together.
 #' @return a single data frame
 
-rbindx <- function(..., dfs=list(...)) {
+rbindx <- function(..., dfs = list(...)) {
   ns <- unique(unlist(sapply(dfs, names)))
   do.call(rbind, lapply(dfs, function(x) {
     for(n in ns[! ns %in% names(x)]) {x[[n]] <- NA}; x }))
@@ -99,7 +100,9 @@ rbindlistx <- function(x) {
 #' 
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @examples
-#' View(debug_qbms())
+#' obj <- debug_qbms()
+#' obj$config
+#' obj$state
 #' @export
 
 debug_qbms <- function(){
@@ -222,12 +225,14 @@ get_login_details <- function() {
 #' @param password the BMS password (optional, default is NULL)
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @examples
+#' if (interactive()) {
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
 #' login_bms()
+#' }
 #' @export
 
 login_bms <- function(username = NULL, password = NULL) {
@@ -260,6 +265,7 @@ login_bms <- function(username = NULL, password = NULL) {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}
 #' @examples
+#' if (interactive()) {
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -269,6 +275,7 @@ login_bms <- function(username = NULL, password = NULL) {
 #' 
 #' # list supported crops in the bms server
 #' list_crops()
+#' }
 #' @export
 
 list_crops <- function() {
@@ -290,9 +297,11 @@ list_crops <- function() {
 #' This function will update the current active crop in the internal 
 #' configuration object (including the brapi connection object).
 #' 
+#' @param crop_name the name of the crop
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{list_crops}}
 #' @examples
+#' if (interactive()) {
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -301,6 +310,7 @@ list_crops <- function() {
 #' login_bms()
 #' 
 #' set_crop("maize")
+#' }
 #' @export
 
 set_crop <- function(crop_name) {
@@ -325,6 +335,7 @@ set_crop <- function(crop_name) {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}
 #' @examples
+#' if (interactive()) {
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -336,6 +347,7 @@ set_crop <- function(crop_name) {
 #' 
 #' # list existing breeding programs
 #' list_programs()
+#' }
 #' @export
 
 list_programs <- function() {
@@ -366,6 +378,7 @@ list_programs <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{list_programs}}
 #' @examples
+#' if (interactive()) {
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -377,6 +390,7 @@ list_programs <- function() {
 #' 
 #' # select a breeding program by name
 #' set_program("MC Maize")
+#' }
 #' @export
 
 set_program <- function(program_name) {
@@ -439,6 +453,7 @@ get_program_trials <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}
 #' @examples
+#' if (interactive()) {
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -456,6 +471,7 @@ get_program_trials <- function() {
 #' 
 #' # filter listed studies/trials by year
 #' list_trials(2020)
+#' }
 #' @export
 
 list_trials <- function(year = NULL) {
@@ -496,6 +512,7 @@ list_trials <- function(year = NULL) {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}}
 #' @examples
+#' if (interactive()) {
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -510,6 +527,7 @@ list_trials <- function(year = NULL) {
 #' 
 #' # select a specific study/trial by name
 #' set_trial("2018 PVT")
+#' }
 #' @export
 
 set_trial <- function(trial_name) {
@@ -537,6 +555,7 @@ set_trial <- function(trial_name) {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
 #' @examples
+#' if (interactive()) {
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -554,6 +573,7 @@ set_trial <- function(trial_name) {
 #' 
 #' # list all environments/locations information in the selected study/trial
 #' list_studies()
+#' }
 #' @export
 
 list_studies <- function() {
@@ -582,6 +602,7 @@ list_studies <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{list_studies}}
 #' @examples
+#' if (interactive()) {
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -599,6 +620,7 @@ list_studies <- function() {
 #' 
 #' # select a specific environment/location dataset
 #' set_study("2018 PVT Environment Number 1")
+#' }
 #' @export
 
 set_study <- function(study_name) {
@@ -630,6 +652,7 @@ set_study <- function(study_name) {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
 #' @examples
+#' if (interactive()) {
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -650,6 +673,7 @@ set_study <- function(study_name) {
 #' 
 #' # retrieve the general information of the selected environment/location
 #' info <- get_study_info()
+#' }
 #' @export
 
 get_study_info <- function() {
@@ -677,6 +701,7 @@ get_study_info <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
 #' @examples
+#' if (interactive()) {
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -697,6 +722,7 @@ get_study_info <- function() {
 #' 
 #' # retrieve the data of the selected environment/location
 #' data <- get_study_data()
+#' }
 #' @export
 
 get_study_data <- function() {
@@ -727,6 +753,7 @@ get_study_data <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
 #' @examples
+#' if (interactive()) {
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -747,6 +774,7 @@ get_study_data <- function() {
 #' 
 #' # retrieve the germplasm list of the selected environment/location
 #' germplasm <- get_germplasm_list()
+#' }
 #' @export
 
 get_germplasm_list <- function() {
@@ -785,6 +813,7 @@ get_germplasm_list <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
 #' @examples
+#' if (interactive()) {
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -805,6 +834,7 @@ get_germplasm_list <- function() {
 #' 
 #' # retrive multi-environment trial data
 #' MET <- get_trial_data()
+#' }
 #' @export
 
 get_trial_data <- function() {
@@ -831,6 +861,7 @@ get_trial_data <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
 #' @examples
+#' if (interactive()) {
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -848,6 +879,7 @@ get_trial_data <- function() {
 #' 
 #' # get observation variable ontology
 #' ontology <- get_trial_obs_ontology()
+#' }
 #' @export
 
 get_trial_obs_ontology <- function() {
@@ -912,6 +944,7 @@ get_crop_locations <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}
 #' @examples
+#' if (interactive()) {
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -926,6 +959,7 @@ get_crop_locations <- function() {
 #' 
 #' # retrive all environments/locations information in the selected program studies/trials
 #' program_studies <- get_program_studies()
+#' }
 #' @export
 
 get_program_studies <- function() {
@@ -934,7 +968,7 @@ get_program_studies <- function() {
   }
   
   all_trials <- get_program_trials()
-  program_trials <- subset(all_trials, programDbId == qbms_globals$state$program_db_id)
+  program_trials <- all_trials[all_trials$programDbId == qbms_globals$state$program_db_id,]
   
   colnames(program_trials) <- gsub('additionalInfo.', '', colnames(program_trials))
 
@@ -985,6 +1019,7 @@ get_program_studies <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}
 #' @examples
+#' if (interactive()) {
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -999,6 +1034,7 @@ get_program_studies <- function() {
 #' 
 #' # retrive observations data of a given germplasm aggregated from all trials
 #' germplasm_observations <- get_germplasm_data("BASFCORN-2-1")
+#' }
 #' @export
 
 get_germplasm_data <- function(germplasm_name) {

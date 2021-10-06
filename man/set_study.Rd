@@ -15,6 +15,7 @@ object using the studyDbId retrieved from BMS which is associated to the
 given study_name parameter.
 }
 \examples{
+if (interactive()) {
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 
@@ -32,6 +33,7 @@ set_trial("2018 PVT")
 
 # select a specific environment/location dataset
 set_study("2018 PVT Environment Number 1")
+}
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{list_studies}}

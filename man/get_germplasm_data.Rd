@@ -17,6 +17,7 @@ This function will retrieve the observations data of the current active study
 as configured in the internal state object using `set_study()` function.
 }
 \examples{
+if (interactive()) {
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 
@@ -31,6 +32,7 @@ set_program("MC Maize")
 
 # retrive observations data of a given germplasm aggregated from all trials
 germplasm_observations <- get_germplasm_data("BASFCORN-2-1")
+}
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}

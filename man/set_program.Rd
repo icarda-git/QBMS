@@ -15,6 +15,7 @@ internal state object using the programDbId retrieved from BMS which is
 associated to the given program_name parameter.
 }
 \examples{
+if (interactive()) {
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 
@@ -26,6 +27,7 @@ set_crop("maize")
 
 # select a breeding program by name
 set_program("MC Maize")
+}
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{list_programs}}

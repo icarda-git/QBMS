@@ -10,7 +10,9 @@ debug_qbms()
 Return the internal QBMS status object for debuging
 }
 \examples{
-View(debug_qbms())
+obj <- debug_qbms()
+obj$config
+obj$state
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

@@ -14,6 +14,7 @@ This function will retrieve the germplasm list of the current active study
 as configured in the internal state object using `set_study()` function.
 }
 \examples{
+if (interactive()) {
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 
@@ -34,6 +35,7 @@ set_study("2018 PVT Environment Number 1")
 
 # retrieve the germplasm list of the selected environment/location
 germplasm <- get_germplasm_list()
+}
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}

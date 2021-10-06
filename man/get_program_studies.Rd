@@ -14,6 +14,7 @@ This function will retrieve all environments/locations information of the trials
 current active program as configured in the internal state object using `set_program()` function.
 }
 \examples{
+if (interactive()) {
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 
@@ -28,6 +29,7 @@ set_program("MC Maize")
 
 # retrive all environments/locations information in the selected program studies/trials
 program_studies <- get_program_studies()
+}
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}

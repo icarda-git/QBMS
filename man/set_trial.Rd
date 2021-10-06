@@ -15,6 +15,7 @@ object using the trialDbId retrieved from BMS which is associated to the
 given trial_name parameter.
 }
 \examples{
+if (interactive()) {
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 
@@ -29,6 +30,7 @@ set_program("MC Maize")
 
 # select a specific study/trial by name
 set_trial("2018 PVT")
+}
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}}

@@ -13,6 +13,7 @@ a list of supported crops
 Get the list of supported crops
 }
 \examples{
+if (interactive()) {
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 
@@ -22,6 +23,7 @@ login_bms()
 
 # list supported crops in the bms server
 list_crops()
+}
 }
 \seealso{
 \code{\link{login_bms}}
