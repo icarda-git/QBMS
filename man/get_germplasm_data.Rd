@@ -30,7 +30,7 @@ set_crop("maize")
 set_program("MC Maize")
 
 # retrive observations data of a given germplasm aggregated from all trials
-germplasm_observations <- get_germplasm_data("FLIP10-3C")
+germplasm_observations <- get_germplasm_data("BASFCORN-2-1")
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}

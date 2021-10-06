@@ -44,6 +44,7 @@
 #
 #           v0.6 - 8 Oct 2021
 #                * Fix filter by year functionality in the list_trials function.
+#                * Fix get_germplasm_data by replaced the deprecated germplasm-search call.
 #                * Minimize package dependencies (rbindx replaced plyr::rbind.fill, rbindlistx replaced data.table::rbindlist, and use merge to replace dplyr::left_join).
 #                * Resolve compatibility issues with BrAPI changes in BMS version 19.
 #
@@ -53,6 +54,7 @@
 # if (!require(httr)) install.packages("httr")
 # if (!require(tcltk)) install.packages("tcltk")
 # if (!require(jsonlite)) install.packages("jsonlite")
+# if (!require(data.table)) install.packages("data.table")
 
 # Internal state variables/lists
 qbms_globals <- new.env()
@@ -996,17 +998,15 @@ get_program_studies <- function() {
 #' set_program("MC Maize")
 #' 
 #' # retrive observations data of a given germplasm aggregated from all trials
-#' germplasm_observations <- get_germplasm_data("FLIP10-3C")
+#' germplasm_observations <- get_germplasm_data("BASFCORN-2-1")
 #' @export
 
 get_germplasm_data <- function(germplasm_name) {
   crop_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1")
+  call_url <- paste0(crop_url, "/germplasm?germplasmName=", germplasm_name)
   
-  # DEPRECATED in BMS API v16: https://app.swaggerhub.com/apis/ibp_bms/BMSAPI/16.0#/germplasm-resource-brapi/searchGermplasmsUsingGET
-  # Use /search/germplasm: https://app.swaggerhub.com/apis/ibp_bms/BMSAPI/16.0#/germplasm-resource-brapi/postSearchGermplasmUsingPOST
-  call_url <- paste0(crop_url, "/germplasm-search?germplasmName=", germplasm_name)
-  
-  germplasm_db_id <- brapi_get_call(call_url)$data$germplasmDbId
+  results <- brapi_get_call(call_url)$data
+  germplasm_db_id <- results[results$germplasmName == germplasm_name, "germplasmDbId"]
   
   # https://github.com/plantbreeding/API/blob/V1.2/Specification/Phenotypes/PhenotypesSearch_POST.md
   # Note 1: It does not work with germplasm name (BrAPI specifications): e.g. {"germplasmDbIds": ["ILC 3279"]}
@@ -1023,13 +1023,12 @@ get_germplasm_data <- function(germplasm_name) {
   flatten_results <- jsonlite::fromJSON(jsonlite::toJSON(results), flatten = TRUE)
   
   # unlist nested list with id
-  unlisted_observations <- rbindlistx(flatten_results$observations, fill = TRUE, idcol = "id")
-  
+  unlisted_observations <- data.table::rbindlist(flatten_results$observations, fill = TRUE, idcol = "id")
+
   # create same id in remaining data frame
   flatten_results$id <- seq.int(nrow(flatten_results))
   
   # join data frame with unlisted list
-  # flatten_results <- dplyr::left_join(flatten_results, unlisted_observations, by = "id")
   flatten_results <- merge(flatten_results, unlisted_observations, by = "id", all.x = TRUE)
   
   # get rid of unnecessary columns
