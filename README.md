@@ -76,7 +76,7 @@ MET <- get_trial_data()
 program_studies <- get_program_studies()
 
 # retrieve observations data of given germplasm aggregated from all trials in the selected program
-germplasm_observations <- get_germplasm_data("CHALCO PR MZO")
+germplasm_observations <- get_germplasm_data("BASFCORN-2-1")
 
 ```
 ## _Troubleshooting the installation_
