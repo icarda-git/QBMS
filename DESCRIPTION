@@ -2,25 +2,26 @@ Package: QBMS
 Type: Package
 Version: 0.6
 Date: 2021-10-08
-Title: Query Breeding Management System (BMS)
+Title: Query the Breeding Management System 'BMS'
 Authors@R: c(
-  person("Khaled", "Al-Shamaa", role = c("aut", "cre"), email = "k.el-shamaa@cgiar.org"),
-  person("Mariano Omar", "Crimi", role = c("ctb"), email = "m.crimi@cgiar.org"),
-  person("Zakaria", "Kehel", role = c("ctb"), email = "z.kehel@cgiar.org"),
-  person("International Center for Agricultural Research in the Dry Areas (ICARDA)", role = c("cph"))
-  )
-Author: Khaled Al-Shamaa [aut, cre]
+  person(given = "Khaled", family = "Al-Shamaa", role = c("aut", "cre"), email = "k.el-shamaa@cgiar.org"),
+  person(given = "Mariano Omar", family = "Crimi", role = c("ctb"), email = "m.crimi@cgiar.org"),
+  person(given = "Zakaria", family = "Kehel", role = c("ctb"), email = "z.kehel@cgiar.org"),
+  person(given = "ICARDA", role = c("cph"))
+)
+Author: Khaled Al-Shamaa [aut, cre],
+  Mariano Omar Crimi [ctb],
+  Zakaria Kehel [ctb],
+  ICARDA [cph]
 Maintainer: Khaled Al-Shamaa <k.el-shamaa@cgiar.org>
 Depends: R (>= 3.1.0)
-Description: R package to Query the Breeding Management System database (using BrAPI calls) in favor of scientists/researchers as targeted end-users who want to retrieve their experiments data directly into R statistical analyzing environment.
+Description: Query the Breeding Management System 'BMS' database (using 'BrAPI' calls) to help breeders as targeted end-users retrieving data directly into their analyzing pipelines.
 License: GPL (>= 3)
-URL: https://github.com/khaled-alshamaa/QBMS
-BugReports: https://github.com/khaled-alshamaa/QBMS/issues
-LazyData: FALSE
+URL: https://github.com/icarda-git/QBMS
+BugReports: https://github.com/icarda-git/QBMS/issues
+LazyData: TRUE
 RoxygenNote: 7.1.1
-Imports:
-	utils (>= 3.6.1),
-	httr (>= 1.4.1),
-	tcltk (>= 3.6.1),
-	jsonlite (>= 1.7.0),
-    data.table(>= 1.12.8)
+Imports: utils, httr, tcltk, jsonlite, data.table
+NeedsCompilation: no
+Encoding: UTF-8
+
