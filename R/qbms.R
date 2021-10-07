@@ -255,6 +255,7 @@ login_bms <- function(username = NULL, password = NULL) {
   
   qbms_globals$state$token <- httr::content(response)$access_token
   qbms_globals$state$user  <- httr::content(response)$userDisplayName
+  # as.POSIXct(qbms_globals$state$expires_in/1000, origin="1970-01-01")
   qbms_globals$state$expires_in <- httr::content(response)$expires_in
 }
 
