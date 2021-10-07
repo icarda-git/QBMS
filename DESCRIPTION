@@ -19,7 +19,7 @@ Description: Query the Breeding Management System 'BMS' database (using 'BrAPI' 
 License: GPL (>= 3)
 URL: https://github.com/icarda-git/QBMS
 BugReports: https://github.com/icarda-git/QBMS/issues
-LazyData: TRUE
+LazyData: FALSE
 RoxygenNote: 7.1.1
 Imports: utils, httr, tcltk, jsonlite, data.table
 NeedsCompilation: no
