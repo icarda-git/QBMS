@@ -8,7 +8,7 @@ Authors@R: c(
   person(given = "Mariano Omar", family = "Crimi", role = c("ctb"), email = "m.crimi@cgiar.org"),
   person(given = "Zakaria", family = "Kehel", role = c("ctb"), email = "z.kehel@cgiar.org"),
   person(given = "ICARDA", role = c("cph"))
-)
+  )
 Author: Khaled Al-Shamaa [aut, cre],
   Mariano Omar Crimi [ctb],
   Zakaria Kehel [ctb],
