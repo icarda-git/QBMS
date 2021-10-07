@@ -64,6 +64,10 @@ list_studies(2020)
 # select a specific environment/location by name
 set_study("2018 PVT Environment Number 1")
 
+# select a specific study by location name (first match)
+studies <- list_studies()
+set_study(studies[studies$locationName == "BASF Bremen", "studyName"][1])
+
 # retrieve data, general information, and germplasm list of the selected environment/location
 data <- get_study_data()
 info <- get_study_info()
