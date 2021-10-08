@@ -230,7 +230,7 @@ get_login_details <- function() {
 #' @param password the BMS password (optional, default is NULL)
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @examples
-#' if (interactive()) {
+#' \dontrun{
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -272,7 +272,7 @@ login_bms <- function(username = NULL, password = NULL) {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}
 #' @examples
-#' if (interactive()) {
+#' \dontrun{
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -308,7 +308,7 @@ list_crops <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{list_crops}}
 #' @examples
-#' if (interactive()) {
+#' \dontrun{
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -342,7 +342,7 @@ set_crop <- function(crop_name) {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}
 #' @examples
-#' if (interactive()) {
+#' \dontrun{
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -385,7 +385,7 @@ list_programs <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{list_programs}}
 #' @examples
-#' if (interactive()) {
+#' \dontrun{
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -460,7 +460,7 @@ get_program_trials <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}
 #' @examples
-#' if (interactive()) {
+#' \dontrun{
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -519,7 +519,7 @@ list_trials <- function(year = NULL) {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}}
 #' @examples
-#' if (interactive()) {
+#' \dontrun{
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -562,7 +562,7 @@ set_trial <- function(trial_name) {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
 #' @examples
-#' if (interactive()) {
+#' \dontrun{
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -609,7 +609,7 @@ list_studies <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{list_studies}}
 #' @examples
-#' if (interactive()) {
+#' \dontrun{
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -659,7 +659,7 @@ set_study <- function(study_name) {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
 #' @examples
-#' if (interactive()) {
+#' \dontrun{
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -708,7 +708,7 @@ get_study_info <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
 #' @examples
-#' if (interactive()) {
+#' \dontrun{
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -760,7 +760,7 @@ get_study_data <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
 #' @examples
-#' if (interactive()) {
+#' \dontrun{
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -837,7 +837,7 @@ get_germplasm_list <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
 #' @examples
-#' if (interactive()) {
+#' \dontrun{
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -885,7 +885,7 @@ get_trial_data <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
 #' @examples
-#' if (interactive()) {
+#' \dontrun{
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -970,7 +970,7 @@ get_crop_locations <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}
 #' @examples
-#' if (interactive()) {
+#' \dontrun{
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 
@@ -1047,7 +1047,7 @@ get_program_studies <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}
 #' @examples
-#' if (interactive()) {
+#' \dontrun{
 #' # config your BMS connection
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' 

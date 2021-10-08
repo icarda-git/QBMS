@@ -14,7 +14,7 @@ This function will retrive the traits ontology/metadata of the current active
 trial as configured in the internal state object using `set_trial()` function.
 }
 \examples{
-if (interactive()) {
+\dontrun{
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 

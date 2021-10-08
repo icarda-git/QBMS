@@ -15,7 +15,7 @@ internal state object using the programDbId retrieved from BMS which is
 associated to the given program_name parameter.
 }
 \examples{
-if (interactive()) {
+\dontrun{
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 

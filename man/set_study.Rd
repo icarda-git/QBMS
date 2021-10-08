@@ -15,7 +15,7 @@ object using the studyDbId retrieved from BMS which is associated to the
 given study_name parameter.
 }
 \examples{
-if (interactive()) {
+\dontrun{
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 

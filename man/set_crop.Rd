@@ -14,7 +14,7 @@ This function will update the current active crop in the internal
 configuration object (including the brapi connection object).
 }
 \examples{
-if (interactive()) {
+\dontrun{
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 

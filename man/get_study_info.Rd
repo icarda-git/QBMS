@@ -14,7 +14,7 @@ This function will retrieve the details/metadata of the current active study
 as configured in the internal state object using `set_study()` function.
 }
 \examples{
-if (interactive()) {
+\dontrun{
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 

@@ -23,7 +23,7 @@ This function will update both of the qbms_config list (brapi connection
 object in the con key) and qbms_state list (token value in the token key).
 }
 \examples{
-if (interactive()) {
+\dontrun{
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 
