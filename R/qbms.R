@@ -920,7 +920,7 @@ get_trial_obs_ontology <- function() {
                    "&variableIds=", paste(study_obs, collapse = ","))
   
   response <- httr::GET(url = utils::URLencode(my_url), 
-                        httr::add_headers("X-Auth-Token" = qbms_globals$state$token),
+                        httr::add_headers("X-Auth-Token" = qbms_globals$state$token, "Accept-Encoding" = "gzip, deflate"),
                         httr::timeout(qbms_globals$config$time_out))
   
   ontology <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
@@ -1024,7 +1024,7 @@ get_program_studies <- function() {
     call_url <- paste0(crop_url, "/programs/", qbms_globals$state$program_db_id, "/studies/", i, "/entries/metadata")
     
     response <- httr::GET(url = utils::URLencode(call_url), 
-                          httr::add_headers("X-Auth-Token" = qbms_globals$state$token),
+                          httr::add_headers("X-Auth-Token" = qbms_globals$state$token, "Accept-Encoding" = "gzip, deflate"),
                           httr::timeout(qbms_globals$config$time_out))
     metadata <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
     
