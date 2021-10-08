@@ -24,4 +24,7 @@ RoxygenNote: 7.1.1
 Imports: utils, httr, tcltk, jsonlite
 NeedsCompilation: no
 Encoding: UTF-8
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
+
 
