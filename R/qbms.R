@@ -47,6 +47,7 @@
 #                * Fix get_germplasm_data by replaced the deprecated germplasm-search call.
 #                * Minimize package dependencies (rbindx replaced plyr::rbind.fill, rbindlistx replaced data.table::rbindlist, and use merge to replace dplyr::left_join).
 #                * Resolve compatibility issues with BrAPI changes in BMS version 19.
+#                * Enable to set the connection time_out in the set_qbms_config function.
 #
 # License:  GPLv3
 
@@ -802,7 +803,24 @@ get_germplasm_list <- function() {
     }
   }
   
-  germplasm_list[,c("synonyms","typeOfGermplasmStorageCode","taxonIds","donors")] <- list(NULL)
+  # BMS POST /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries to extract entry type (test or check)
+  call_url <- paste0(qbms_globals$config$base_url, "/crops/", qbms_globals$config$crop, 
+                     "/programs/", qbms_globals$state$program_db_id,
+                     "/studies/", qbms_globals$state$trial_db_id, "/entries")
+
+  call_body <- paste0('{"filter":{"entryNumbers": ["', paste0(germplasm_list$entryNumber, collapse = '","'), '"]}}')
+  
+  response <- httr::POST(url = utils::URLencode(call_url), body = "", encode = "json", 
+                         httr::add_headers(c("X-Auth-Token" = qbms_globals$state$token), "Accept-Encoding" = "gzip, deflate"),
+                         httr::timeout(qbms_globals$config$time_out))
+
+  results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+  
+  germplasm_list <- merge(germplasm_list, results[,c("entryNumber", "properties.8255.value")], by = "entryNumber")
+  
+  germplasm_list$check <- ifelse(germplasm_list$properties.8255.value == 10180, 1, 0)
+  
+  germplasm_list[,c("synonyms","typeOfGermplasmStorageCode","taxonIds","donors", "properties.8255.value")] <- list(NULL)
   
   return(germplasm_list)
 }
