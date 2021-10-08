@@ -7,7 +7,8 @@
 set_qbms_config(
   url = "http://localhost/ibpworkbench/controller/auth/login",
   path = "bmsapi",
-  page_size = 1000
+  page_size = 1000,
+  time_out = 10
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ set_qbms_config(
 \item{path}{BMS API path (default is "bmsapi")}
 
 \item{page_size}{Page size (default is 1000)}
+
+\item{time_out}{Number of seconds to wait for a response until giving up (default is 10)}
 }
 \description{
 Set the connection configuration of the BMS server

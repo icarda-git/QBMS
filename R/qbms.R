@@ -117,17 +117,19 @@ debug_qbms <- function(){
 #' @param url       URL of the BMS login page (default is "http://localhost/ibpworkbench/")
 #' @param path      BMS API path (default is "bmsapi")
 #' @param page_size Page size (default is 1000)
+#' @param time_out  Number of seconds to wait for a response until giving up (default is 10)
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @examples
 #' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 #' @export
 
 set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth/login",
-                            path = "bmsapi", page_size = 1000){
+                            path = "bmsapi", page_size = 1000, time_out = 10){
 
   qbms_globals$config$server    <- strsplit(url, "ibpworkbench")[[1]][1]
   qbms_globals$config$path      <- path
   qbms_globals$config$page_size <- page_size
+  qbms_globals$config$time_out  <- time_out
   qbms_globals$config$base_url  <- paste0(qbms_globals$config$server, qbms_globals$config$path)
 }
 
@@ -152,7 +154,9 @@ brapi_get_call <- function(call_url, page = 0, nested = TRUE){
   auth_code <- paste0("Bearer ", qbms_globals$state$token)
   headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
 
-  response  <- httr::GET(utils::URLencode(full_url), httr::add_headers(headers))
+  response  <- httr::GET(url = utils::URLencode(full_url), 
+                         httr::add_headers(headers), 
+                         httr::timeout(qbms_globals$config$time_out))
 
   result_object <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = !nested)
   result_info   <- result_object$result
@@ -247,7 +251,8 @@ login_bms <- function(username = NULL, password = NULL) {
   call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v1/token")
   call_body <- list(username = credentials["usr"], password = credentials["pwd"])
   
-  response <- httr::POST(call_url, body=call_body, encode="json")
+  response <- httr::POST(url = utils::URLencode(call_url), body = call_body, encode = "json",
+                         httr::timeout(qbms_globals$config$time_out))
 
   if (!is.null(httr::content(response)$errors)) {
     stop(httr::content(response)$errors[[1]]$message)
@@ -896,7 +901,9 @@ get_trial_obs_ontology <- function() {
                    "/variables/filter?programUUID=", qbms_globals$state$program_db_id,
                    "&variableIds=", paste(study_obs, collapse = ","))
   
-  response <- httr::GET(my_url, httr::add_headers("X-Auth-Token" = qbms_globals$state$token))
+  response <- httr::GET(url = utils::URLencode(my_url), 
+                        httr::add_headers("X-Auth-Token" = qbms_globals$state$token),
+                        httr::timeout(qbms_globals$config$time_out))
   
   ontology <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
 
@@ -998,7 +1005,9 @@ get_program_studies <- function() {
   for(i in unique(studies$trialDbId)){
     call_url <- paste0(crop_url, "/programs/", qbms_globals$state$program_db_id, "/studies/", i, "/entries/metadata")
     
-    response <- httr::GET(url = call_url, httr::add_headers("X-Auth-Token" = qbms_globals$state$token))
+    response <- httr::GET(url = utils::URLencode(call_url), 
+                          httr::add_headers("X-Auth-Token" = qbms_globals$state$token),
+                          httr::timeout(qbms_globals$config$time_out))
     metadata <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
     
     studies[studies$trialDbId == i, 'testEntriesCount'] <- metadata$testEntriesCount
@@ -1053,7 +1062,9 @@ get_germplasm_data <- function(germplasm_name) {
   call_body <- list(germplasmDbIds = c(germplasm_db_id,""), observationLevel = "PLOT")
   auth_code <- paste0("Bearer ", qbms_globals$state$token)
   
-  response <- httr::POST(call_url, body=call_body, encode="json", httr::add_headers(c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")))
+  response <- httr::POST(url = utils::URLencode(call_url), body = call_body, encode = "json", 
+                         httr::add_headers(c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")),
+                         httr::timeout(qbms_globals$config$time_out))
   
   results <- httr::content(response)$result$data
   
