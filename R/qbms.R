@@ -48,6 +48,7 @@
 #                * Minimize package dependencies (rbindx replaced plyr::rbind.fill, rbindlistx replaced data.table::rbindlist, and use merge to replace dplyr::left_join).
 #                * Resolve compatibility issues with BrAPI changes in BMS version 19.
 #                * Enable to set the connection time_out in the set_qbms_config function.
+#                * Get entry type (test or check) in the get_germplasm_list returned data frame.
 #
 # License:  GPLv3
 
@@ -55,7 +56,6 @@
 # if (!require(httr)) install.packages("httr")
 # if (!require(tcltk)) install.packages("tcltk")
 # if (!require(jsonlite)) install.packages("jsonlite")
-# if (!require(data.table)) install.packages("data.table")
 
 # Internal state variables/lists
 qbms_globals <- new.env()
@@ -1089,7 +1089,17 @@ get_germplasm_data <- function(germplasm_name) {
   flatten_results <- jsonlite::fromJSON(jsonlite::toJSON(results), flatten = TRUE)
   
   # unlist nested list with id
-  unlisted_observations <- data.table::rbindlist(flatten_results$observations, fill = TRUE, idcol = "id")
+  #unlisted_observations <- data.table::rbindlist(flatten_results$observations, fill = TRUE, idcol = "id")
+
+  unlisted_observations    <- rbindx(flatten_results$observations[[1]])
+  unlisted_observations$id <- 1
+  
+  for (i in 2:length(flatten_results$observations)) {
+    obs <- rbindx(flatten_results$observations[[i]])
+    if (nrow(obs) == 0) next
+    obs$id <- i
+    unlisted_observations <- rbind(unlisted_observations, obs)
+  }
 
   # create same id in remaining data frame
   flatten_results$id <- seq.int(nrow(flatten_results))
