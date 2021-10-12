@@ -9,13 +9,16 @@ set_program(program_name)
 \arguments{
 \item{program_name}{the name of the breeding program}
 }
+\value{
+no return value
+}
 \description{
 This function will update the current active breeding program in the 
 internal state object using the programDbId retrieved from BMS which is 
 associated to the given program_name parameter.
 }
 \examples{
-\dontrun{
+if(interactive()){
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 

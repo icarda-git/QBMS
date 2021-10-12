@@ -15,7 +15,7 @@ crop as configured in the internal configuration object using `set_crop()`
 function.
 }
 \examples{
-\dontrun{
+if(interactive()){
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 

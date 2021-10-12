@@ -20,6 +20,9 @@ set_qbms_config(
 
 \item{time_out}{Number of seconds to wait for a response until giving up (default is 10)}
 }
+\value{
+no return value
+}
 \description{
 Set the connection configuration of the BMS server
 }

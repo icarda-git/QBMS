@@ -6,6 +6,9 @@
 \usage{
 debug_qbms()
 }
+\value{
+an environment object for the package config and status
+}
 \description{
 Return the internal QBMS status object for debuging
 }
