@@ -50,6 +50,9 @@
 #                * Enable to set the connection time_out in the set_qbms_config function.
 #                * Get entry type (test or check) in the get_germplasm_list returned data frame.
 #
+#           v0.7 - # xxx 202#
+#                * Default timeout become 120 sec instead of 10!
+#
 # License:  GPLv3
 
 # Load/install required packages
@@ -127,7 +130,7 @@ debug_qbms <- function(){
 #' @export
 
 set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth/login",
-                            path = "bmsapi", page_size = 1000, time_out = 10){
+                            path = "bmsapi", page_size = 1000, time_out = 120){
 
   qbms_globals$config$server    <- strsplit(url, "ibpworkbench")[[1]][1]
   qbms_globals$config$path      <- path
