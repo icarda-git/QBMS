@@ -1,9 +1,10 @@
-# QBMS
+# QBMS <img src='./QBMS_logo.png' align="right" height="140" />
 <!-- badges: start -->
 [![CRAN version](https://www.r-pkg.org/badges/version/QBMS)](https://cran.r-project.org/package=QBMS)
 [![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/QBMS)](https://cran.r-project.org/package=QBMS)
 <!-- badges: end -->
 
+## Overview
 Linking data management systems to analytics is an important step in breeding digitalization. Breeders can use this R package to Query the [Breeding Management System](https://bmspro.io/) database (using [BrAPI](https://brapi.org/) calls) and help them to retrieve their experiments data directly into R statistical analyzing environment.
 
 >___Author and Maintainer:__ [Khaled Al-Shamaa](https://github.com/khaled-alshamaa) <k.el-shamaa (at) cgiar (dot) org>_
@@ -20,15 +21,23 @@ Breeding Management System ([BMS](https://bmspro.io/)) is an information managem
 ## BrAPI
 The Breeding API ([BrAPI](https://brapi.org/)) project is an effort to enable interoperability among plant breeding databases. BrAPI is a standardized RESTful web service API specification for communicating plant breeding data. This community driven standard is free to be used by anyone interested in plant breeding data management.
 
-## _Install_
+## Installation
+```r
+install.packages("QBMS")
+```
+
+> _If you are not already an active BMS user, you can contact [IBP support](https://ibplatform.atlassian.net/servicedesk/customer/portal/4/group/30/create/60) to get access to a trial BMS server._
+
+### _Development version_
+
+To get a bug fix or to use a feature from the development version, you can install the development version of QBMS from GitHub.
+
 ```r
 install.packages("remotes")
 remotes::install_github("icarda-git/QBMS")
 ```
 
-> _If you are not already an active BMS user, you can contact [IBP support](https://ibplatform.atlassian.net/servicedesk/customer/portal/4/group/30/create/60) to get access to a trial BMS server._
-
-## _Example_
+## _Usage_
 ```r
 # load the QBMS library
 library(QBMS)
