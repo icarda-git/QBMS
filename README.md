@@ -2,6 +2,11 @@
 <!-- badges: start -->
 [![CRAN version](https://www.r-pkg.org/badges/version/QBMS)](https://cran.r-project.org/package=QBMS)
 [![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/QBMS)](https://cran.r-project.org/package=QBMS)
+[![CRAN downloads](https://img.shields.io/packagist/l/icarda-git/QBMS)](https://www.gnu.org/licenses/lgpl-3.0.en.html)
+[![GitHub commits](https://img.shields.io/github/last-commit/icarda-git/QBMS)](https://github.com/icarda-git/QBMS/commits/master)
+[![GitHub issues](https://img.shields.io/github/issues-raw/icarda-git/QBMS)](https://github.com/icarda-git/QBMS/issues)
+![GitHub size](https://img.shields.io/github/languages/code-size/icarda-git/QBMS)
+[![GitHub code](https://img.shields.io/github/languages/top/icarda-git/QBMS)](https://www.r-project.org/)
 <!-- badges: end -->
 
 ## Overview
