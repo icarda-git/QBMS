@@ -2,7 +2,7 @@
 <!-- badges: start -->
 [![CRAN version](https://www.r-pkg.org/badges/version/QBMS)](https://cran.r-project.org/package=QBMS)
 [![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/QBMS)](https://cran.r-project.org/package=QBMS)
-[![CRAN downloads](https://img.shields.io/packagist/l/icarda-git/QBMS)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![CRAN downloads](https://img.shields.io/github/license/icarda-git/QBMS)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![GitHub commits](https://img.shields.io/github/last-commit/icarda-git/QBMS)](https://github.com/icarda-git/QBMS/commits/master)
 [![GitHub issues](https://img.shields.io/github/issues-raw/icarda-git/QBMS)](https://github.com/icarda-git/QBMS/issues)
 <!-- badges: end -->
