@@ -1,66 +1,68 @@
-# Name:     qbms.R
-# Purpose:  Set of functions to query BMS by a wrapper using BrAPI calls
-# Author:   Khaled Al-Shamaa <k.el-shamaa@cgiar.org>
-# Version:  0.6
-#
-# Revision: 
-#           v0.1 - 24 Jul 2019 
-#                * Initial version.
-#
-#           v0.2 - 20 Aug 2019 
-#                * Adopt tidyverse style guide https://style.tidyverse.org/
-#                * Add functions documentation using roxygen2 format.
-#                * Add basic error handling to the functions.
-#                * Add a function to retrieve the traits ontology of a trial.
-#
-#           v0.3 - 2 Jun 2020
-#                * Call BrAPI directly (i.e. not required "CIP-RIU/brapi" from GitHub anymore).
-#                * Add a function to get all data of the current active trial (combined all studies).
-#                * Add a function to get a list of studies where given germplasm has been used.
-#                * Add a function to get a specific germplasm data from all program trials.
-#                * Handle BrAPI pagination in a proper way.
-#
-#           v0.3.1 - 9 Jun 2020
-#                * Fix the "get_trial_data" function bug when you have more than one study in the same location. 
-#                * Function "list_studies" returns studyName also, and function "set_study" input is studyName now.
-#                * Simplify the "get_germplasm_list" function output by getting rid of nested lists.
-#                * Deprecate the "list_all_studies" function in favor of "get_program_studies" function.
-#
-#           v0.4 - 3 Jul 2020
-#                * Convert it into an R package.
-#                * Add set_qbms_config function to setup connection configuration variables.
-#                * Use the double colon approach for functions from external packages.
-#                * Fix the deprecated API call in the get_trial_obs_ontology function.
-#
-#           v0.4.1 - 16 Oct 2020
-#                * Simplify configuration by required only the URL of the BMS login page.
-#                * Improve the performance of the internal get_program_trials function by passing the programDbId in the /trials GET call.
-#                * Add debug_qbms function to get the internal config/state object.
-#
-#           v0.5 - 8 Jul 2021
-#                * Fix the issue of empty list in get_germplasm_data returned results.
-#                * Fix retrieving error when the study has no data!
-#                * Enhance returned info by the get_program_studies function to include study settings and number of test/check entries.
-#
-#           v0.6 - 8 Oct 2021
-#                * Fix filter by year functionality in the list_trials function.
-#                * Fix get_germplasm_data by replaced the deprecated germplasm-search call.
-#                * Minimize package dependencies (rbindx replaced plyr::rbind.fill, rbindlistx replaced data.table::rbindlist, and use merge to replace dplyr::left_join).
-#                * Resolve compatibility issues with BrAPI changes in BMS version 19.
-#                * Enable to set the connection time_out in the set_qbms_config function.
-#                * Get entry type (test or check) in the get_germplasm_list returned data frame.
-#
-#           v0.7 - # xxx 202#
-#                * Default timeout become 120 sec instead of 10!
-#
-# License:  GPLv3
+#' Name:     qbms.R
+#' Purpose:  Set of functions to query BMS by a wrapper using BrAPI calls
+#' Author:   Khaled Al-Shamaa <k.el-shamaa@cgiar.org>
+#' Version:  0.6
+#'
+#' Revision: 
+#'           v0.1 - 24 Jul 2019 
+#'                * Initial version.
+#'
+#'           v0.2 - 20 Aug 2019 
+#'                * Adopt tidyverse style guide https://style.tidyverse.org/
+#'                * Add functions documentation using roxygen2 format.
+#'                * Add basic error handling to the functions.
+#'                * Add a function to retrieve the traits ontology of a trial.
+#'
+#'           v0.3 - 2 Jun 2020
+#'                * Call BrAPI directly (i.e. not required "CIP-RIU/brapi" from GitHub anymore).
+#'                * Add a function to get all data of the current active trial (combined all studies).
+#'                * Add a function to get a list of studies where given germplasm has been used.
+#'                * Add a function to get a specific germplasm data from all program trials.
+#'                * Handle BrAPI pagination in a proper way.
+#'
+#'           v0.3.1 - 9 Jun 2020
+#'                * Fix the "get_trial_data" function bug when you have more than one study in the same location. 
+#'                * Function "list_studies" returns studyName also, and function "set_study" input is studyName now.
+#'                * Simplify the "get_germplasm_list" function output by getting rid of nested lists.
+#'                * Deprecate the "list_all_studies" function in favor of "get_program_studies" function.
+#'
+#'           v0.4 - 3 Jul 2020
+#'                * Convert it into an R package.
+#'                * Add set_qbms_config function to setup connection configuration variables.
+#'                * Use the double colon approach for functions from external packages.
+#'                * Fix the deprecated API call in the get_trial_obs_ontology function.
+#'
+#'           v0.4.1 - 16 Oct 2020
+#'                * Simplify configuration by required only the URL of the BMS login page.
+#'                * Improve the performance of the internal get_program_trials function by passing the programDbId in the /trials GET call.
+#'                * Add debug_qbms function to get the internal config/state object.
+#'
+#'           v0.5 - 8 Jul 2021
+#'                * Fix the issue of empty list in get_germplasm_data returned results.
+#'                * Fix retrieving error when the study has no data!
+#'                * Enhance returned info by the get_program_studies function to include study settings and number of test/check entries.
+#'
+#'           v0.6 - 8 Oct 2021
+#'                * Fix filter by year functionality in the list_trials function.
+#'                * Fix get_germplasm_data by replaced the deprecated germplasm-search call.
+#'                * Minimize package dependencies (rbindx replaced plyr::rbind.fill, rbindlistx replaced data.table::rbindlist, and use merge to replace dplyr::left_join).
+#'                * Resolve compatibility issues with BrAPI changes in BMS version 19.
+#'                * Enable to set the connection time_out in the set_qbms_config function.
+#'                * Get entry type (test or check) in the get_germplasm_list returned data frame.
+#'
+#'           v0.7 - # xxx 2022
+#'                * Default timeout become 120 sec instead of 10!
+#'                * Improve set_qbms_config to generalize the way of getting the server domain from the URL.
+#'                * Set default encoding for HTTP content to UTF-8.
+#'
+#' License:  GPLv3
 
-# Load/install required packages
-# if (!require(httr)) install.packages("httr")
-# if (!require(tcltk)) install.packages("tcltk")
-# if (!require(jsonlite)) install.packages("jsonlite")
+#' Load/install required packages
+#' if (!require(httr)) install.packages("httr")
+#' if (!require(tcltk)) install.packages("tcltk")
+#' if (!require(jsonlite)) install.packages("jsonlite")
 
-# Internal state variables/lists
+#' Internal state variables/lists
 qbms_globals <- new.env()
 qbms_globals$config <- list(crop = NULL)
 qbms_globals$state  <- list(token = NULL)
@@ -132,7 +134,7 @@ debug_qbms <- function(){
 set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth/login",
                             path = "bmsapi", page_size = 1000, time_out = 120){
 
-  qbms_globals$config$server    <- strsplit(url, "ibpworkbench")[[1]][1]
+  qbms_globals$config$server    <- regmatches(url, regexpr("^(?://|[^/]+)*", url))
   qbms_globals$config$path      <- path
   qbms_globals$config$page_size <- page_size
   qbms_globals$config$time_out  <- time_out
@@ -164,7 +166,7 @@ brapi_get_call <- function(call_url, page = 0, nested = TRUE){
                          httr::add_headers(headers), 
                          httr::timeout(qbms_globals$config$time_out))
 
-  result_object <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = !nested)
+  result_object <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
   result_info   <- result_object$result
   
   qbms_globals$state$current_page <- result_object$metadata$pagination$currentPage
