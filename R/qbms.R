@@ -51,8 +51,9 @@
 #'                * Get entry type (test or check) in the get_germplasm_list returned data frame.
 #'
 #'           v0.7 - # xxx 2022
-#'                * Default timeout become 120 sec instead of 10!
+#'                * Add support to BreedBase servers using BrAPI v1 calls
 #'                * Improve set_qbms_config to generalize the way of getting the server domain from the URL.
+#'                * Default timeout become 120 sec instead of 10!
 #'                * Set default encoding for HTTP content to UTF-8.
 #'
 #' License:  GPLv3
@@ -125,6 +126,8 @@ debug_qbms <- function(){
 #' @param path      BMS API path (default is "bmsapi")
 #' @param page_size Page size (default is 1000)
 #' @param time_out  Number of seconds to wait for a response until giving up (default is 10)
+#' @param no_auth   TRUE if the server doesn't require authentication/login (default is FALSE)
+#' @param engine    Backend database (qbms default, breedbase)
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @return no return value
 #' @examples
@@ -132,13 +135,19 @@ debug_qbms <- function(){
 #' @export
 
 set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth/login",
-                            path = "bmsapi", page_size = 1000, time_out = 120){
+                            path = "bmsapi", page_size = 1000, time_out = 120, 
+                            no_auth = FALSE, engine = "bms"){
 
   qbms_globals$config$server    <- regmatches(url, regexpr("^(?://|[^/]+)*", url))
   qbms_globals$config$path      <- path
   qbms_globals$config$page_size <- page_size
   qbms_globals$config$time_out  <- time_out
-  qbms_globals$config$base_url  <- paste0(qbms_globals$config$server, qbms_globals$config$path)
+  qbms_globals$config$base_url  <- paste0(qbms_globals$config$server, "/", qbms_globals$config$path)
+  qbms_globals$config$engine    <- engine
+  
+  if (no_auth == TRUE) {
+    qbms_globals$state$token <- NA
+  }
 }
 
 
@@ -249,8 +258,6 @@ get_login_details <- function() {
 #' @export
 
 login_bms <- function(username = NULL, password = NULL) {
-  qbms_globals$config$base_url <- paste0(qbms_globals$config$server, qbms_globals$config$path)
-  
   if (is.null(username) || is.null(password)) {
     credentials <- get_login_details()
   } else {
@@ -336,7 +343,11 @@ set_crop <- function(crop_name) {
     stop("Your crop name is not supported in this connected BMS server! You may use the `list_crops()` function to check the available crops")
   }
   
-  qbms_globals$config$crop <- crop_name
+  if (qbms_globals$config$engine == "breedbase") {
+    qbms_globals$config$crop <- ""
+  } else {
+    qbms_globals$config$crop <- crop_name
+  }
 }
 
 
@@ -379,7 +390,13 @@ list_programs <- function() {
   
   bms_programs <- brapi_get_call(call_url)
   
-  return(bms_programs$data[c("name")])
+  if (qbms_globals$config$engine == "breedbase") {
+    bms_programs <- bms_programs$data[c("programName")]
+  } else {
+    bms_programs <- bms_programs$data[c("name")]
+  }
+
+  return(bms_programs)
 }
 
 
@@ -413,7 +430,7 @@ list_programs <- function() {
 set_program <- function(program_name) {
   valid_programs <- list_programs()
   
-  if (!program_name %in% valid_programs$name) {
+  if (!program_name %in% valid_programs[,1]) {
     stop("Your breeding program name is not exists in this crop database! You may use the `list_programs()` function to check the available breeding programs")
   }
 
@@ -421,7 +438,11 @@ set_program <- function(program_name) {
   
   bms_programs <- brapi_get_call(call_url)
 
-  program_row <- which(bms_programs$data$name == program_name)
+  if (qbms_globals$config$engine == "breedbase") {
+    program_row <- which(bms_programs$data$programName == program_name)
+  } else {
+    program_row <- which(bms_programs$data$name == program_name)
+  }
   
   qbms_globals$state$program_db_id <- bms_programs$data[program_row, "programDbId"]
 }
@@ -495,15 +516,19 @@ list_trials <- function(year = NULL) {
   if (is.null(qbms_globals$state$program_db_id)) {
     stop("No breeding program has been selected yet! You have to set your breeding program first using the `set_program()` function")
   }
+
+  if (!is.null(year) && !is.numeric(year)) {
+    stop("Year parameter should be numeric")
+  }
+  
+  if (!is.null(year) && qbms_globals$config$engine == "breedbase") {
+    stop("Year parameter is not supported in BreedBase!")
+  }
   
   bms_trials <- get_program_trials()
 
   # startDate format in bms_trials is "yyyy-mm-dd"
   if (!is.null(year)) {
-    if (!is.numeric(year)) {
-      stop("Year parameter if exists should be numeric")
-    }
-    
     bms_trials <- bms_trials[gsub("-\\d{2}-\\d{2}", "", bms_trials$startDate) == year,]
   }
   
@@ -704,7 +729,7 @@ get_study_info <- function() {
   call_url <- paste0(crop_url, "/studies/", qbms_globals$state$study_db_id)
   
   study_info <- brapi_get_call(call_url)
-  study_info <- as.data.frame(do.call(c, unlist(study_info, recursive=FALSE)))
+  study_info <- as.data.frame(t(as.matrix(do.call(c, unlist(study_info, recursive=FALSE)))))
   
   return(study_info)
 }
@@ -754,7 +779,13 @@ get_study_data <- function() {
   
   study_result <- brapi_get_call(call_url)
   
-  study_data <- as.data.frame(study_result$data)
+  if (qbms_globals$config$engine == "breedbase") {
+    study_data <- as.data.frame(study_result$data[-1,])
+    colnames(study_data) <- study_result$data[1,]
+  } else {
+    study_data <- as.data.frame(study_result$data)
+  }
+  
   study_header <- c(study_result$headerRow, study_result$observationVariableNames)
   if (nrow(study_data) > 0) { colnames(study_data) <- study_header }
   
@@ -815,24 +846,29 @@ get_germplasm_list <- function() {
     }
   }
   
-  # BMS POST /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries to extract entry type (test or check)
-  call_url <- paste0(qbms_globals$config$base_url, "/crops/", qbms_globals$config$crop, 
-                     "/programs/", qbms_globals$state$program_db_id,
-                     "/studies/", qbms_globals$state$trial_db_id, "/entries")
-
-  call_body <- paste0('{"filter":{"entryNumbers": ["', paste0(germplasm_list$entryNumber, collapse = '","'), '"]}}')
-  
-  response <- httr::POST(url = utils::URLencode(call_url), body = "", encode = "json", 
-                         httr::add_headers(c("X-Auth-Token" = qbms_globals$state$token), "Accept-Encoding" = "gzip, deflate"),
-                         httr::timeout(qbms_globals$config$time_out))
-
-  results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
-  
-  germplasm_list <- merge(germplasm_list, results[,c("entryNumber", "properties.8255.value")], by = "entryNumber")
-  
-  germplasm_list$check <- ifelse(germplasm_list$properties.8255.value == 10180, 1, 0)
-  
-  germplasm_list[,c("synonyms","typeOfGermplasmStorageCode","taxonIds","donors", "properties.8255.value")] <- list(NULL)
+  if (qbms_globals$config$engine == "breedbase") {
+    germplasm_list$check <- NA
+    germplasm_list[,c("synonyms")] <- list(NULL)
+  } else {
+    # BMS POST /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries to extract entry type (test or check)
+    call_url <- paste0(qbms_globals$config$base_url, "/crops/", qbms_globals$config$crop, 
+                       "/programs/", qbms_globals$state$program_db_id,
+                       "/studies/", qbms_globals$state$trial_db_id, "/entries")
+    
+    call_body <- paste0('{"filter":{"entryNumbers": ["', paste0(germplasm_list$entryNumber, collapse = '","'), '"]}}')
+    
+    response <- httr::POST(url = utils::URLencode(call_url), body = "", encode = "json", 
+                           httr::add_headers(c("X-Auth-Token" = qbms_globals$state$token), "Accept-Encoding" = "gzip, deflate"),
+                           httr::timeout(qbms_globals$config$time_out))
+    
+    results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+    
+    germplasm_list <- merge(germplasm_list, results[,c("entryNumber", "properties.8255.value")], by = "entryNumber")
+    
+    germplasm_list$check <- ifelse(germplasm_list$properties.8255.value == 10180, 1, 0)
+    
+    germplasm_list[,c("synonyms","typeOfGermplasmStorageCode","taxonIds","donors", "properties.8255.value")] <- list(NULL)
+  }
   
   return(germplasm_list)
 }
@@ -925,17 +961,24 @@ get_trial_obs_ontology <- function() {
   call_url <- paste0(crop_url, "/studies/", qbms_globals$state$study_db_id, "/table")
   
   study_data <- brapi_get_call(call_url)
-  study_obs  <- study_data$observationVariableDbIds
   
-  my_url <- paste0(qbms_globals$config$base_url, "/crops/", qbms_globals$config$crop, 
-                   "/variables/filter?programUUID=", qbms_globals$state$program_db_id,
-                   "&variableIds=", paste(study_obs, collapse = ","))
-  
-  response <- httr::GET(url = utils::URLencode(my_url), 
-                        httr::add_headers("X-Auth-Token" = qbms_globals$state$token, "Accept-Encoding" = "gzip, deflate"),
-                        httr::timeout(qbms_globals$config$time_out))
-  
-  ontology <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+  if (qbms_globals$config$engine == "breedbase") {
+    ontology <- as.data.frame(study_data$observationVariableNames)
+    
+    colnames(ontology) <- "observationVariableNames"
+  } else {
+    study_obs  <- study_data$observationVariableDbIds
+    
+    my_url <- paste0(qbms_globals$config$base_url, "/crops/", qbms_globals$config$crop, 
+                     "/variables/filter?programUUID=", qbms_globals$state$program_db_id,
+                     "&variableIds=", paste(study_obs, collapse = ","))
+    
+    response <- httr::GET(url = utils::URLencode(my_url), 
+                          httr::add_headers("X-Auth-Token" = qbms_globals$state$token, "Accept-Encoding" = "gzip, deflate"),
+                          httr::timeout(qbms_globals$config$time_out))
+    
+    ontology <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+  }
 
   return(ontology)
 }
@@ -1001,6 +1044,10 @@ get_crop_locations <- function() {
 #' @export
 
 get_program_studies <- function() {
+  if (qbms_globals$config$engine == "breedbase") {
+    stop("This function is not supported yet in BreedBase!")
+  }
+
   if (is.null(qbms_globals$state$program_db_id)) {
     stop("No breeding program has been selected yet! You have to set your breeding program first using the `set_program()` function")
   }
@@ -1078,6 +1125,10 @@ get_program_studies <- function() {
 #' @export
 
 get_germplasm_data <- function(germplasm_name) {
+  if (qbms_globals$config$engine == "breedbase") {
+    stop("This function is not supported yet in BreedBase!")
+  }
+
   crop_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1")
   call_url <- paste0(crop_url, "/germplasm?germplasmName=", germplasm_name)
   
