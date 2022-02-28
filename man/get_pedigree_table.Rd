@@ -50,7 +50,7 @@ set_study("2018 PVT Environment Number 1")
 # retrieve the germplasm list of the selected environment/location
 germplasm <- get_germplasm_list()
 
-pedigree_df <- get_pedigree_table(germplasm, "germplasmName", "pedigree")
+pedigree_table <- get_pedigree_table(germplasm, "germplasmName", "pedigree")
 
 #############################
 # dummy data set for testing
