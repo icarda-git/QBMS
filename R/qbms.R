@@ -50,15 +50,17 @@
 #'                * Enable to set the connection time_out in the set_qbms_config function.
 #'                * Get entry type (test or check) in the get_germplasm_list returned data frame.
 #'
-#'           v0.7 - # xxx 2022
-#'                * Add support to BreedBase servers using BrAPI v1 calls
+#'           v0.7 - # Mar 2022
+#'                * Add BreedBase support using BrAPI v1 calls.
+#'                * Add functionality to get the pedigree table starting from germplasm dataset.
 #'                * Improve set_qbms_config to generalize the way of getting the server domain from the URL.
-#'                * Default timeout become 120 sec instead of 10!
+#'                * Default timeout become 120 sec instead of 10.
 #'                * Set default encoding for HTTP content to UTF-8.
 #'
 #' License:  GPLv3
 
 #' Load/install required packages
+#' if (!require(utils)) install.packages("utils")
 #' if (!require(httr)) install.packages("httr")
 #' if (!require(tcltk)) install.packages("tcltk")
 #' if (!require(jsonlite)) install.packages("jsonlite")
@@ -1189,4 +1191,228 @@ get_germplasm_data <- function(germplasm_name) {
   results_df <- merge(results_df, crop_locations, by.x = "studyLocationDbId", by.y = "locationDbId", all.x = TRUE)
   
   return(results_df)
+}
+
+
+#' Get Direct Parents
+#' 
+#' @description
+#' Internal helping function to split the given pedigree string that provides the parentage 
+#' through which a cultivar was obtained, and get the pedigrees of the direct parents.
+#' 
+#' @param pedigree String provide the parentage through which a cultivar was obtained.
+#' @return Vector of two items, the direct female and male parents.
+#' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+
+get_parents <- function(pedigree) {
+  # make sure it is a string
+  pedigree <- as.character(pedigree)
+  
+  # 1. we did not expect cross depth to be more than two digits (up to 99)
+  cross <- regmatches(pedigree, gregexpr("/[0-9]{1,2}/", pedigree))
+  
+  if (length(cross[[1]]) != 0) {
+    # find the highest cross order to cut at it and get parents sub-pedigree
+    last_cross <- max(as.numeric(gsub("/", "", cross[[1]])))
+    parents    <- strsplit(pedigree, paste0("/", last_cross, "/"))[[1]]
+  } else {
+    # 2. if it is not of type /#/, then try double backslash //
+    cross <- regmatches(pedigree, gregexpr("//", pedigree))
+    
+    if (length(cross[[1]]) != 0) {
+      # get parents sub-pedigree if it is crossed using //
+      parents <- strsplit(pedigree, "//")[[1]]
+    } else {
+      # 3. if it is not // then try with single backslash /
+      cross <- regmatches(pedigree, gregexpr("/", pedigree))
+      
+      if (length(cross[[1]]) != 0) {
+        # get parents names
+        parents <- strsplit(pedigree, "/")[[1]]
+      } else {
+        # 4. else, there is no more cross info in this pedigree, so parents are unknown
+        parents <- c(NA, NA)
+      }
+    }
+  }
+  
+  # remove leading/trailing white-space
+  parents <- trimws(parents)
+  
+  # replace unknown parents by NA
+  parents <- gsub("Unknown", NA, x)
+  
+  # send back a vector of two items, the direct female and male parents
+  return(parents)
+}
+
+
+#' Building Pedigree Table Recursively
+#' 
+#' @description
+#' Internal helping function to build the pedigree table recursively.
+#' 
+#' @param geno_list List of genotypes/germplasms names.
+#' @param pedigree_list List of associated pedigree strings.
+#' @param pedigree_df Pedigree data.frame as per previous call/iteration.
+#' @return A data.frame that has three columns correspond to the identifiers for the individual, 
+#'         female parent and male parent, respectively.
+#' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+
+build_pedigree_table <- function(geno_list = NULL, pedigree_list = NULL, pedigree_df = NULL) {
+  # check if geno list is not empty
+  if (length(geno_list) == 0) warning("Empty genotype/germplasm list!")
+  
+  # check if the length of pedigree list is the same length of geno list
+  if (length(pedigree_list) != length(geno_list)) warning("Pedigree list does not match the length of genotype/germplasm list!")
+  
+  # if no previous pedigree data.frame passed by current call
+  if (is.null(pedigree_df)) {
+    # create an empty pedigree data.frame
+    pedigree_df   <- data.frame(Variety = factor(), Female = factor(), Male = factor())
+    
+    # make sure that all strings of genotype/germplasm and pedigree lists are in small letters (needs only first time)
+    geno_list     <- tolower(geno_list)
+    pedigree_list <- tolower(pedigree_list)
+  }
+  
+  # create an empty dummy list of previous generation parents 
+  prev_generation <- c()
+  
+  # extract the parents of each genotype/germplasm in the given list
+  for (i in 1:length(geno_list)) {
+    geno    <- as.character(geno_list[i])
+    cross   <- as.character(pedigree_list[i])
+    parents <- get_parents(cross)
+    
+    # update the pedigree data.frame and dummy list of previous generation parents
+    pedigree_df     <- rbind(c(geno, parents), pedigree_df)
+    prev_generation <- c(prev_generation, parents)
+  }
+  
+  # clean the previous generation parents list by remove NA and duplicates
+  prev_generation <- prev_generation[which(!is.na(prev_generation))]
+  prev_generation <- unique(prev_generation)
+  
+  # check if we still have any previous generation parents need to extract
+  if (length(prev_generation) > 0) {
+    # recall this function recursively to process the previous generation parents passing current pedigree data.frame
+    build_pedigree_table(prev_generation, prev_generation, pedigree_df)
+  } else {
+    # rename the pedigree data.frame columns properly
+    names(pedigree_df) <- c("Variety", "Female", "Male")
+    
+    # remove duplicated entries in the pedigree data.frame
+    pedigree_df <- pedigree_df[!duplicated(pedigree_df$Variety), ]
+    
+    # return the pedigree data.frame
+    return(pedigree_df)
+  }
+}
+
+
+#' Get the Pedigree Table
+#' 
+#' @description
+#' Get the pedigree table starting from current germplasm list and associated
+#' pedigree string that provides the parentage through which a cultivar was obtained.
+#' 
+#' @param data germplasm dataset as a data.frame.
+#' @param geno_column name of the column that identifies the genotype/germplasm names.
+#' @param pedigree_column name of the column that identifies the pedigree strings.
+#' @return A data.frame that has three columns correspond to the identifiers for the individual, 
+#'         female parent and male parent, respectively. The row giving the pedigree of an 
+#'         individual appears before any row where that individual appears as a parent. 
+#'         Founders use NA in the parental columns.
+#' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' @examples
+#' if(interactive()){
+#' # config your BMS connection
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#' 
+#' # login using your BMS account (interactive mode)
+#' # you can pass BMS username and password as parameters (batch mode)
+#' login_bms()
+#' 
+#' set_crop("maize")
+#' 
+#' # select a breeding program by name
+#' set_program("MC Maize")
+#' 
+#' # select a specific study/trial by name
+#' set_trial("2018 PVT")
+#' 
+#' # select a specific environment/location dataset
+#' set_study("2018 PVT Environment Number 1")
+#' 
+#' # retrieve the germplasm list of the selected environment/location
+#' germplasm <- get_germplasm_list()
+#' 
+#' pedigree_df <- get_pedigree_table(germplasm, "germplasmName", "pedigree")
+#' 
+#' # nadiv package way
+#' library(nadiv)
+#' 
+#' # get additive relationship matrix in sparse matrix format
+#' A <- nadiv::makeA(pedigree_df)
+#' 
+#' # get A inverse matrix using base R function
+#' AINV <- solve(as.matrix(A))
+#' 
+#' # ASReml-R package way
+#' library(asreml)
+#' 
+#' # represent A inverse matrix in efficient way using i,j index and Ainverse value
+#' # actual genotype names of any given index are in the attr(ainv, "rowNames")
+#' ainv <- asreml::ainverse(pedigree_df)
+#' }
+#' @export
+
+get_pedigree_table <- function(data, geno_column = "germplasmName", pedigree_column = "pedigree") {
+  # extract the list of genotypes/germplasms and associated pedigrees
+  geno_list     <- data[, geno_column]
+  pedigree_list <- data[, pedigree_column]
+  
+  # extract the first round of pedigree data.frame to check/audit it before the final call
+  pedigree_df <- build_pedigree_table(geno_list, pedigree_list)
+  
+  # get only root genotypes (i.e., have no parents info)
+  roots <- pedigree_df[is.na(pedigree_df$Female) & is.na(pedigree_df$Male), "Variety"]
+  
+  # compute the string edit distance
+  diff <- utils::adist(roots)
+  
+  # keep the lower triangular part of the matrix
+  diff[!lower.tri(diff)] <- NA
+  
+  # get the index of pairs with distance = 1 (i.e., one char difference)
+  check <- which(diff == 1, arr.ind = TRUE)
+  
+  # replace index by the genotype name
+  check <- cbind(roots[check[,1]], roots[check[,2]])
+  
+  # for each pair of similar genotype names
+  for (i in 1:nrow(check)) {
+    # go through all letters of the given pair 
+    for (j in 1:max(str_length(check[i,]))){
+      # if the given letters in the j offset are same, then move to the next letter
+      if (substr(check[i, 1], j, j) == substr(check[i, 2], j, j)) next
+      
+      # if they are not the same, then check 
+      # if the different letter is one of this group: <space>, -, _, .
+      # then update the geno_list and pedigree_list to be the same
+      if (substr(check[i, 1], j, j) %in% c(" ", "-", "_", ".")) {
+        geno_list     <- gsub(check[i, 2], check[i, 1], geno_list,     ignore.case = TRUE)
+        pedigree_list <- gsub(check[i, 2], check[i, 1], pedigree_list, ignore.case = TRUE)
+      } else if (substr(check[i, 2], j, j) %in% c(" ", "-", "_", ".")) {
+        geno_list     <- gsub(check[i, 1], check[i, 2], geno_list,     ignore.case = TRUE)
+        pedigree_list <- gsub(check[i, 1], check[i, 2], pedigree_list, ignore.case = TRUE)
+      }
+    }
+  }
+  
+  # get the final pedigree data.frame using updated/audited lists of geno_list and pedigree_list
+  pedigree_df <- build_pedigree_table(geno_list, pedigree_list)
+  
+  return(pedigree_df)
 }
