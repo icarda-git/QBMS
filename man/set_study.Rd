@@ -13,12 +13,12 @@ set_study(study_name)
 no return value
 }
 \description{
-This function will update the current active study in the internal state 
-object using the studyDbId retrieved from BMS which is associated to the 
+This function will update the current active study in the internal state
+object using the studyDbId retrieved from BMS which is associated to the
 given study_name parameter.
 }
 \examples{
-if(interactive()){
+if(interactive()) {
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 

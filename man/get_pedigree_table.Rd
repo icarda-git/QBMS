@@ -18,9 +18,9 @@ get_pedigree_table(
 \item{pedigree_column}{name of the column that identifies the pedigree strings.}
 }
 \value{
-A data.frame that has three columns correspond to the identifiers for the individual, 
-        female parent and male parent, respectively. The row giving the pedigree of an 
-        individual appears before any row where that individual appears as a parent. 
+A data.frame that has three columns correspond to the identifiers for the individual,
+        female parent and male parent, respectively. The row giving the pedigree of an
+        individual appears before any row where that individual appears as a parent.
         Founders use NA in the parental columns.
 }
 \description{
@@ -28,7 +28,7 @@ Get the pedigree table starting from current germplasm list and associated
 pedigree string that provides the parentage through which a cultivar was obtained.
 }
 \examples{
-if(interactive()){
+if(interactive()) {
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 
@@ -72,9 +72,9 @@ pedigree_table <- get_pedigree_table(germplasm, "germplasmName", "pedigree")
 
 #############################
 # dummy data set for testing
-test <- data.frame(genotype = c("X", "Y"), 
+test <- data.frame(genotype = c("X", "Y"),
                    pedigree = c("A//B/D/2/C", "B/C/3/A//B/C/2/D"))
-                   
+
 pedigree_table <- get_pedigree_table(test, "genotype", "pedigree")
 }
 }

@@ -18,7 +18,7 @@ build_pedigree_table(
 \item{pedigree_df}{Pedigree data.frame as per previous call/iteration.}
 }
 \value{
-A data.frame that has three columns correspond to the identifiers for the individual, 
+A data.frame that has three columns correspond to the identifiers for the individual,
         female parent and male parent, respectively.
 }
 \description{

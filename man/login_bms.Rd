@@ -15,18 +15,18 @@ login_bms(username = NULL, password = NULL)
 no return value
 }
 \description{
-Connect to the BMS server. If username or password parameters are missing, 
-then a login window will pop-up to insert username and password. 
+Connect to the BMS server. If username or password parameters are missing,
+then a login window will pop-up to insert username and password.
 
-All other connection parameters (i.e. server IP or domain, connection port, 
-API path, and connection protocol e.g. http://) will retrieve from the 
+All other connection parameters (i.e. server IP or domain, connection port,
+API path, and connection protocol e.g. http://) will retrieve from the
 qbms_config list.
 
-This function will update both of the qbms_config list (brapi connection 
+This function will update both of the qbms_config list (brapi connection
 object in the con key) and qbms_state list (token value in the token key).
 }
 \examples{
-if(interactive()){
+if(interactive()) {
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 

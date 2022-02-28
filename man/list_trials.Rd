@@ -13,12 +13,12 @@ list_trials(year = NULL)
 a list of trials names
 }
 \description{
-This function will retrieve the trials list from the current active breeding 
-program as configured in the internal state object using `set_program()` 
+This function will retrieve the trials list from the current active breeding
+program as configured in the internal state object using `set_program()`
 function.
 }
 \examples{
-if(interactive()){
+if(interactive()) {
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 

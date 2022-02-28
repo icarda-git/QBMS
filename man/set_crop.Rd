@@ -13,11 +13,11 @@ set_crop(crop_name)
 no return value
 }
 \description{
-This function will update the current active crop in the internal 
+This function will update the current active crop in the internal
 configuration object (including the brapi connection object).
 }
 \examples{
-if(interactive()){
+if(interactive()) {
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 

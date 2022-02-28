@@ -13,7 +13,7 @@ get_parents(pedigree)
 Vector of two items, the direct female and male parents.
 }
 \description{
-Internal helping function to split the given pedigree string that provides the parentage 
+Internal helping function to split the given pedigree string that provides the parentage
 through which a cultivar was obtained, and get the pedigrees of the direct parents.
 }
 \author{

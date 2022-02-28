@@ -10,11 +10,11 @@ list_studies()
 a list of study and location names
 }
 \description{
-This function will retrieve the studies list from the current active trial 
+This function will retrieve the studies list from the current active trial
 as configured in the internal state object using `set_trial()` function.
 }
 \examples{
-if(interactive()){
+if(interactive()) {
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 

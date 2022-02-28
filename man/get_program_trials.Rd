@@ -10,9 +10,9 @@ get_program_trials()
 a list of trials information
 }
 \description{
-This function created for *internal use only* to retrieve the rough list of trials 
+This function created for *internal use only* to retrieve the rough list of trials
 from the pre-selected (i.e. currently active) crop and breeding program combination
-as already configured in the internal state object using `set_crop()` and `set_program()` 
+as already configured in the internal state object using `set_crop()` and `set_program()`
 functions respectively.
 }
 \seealso{

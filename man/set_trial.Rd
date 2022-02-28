@@ -13,12 +13,12 @@ set_trial(trial_name)
 no return value
 }
 \description{
-This function will update the current active trial in the internal state 
-object using the trialDbId retrieved from BMS which is associated to the 
+This function will update the current active trial in the internal state
+object using the trialDbId retrieved from BMS which is associated to the
 given trial_name parameter.
 }
 \examples{
-if(interactive()){
+if(interactive()) {
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 

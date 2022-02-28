@@ -14,7 +14,7 @@ This function will retrieve the observations data of the current active study
 as configured in the internal state object using `set_study()` function.
 }
 \examples{
-if(interactive()){
+if(interactive()) {
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 
@@ -38,7 +38,8 @@ data <- get_study_data()
 }
 }
 \seealso{
-\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
+\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}},
+         \code{\link{set_trial}}, \code{\link{set_study}}
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

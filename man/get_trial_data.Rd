@@ -11,11 +11,11 @@ a data frame of the trial observations data
 }
 \description{
 This function will retrieve the observations data of the current active trial
-(i.e. including all studies within) as configured in the internal state 
+(i.e. including all studies within) as configured in the internal state
 object using `set_trial()` function.
 }
 \examples{
-if(interactive()){
+if(interactive()) {
 # config your BMS connection
 set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
 
