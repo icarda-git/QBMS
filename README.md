@@ -91,6 +91,9 @@ data <- get_study_data()
 info <- get_study_info()
 germplasm <- get_germplasm_list()
 
+# get the pedigree table
+pedigree_table <- get_pedigree_table(germplasm, "germplasmName", "pedigree")
+
 # retrieve multi-environment trial data of the selected study/trial
 MET <- get_trial_data()
 
