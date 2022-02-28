@@ -8,7 +8,9 @@ set_qbms_config(
   url = "http://localhost/ibpworkbench/controller/auth/login",
   path = "bmsapi",
   page_size = 1000,
-  time_out = 10
+  time_out = 120,
+  no_auth = FALSE,
+  engine = "bms"
 )
 }
 \arguments{
@@ -19,6 +21,10 @@ set_qbms_config(
 \item{page_size}{Page size (default is 1000)}
 
 \item{time_out}{Number of seconds to wait for a response until giving up (default is 10)}
+
+\item{no_auth}{TRUE if the server doesn't require authentication/login (default is FALSE)}
+
+\item{engine}{Backend database (qbms default, breedbase)}
 }
 \value{
 no return value

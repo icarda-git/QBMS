@@ -1,7 +1,7 @@
 #' Name:     qbms.R
 #' Purpose:  Set of functions to query BMS by a wrapper using BrAPI calls
 #' Author:   Khaled Al-Shamaa <k.el-shamaa@cgiar.org>
-#' Version:  0.6
+#' Version:  0.7
 #'
 #' Revision: 
 #'           v0.1 - 24 Jul 2019 
@@ -50,7 +50,7 @@
 #'                * Enable to set the connection time_out in the set_qbms_config function.
 #'                * Get entry type (test or check) in the get_germplasm_list returned data frame.
 #'
-#'           v0.7 - # Mar 2022
+#'           v0.7 - 3 Mar 2022
 #'                * Add BreedBase support using BrAPI v1 calls.
 #'                * Add functionality to get the pedigree table starting from germplasm dataset.
 #'                * Improve set_qbms_config to generalize the way of getting the server domain from the URL.
@@ -1350,27 +1350,30 @@ build_pedigree_table <- function(geno_list = NULL, pedigree_list = NULL, pedigre
 #' 
 #' pedigree_df <- get_pedigree_table(germplasm, "germplasmName", "pedigree")
 #' 
-#' # nadiv package way
-#' library(nadiv)
-#' 
-#' # get additive relationship matrix in sparse matrix format
-#' A <- nadiv::makeA(pedigree_df)
-#' 
-#' # get A inverse matrix using base R function
-#' AINV <- solve(as.matrix(A))
-#' 
-#' # ASReml-R package way
-#' library(asreml)
-#' 
-#' # represent A inverse matrix in efficient way using i,j index and Ainverse value
-#' # actual genotype names of any given index are in the attr(ainv, "rowNames")
-#' ainv <- asreml::ainverse(pedigree_df)
-#' 
+#' #############################
 #' # dummy data set for testing
 #' test <- data.frame(genotype = c("X", "Y"), 
 #'                    pedigree = c("A//B/D/2/C", "B/C/3/A//B/C/2/D"))
 #'                    
 #' pedigree_df <- get_pedigree_table(test, "genotype", "pedigree")
+#' 
+#' #############################
+#' # nadiv package way
+#' # library(nadiv)
+#' 
+#' # get additive relationship matrix in sparse matrix format
+#' # A <- nadiv::makeA(pedigree_df)
+#' 
+#' # get A inverse matrix using base R function
+#' # AINV <- solve(as.matrix(A))
+#' 
+#' #############################
+#' # ASReml-R package way
+#' # library(asreml)
+#' 
+#' # represent A inverse matrix in efficient way using i,j index and Ainverse value
+#' # actual genotype names of any given index are in the attr(ainv, "rowNames")
+#' # ainv <- asreml::ainverse(pedigree_df)
 #' }
 #' @export
 

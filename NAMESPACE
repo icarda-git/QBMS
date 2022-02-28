@@ -3,6 +3,7 @@
 export(debug_qbms)
 export(get_germplasm_data)
 export(get_germplasm_list)
+export(get_pedigree_table)
 export(get_program_studies)
 export(get_study_data)
 export(get_study_info)
