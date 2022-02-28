@@ -12,10 +12,10 @@ vignette: >
 ## QBMS
 Linking data management systems to analytics is an important step in breeding digitalization. Breeders can use this R package to Query the [Breeding Management System](https://bmspro.io/) database (using [BrAPI](https://brapi.org/) calls) and help them to retrieve their experiments data directly into R statistical analyzing environment.
 
-Well, because [Breedbase](https://breedbase.org/) uses version 1 of the standard [BrAPI](https://brapi.org/) protocol,  most of the QBMS functionalities work smoothly with minor changes. For example, you need to give special attention to the `set_qbms_config` parameters (check the example below). Currently, some functions are not supported when working with BreedBase, like `get_program_studies`, `get_germplasm_data`, and `list_trials` filtered by year!
+Well, because **Breedbase** supports the **BrAPI** standard, most of the QBMS functionalities work smoothly with minor changes. For example, you need to give special attention to the `set_qbms_config` parameters (check the example below). Currently, some functions are not supported when working with BreedBase, like `get_program_studies`, `get_germplasm_data`, and `list_trials` filtered by year!
 
 ## BreedBase
-[Breedbase](https://breedbase.org/) is a comprehensive breeding management and analysis software. It can be used to design field layouts, collect phenotypic information using tablets, support the collection of genotyping samples in a field, store large amounts of high density genotypic information, and provide Genomic Selection related analyses and predictions. Breedbase supports the BrAPI standard.
+[Breedbase](https://breedbase.org/) is a comprehensive breeding management and analysis software. It can be used to design field layouts, collect phenotypic information using tablets, support the collection of genotyping samples in a field, store large amounts of high density genotypic information, and provide Genomic Selection related analyses and predictions.
 
 ## BrAPI
 The Breeding API ([BrAPI](https://brapi.org/)) project is an effort to enable interoperability among plant breeding databases. BrAPI is a standardized RESTful web service API specification for communicating plant breeding data. This community driven standard is free to be used by anyone interested in plant breeding data management.
