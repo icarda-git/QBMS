@@ -10,7 +10,7 @@ get_trial_obs_ontology()
 a data frame of the traits ontology/metadata
 }
 \description{
-This function will retrive the traits ontology/metadata of the current active 
+This function will retrieve the traits ontology/metadata of the current active 
 trial as configured in the internal state object using `set_trial()` function.
 }
 \examples{

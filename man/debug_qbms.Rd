@@ -10,7 +10,7 @@ debug_qbms()
 an environment object for the package config and status
 }
 \description{
-Return the internal QBMS status object for debuging
+Return the internal QBMS status object for debugging
 }
 \examples{
 obj <- debug_qbms()

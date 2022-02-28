@@ -9,9 +9,9 @@ brapi_get_call(call_url, page = 0, nested = TRUE)
 \arguments{
 \item{call_url}{BrAPI URL to call in GET method}
 
-\item{page}{Page number to retrieve in case of multi paged results (default is 0)}
+\item{page}{Page number to retrieve in case of multi-paged results (default is 0)}
 
-\item{nested}{If FLASE, then retrived JSON data will be flatten (default is TRUE)}
+\item{nested}{If FALSE, then retrieved JSON data will be flatten (default is TRUE)}
 }
 \value{
 result object returned by JSON API response
@@ -19,7 +19,7 @@ result object returned by JSON API response
 \description{
 This function created for *internal use only* to cal BrAPI in GET method and 
 retrieve the rough response data and send back the results. This function take
-care of pagination, authintication, encoding, compress, decode JSON response, etc.
+care of pagination, authentication, encoding, compress, decode JSON response, etc.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/qbms.R
 \name{get_program_trials}
 \alias{get_program_trials}
-\title{Internal function used to retrive the rough list of trials}
+\title{Internal function used to retrieve the rough list of trials}
 \usage{
 get_program_trials()
 }
@@ -13,7 +13,7 @@ a list of trials information
 This function created for *internal use only* to retrieve the rough list of trials 
 from the pre-selected (i.e. currently active) crop and breeding program combination
 as already configured in the internal state object using `set_crop()` and `set_program()` 
-functions respectivily.
+functions respectively.
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}}

@@ -105,7 +105,7 @@ rbindlistx <- function(x) {
 #' Debug internal QBMS status object
 #' 
 #' @description
-#' Return the internal QBMS status object for debuging 
+#' Return the internal QBMS status object for debugging 
 #' 
 #' @return an environment object for the package config and status
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -158,11 +158,11 @@ set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth
 #' @description
 #' This function created for *internal use only* to cal BrAPI in GET method and 
 #' retrieve the rough response data and send back the results. This function take
-#' care of pagination, authintication, encoding, compress, decode JSON response, etc.
+#' care of pagination, authentication, encoding, compress, decode JSON response, etc.
 #' 
 #' @param call_url BrAPI URL to call in GET method
-#' @param page     Page number to retrieve in case of multi paged results (default is 0)
-#' @param nested   If FLASE, then retrived JSON data will be flatten (default is TRUE)
+#' @param page     Page number to retrieve in case of multi-paged results (default is 0)
+#' @param nested   If FALSE, then retrieved JSON data will be flatten (default is TRUE)
 #' @return result object returned by JSON API response
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 
@@ -450,13 +450,13 @@ set_program <- function(program_name) {
 }
 
 
-#' Internal function used to retrive the rough list of trials
+#' Internal function used to retrieve the rough list of trials
 #' 
 #' @description
 #' This function created for *internal use only* to retrieve the rough list of trials 
 #' from the pre-selected (i.e. currently active) crop and breeding program combination
 #' as already configured in the internal state object using `set_crop()` and `set_program()` 
-#' functions respectivily.
+#' functions respectively.
 #' 
 #' @return a list of trials information
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -928,7 +928,7 @@ get_trial_data <- function() {
 #' Get the traits ontology/metadata of the current active trial
 #' 
 #' @description
-#' This function will retrive the traits ontology/metadata of the current active 
+#' This function will retrieve the traits ontology/metadata of the current active 
 #' trial as configured in the internal state object using `set_trial()` function.
 #' 
 #' @return a data frame of the traits ontology/metadata
