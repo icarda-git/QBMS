@@ -50,7 +50,7 @@
 #'                * Enable to set the connection time_out in the set_qbms_config function.
 #'                * Get entry type (test or check) in the get_germplasm_list returned data frame.
 #'
-#'           v0.7 - 3 Mar 2022
+#'           v0.7 - 28 Feb 2022
 #'                * Add BreedBase support using BrAPI v1 calls.
 #'                * Add functionality to get the pedigree table starting from germplasm dataset.
 #'                * Improve set_qbms_config to generalize the way of getting the server domain from the URL.
@@ -1240,7 +1240,7 @@ get_parents <- function(pedigree) {
   parents <- trimws(parents)
   
   # replace unknown parents by NA
-  parents <- gsub("Unknown", NA, parents)
+  parents <- gsub("unknown", NA, parents)
   
   # send back a vector of two items, the direct female and male parents
   return(parents)
@@ -1348,7 +1348,7 @@ build_pedigree_table <- function(geno_list = NULL, pedigree_list = NULL, pedigre
 #' # retrieve the germplasm list of the selected environment/location
 #' germplasm <- get_germplasm_list()
 #' 
-#' pedigree_df <- get_pedigree_table(germplasm, "germplasmName", "pedigree")
+#' pedigree_table <- get_pedigree_table(germplasm, "germplasmName", "pedigree")
 #' 
 #' #############################
 #' # dummy data set for testing
@@ -1403,7 +1403,7 @@ get_pedigree_table <- function(data, geno_column = "germplasmName", pedigree_col
   # for each pair of similar genotype names
   for (i in 1:nrow(check)) {
     # go through all letters of the given pair 
-    for (j in 1:max(str_length(check[i,]))){
+    for (j in 1:max(nchar(check[i,]))){
       # if the given letters in the j offset are same, then move to the next letter
       if (substr(check[i, 1], j, j) == substr(check[i, 2], j, j)) next
       
