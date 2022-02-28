@@ -111,7 +111,7 @@ germplasm_observations <- get_germplasm_data("BASFCORN-2-1")
 2. If you get an error related to packages built under a current version of R, and updating your packages doesn’t help, you can consider overriding the error with the following code. _Note: This might help you install QBMS but may result in other problems. If possible, it’s best to resolve the errors rather than ignoring them._
 
 ```r
-Sys.setenv("R_REMOTES_NO_ERRORS_FROM_WARNINGS"=TRUE)
+Sys.setenv("R_REMOTES_NO_ERRORS_FROM_WARNINGS" = TRUE)
 
 remotes::install_github("icarda-git/QBMS", upgrade = "always")
 ```
