@@ -1240,7 +1240,7 @@ get_parents <- function(pedigree) {
   parents <- trimws(parents)
   
   # replace unknown parents by NA
-  parents <- gsub("Unknown", NA, x)
+  parents <- gsub("Unknown", NA, parents)
   
   # send back a vector of two items, the direct female and male parents
   return(parents)
@@ -1365,6 +1365,12 @@ build_pedigree_table <- function(geno_list = NULL, pedigree_list = NULL, pedigre
 #' # represent A inverse matrix in efficient way using i,j index and Ainverse value
 #' # actual genotype names of any given index are in the attr(ainv, "rowNames")
 #' ainv <- asreml::ainverse(pedigree_df)
+#' 
+#' # dummy data set for testing
+#' test <- data.frame(genotype = c("X", "Y"), 
+#'                    pedigree = c("A//B/D/2/C", "B/C/3/A//B/C/2/D"))
+#'                    
+#' pedigree_df <- get_pedigree_table(test, "genotype", "pedigree")
 #' }
 #' @export
 
