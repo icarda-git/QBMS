@@ -62,7 +62,7 @@ v0.2 - 20 Aug 2019
                * Enable to set the connection time_out in the set_qbms_config function.
                * Get entry type (test or check) in the get_germplasm_list returned data frame.
 
-          v0.7 - 3 Mar 2022
+          v0.7 - 28 Feb 2022
                * Add BreedBase support using BrAPI v1 calls.
                * Add functionality to get the pedigree table starting from germplasm dataset.
                * Improve set_qbms_config to generalize the way of getting the server domain from the URL.
