@@ -53,18 +53,11 @@ germplasm <- get_germplasm_list()
 pedigree_table <- get_pedigree_table(germplasm, "germplasmName", "pedigree")
 
 #############################
-# dummy data set for testing
-test <- data.frame(genotype = c("X", "Y"), 
-                   pedigree = c("A//B/D/2/C", "B/C/3/A//B/C/2/D"))
-                   
-pedigree_df <- get_pedigree_table(test, "genotype", "pedigree")
-
-#############################
 # nadiv package way
 # library(nadiv)
 
 # get additive relationship matrix in sparse matrix format
-# A <- nadiv::makeA(pedigree_df)
+# A <- nadiv::makeA(pedigree_table)
 
 # get A inverse matrix using base R function
 # AINV <- solve(as.matrix(A))
@@ -75,7 +68,14 @@ pedigree_df <- get_pedigree_table(test, "genotype", "pedigree")
 
 # represent A inverse matrix in efficient way using i,j index and Ainverse value
 # actual genotype names of any given index are in the attr(ainv, "rowNames")
-# ainv <- asreml::ainverse(pedigree_df)
+# ainv <- asreml::ainverse(pedigree_table)
+
+#############################
+# dummy data set for testing
+test <- data.frame(genotype = c("X", "Y"), 
+                   pedigree = c("A//B/D/2/C", "B/C/3/A//B/C/2/D"))
+                   
+pedigree_table <- get_pedigree_table(test, "genotype", "pedigree")
 }
 }
 \author{
