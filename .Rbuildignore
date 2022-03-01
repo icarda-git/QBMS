@@ -1,5 +1,8 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE$
-^QBMS_logo\.png$
+^man/figures/logo\.png$
 ^\.lintr$
+^docs$
+^_pkgdown\.yml$
+^pkgdown$

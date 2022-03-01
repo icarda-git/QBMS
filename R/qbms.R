@@ -1,17 +1,4 @@
-#' Name:     qbms.R
-#' Purpose:  Set of functions to query BMS by a wrapper using BrAPI calls
-#' Author:   Khaled Al-Shamaa <k.el-shamaa@cgiar.org>
-#' Version:  0.7.0
-#'
-#' License:  GPLv3
-
-#' Load/install required packages
-#' if (!require(utils)) install.packages("utils")
-#' if (!require(httr)) install.packages("httr")
-#' if (!require(tcltk)) install.packages("tcltk")
-#' if (!require(jsonlite)) install.packages("jsonlite")
-
-#' Internal state variables/lists
+# Internal state variables/lists
 qbms_globals <- new.env()
 qbms_globals$config <- list(crop = NULL)
 qbms_globals$state  <- list(token = NULL)

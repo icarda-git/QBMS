@@ -1,4 +1,4 @@
-# QBMS 0.7.0 _2022-02-28_ 
+# QBMS 0.7.0 _2022-03-03_ 
   * Add BreedBase support using BrAPI v1 calls.
   * Add functionality to get the pedigree table starting from germplasm dataset.
   * Improve set_qbms_config to generalize the way of getting the server domain from the URL.

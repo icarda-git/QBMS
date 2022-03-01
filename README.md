@@ -1,4 +1,4 @@
-# QBMS <img src='./QBMS_logo.png' align="right" height="140" />
+# QBMS <img src='man/figures/logo.png' align="right" height="140" />
 <!-- badges: start -->
 [![CRAN version](https://www.r-pkg.org/badges/version/QBMS)](https://cran.r-project.org/package=QBMS)
 [![CRAN checks](https://cranchecks.info/badges/summary/QBMS)](https://cran.r-project.org/web/checks/check_results_QBMS.html)
