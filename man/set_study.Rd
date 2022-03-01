@@ -39,7 +39,8 @@ set_study("2018 PVT Environment Number 1")
 }
 }
 \seealso{
-\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{list_studies}}
+\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}},
+         \code{\link{set_trial}}, \code{\link{list_studies}}
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

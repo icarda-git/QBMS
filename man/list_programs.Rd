@@ -10,7 +10,7 @@ list_programs()
 a list of breeding programs names
 }
 \description{
-This function will retrieve the breeding programs list from the current active 
+This function will retrieve the breeding programs list from the current active
 crop as configured in the internal configuration object using `set_crop()`
 function.
 }

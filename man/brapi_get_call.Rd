@@ -17,7 +17,7 @@ brapi_get_call(call_url, page = 0, nested = TRUE)
 result object returned by JSON API response
 }
 \description{
-This function created for *internal use only* to cal BrAPI in GET method and 
+This function created for *internal use only* to cal BrAPI in GET method and
 retrieve the rough response data and send back the results. This function take
 care of pagination, authentication, encoding, compress, decode JSON response, etc.
 }

@@ -6,7 +6,7 @@
 \title{Name:     qbms.R
 Purpose:  Set of functions to query BMS by a wrapper using BrAPI calls
 Author:   Khaled Al-Shamaa <k.el-shamaa@cgiar.org>
-Version:  0.7}
+Version:  0.7.0}
 \format{
 An object of class \code{environment} of length 2.
 }

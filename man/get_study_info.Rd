@@ -38,7 +38,8 @@ info <- get_study_info()
 }
 }
 \seealso{
-\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
+\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}},
+         \code{\link{set_trial}}, \code{\link{set_study}}
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
