@@ -1,10 +1,12 @@
 # QBMS <img src='./QBMS_logo.png' align="right" height="140" />
 <!-- badges: start -->
 [![CRAN version](https://www.r-pkg.org/badges/version/QBMS)](https://cran.r-project.org/package=QBMS)
+[![CRAN checks](https://cranchecks.info/badges/summary/QBMS)](https://cran.r-project.org/web/checks/check_results_QBMS.html)
 [![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/QBMS)](https://cran.r-project.org/package=QBMS)
-[![CRAN downloads](https://img.shields.io/github/license/icarda-git/QBMS)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![CRAN license](https://img.shields.io/github/license/icarda-git/QBMS)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![GitHub commits](https://img.shields.io/github/last-commit/icarda-git/QBMS)](https://github.com/icarda-git/QBMS/commits/master)
 [![GitHub issues](https://img.shields.io/github/issues-raw/icarda-git/QBMS)](https://github.com/icarda-git/QBMS/issues)
+[![R badge](https://img.shields.io/badge/Build%20with-♥%20and%20R-blue)](https://github.com/icarda-git/QBMS)
 <!-- badges: end -->
 
 ## Overview
