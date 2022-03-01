@@ -1,7 +1,7 @@
 #' Name:     qbms.R
 #' Purpose:  Set of functions to query BMS by a wrapper using BrAPI calls
 #' Author:   Khaled Al-Shamaa <k.el-shamaa@cgiar.org>
-#' Version:  0.7
+#' Version:  0.7.0
 #'
 #' License:  GPLv3
 
@@ -28,7 +28,11 @@ qbms_globals$state  <- list(token = NULL)
 rbindx <- function(..., dfs = list(...)) {
   ns <- unique(unlist(sapply(dfs, names)))
   do.call(rbind, lapply(dfs, function(x) {
-    for (n in ns[! ns %in% names(x)]) { x[[n]] <- NA }; x }))
+    for (n in ns[! ns %in% names(x)]) {
+      x[[n]] <- NA
+    }
+    return(x)
+  }))
 }
 
 #' Makes one data.table from a list of many
@@ -43,7 +47,7 @@ rbindlistx <- function(x) {
   u  <- unlist(x, recursive = FALSE)
   n  <- names(u)
   un <- unique(n)
-  l  <- lapply(un, function(N) unlist(u[N == n], FALSE, FALSE))
+  l  <- lapply(un, function(y) unlist(u[y == n], FALSE, FALSE))
   names(l) <- un
   d <- as.data.frame(l)
 }
@@ -51,7 +55,7 @@ rbindlistx <- function(x) {
 #' Debug internal QBMS status object
 #'
 #' @description
-#' Return the internal QBMS status object for debugging 
+#' Return the internal QBMS status object for debugging
 #'
 #' @return an environment object for the package config and status
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -61,14 +65,14 @@ rbindlistx <- function(x) {
 #' obj$state
 #' @export
 
-debug_qbms <- function(){
+debug_qbms <- function() {
   return(qbms_globals)
 }
 
 #' Configure BMS server settings
 #'
 #' @description
-#' Set the connection configuration of the BMS server 
+#' Set the connection configuration of the BMS server
 #'
 #' @param url       URL of the BMS login page (default is "http://localhost/ibpworkbench/")
 #' @param path      BMS API path (default is "bmsapi")
@@ -102,7 +106,7 @@ set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth
 #' Internal function used for core BrAPI GET calls
 #'
 #' @description
-#' This function created for *internal use only* to cal BrAPI in GET method and 
+#' This function created for *internal use only* to cal BrAPI in GET method and
 #' retrieve the rough response data and send back the results. This function take
 #' care of pagination, authentication, encoding, compress, decode JSON response, etc.
 #'
@@ -302,7 +306,7 @@ set_crop <- function(crop_name) {
 #' Get the list of breeding programs names
 #'
 #' @description
-#' This function will retrieve the breeding programs list from the current active 
+#' This function will retrieve the breeding programs list from the current active
 #' crop as configured in the internal configuration object using `set_crop()`
 #' function.
 #'
@@ -409,7 +413,8 @@ set_program <- function(program_name) {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}}
 
 get_program_trials <- function() {
-  call_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/trials?programDbId=", qbms_globals$state$program_db_id)
+  call_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop,
+                     "/brapi/v1/trials?programDbId=", qbms_globals$state$program_db_id)
 
   bms_crop_trials <- brapi_get_call(call_url, 0, FALSE)
 
@@ -525,7 +530,7 @@ set_trial <- function(trial_name) {
   valid_trials <- list_trials()
 
   if (!trial_name %in% valid_trials$trialName) {
-    stop("Your trial name is not exists in this breeding program!  You may use the `list_trials()` function to check the available trials")
+    stop("Your trial name is not exists in this breeding program! You may use the `list_trials()` function to check the available trials")
   }
 
   bms_trials <- get_program_trials()
@@ -592,7 +597,8 @@ list_studies <- function() {
 #' @param study_name the name of the study
 #' @return no return value
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
-#' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{list_studies}}
+#' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}},
+#'          \code{\link{set_trial}}, \code{\link{list_studies}}
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
@@ -642,7 +648,8 @@ set_study <- function(study_name) {
 #'
 #' @return a data frame of the study details/metadata
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
-#' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
+#' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}},
+#'          \code{\link{set_trial}}, \code{\link{set_study}}
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
@@ -736,7 +743,7 @@ get_study_data <- function() {
   }
 
   study_header <- c(study_result$headerRow, study_result$observationVariableNames)
-  if (nrow(study_data) > 0) { 
+  if (nrow(study_data) > 0) {
     colnames(study_data) <- study_header
   }
 
@@ -752,7 +759,8 @@ get_study_data <- function() {
 #'
 #' @return a data frame of the study germplasm list
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
-#' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
+#' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, 
+#'          \code{\link{set_trial}}, \code{\link{set_study}}
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
@@ -802,7 +810,7 @@ get_germplasm_list <- function() {
     germplasm_list[, c("synonyms")] <- list(NULL)
   } else {
     # BMS POST /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries to extract entry type (test or check)
-    call_url <- paste0(qbms_globals$config$base_url, "/crops/", qbms_globals$config$crop, 
+    call_url <- paste0(qbms_globals$config$base_url, "/crops/", qbms_globals$config$crop,
                        "/programs/", qbms_globals$state$program_db_id,
                        "/studies/", qbms_globals$state$trial_db_id, "/entries")
 
@@ -1030,7 +1038,7 @@ get_program_studies <- function() {
 
   crop_url <- paste0(qbms_globals$config$base_url, "/crops/", qbms_globals$config$crop)
 
-  for (i in unique(studies$trialDbId)){
+  for (i in unique(studies$trialDbId)) {
     call_url <- paste0(crop_url, "/programs/", qbms_globals$state$program_db_id, "/studies/", i, "/entries/metadata")
 
     response <- httr::GET(url = utils::URLencode(call_url),
