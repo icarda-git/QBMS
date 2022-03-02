@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   breedbase_example: breedbase_example.html
   tutorial: tutorial.html
-last_built: 2022-03-02T10:12Z
+last_built: 2022-03-02T10:18Z
 urls:
   reference: https://icarda-git.github.io/QBMS/reference
   article: https://icarda-git.github.io/QBMS/articles
