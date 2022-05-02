@@ -1432,3 +1432,23 @@ gigwa_set_db <- function(db_name) {
 }
 
 # gigwa_set_db("Dummy")
+
+gigwa_list_projects <- function() {
+  if (is.null(qbms_globals$state$token)) {
+    stop("No server has been connected yet! You have to connect a GIGWA server first using the `gigwa_login()` function")
+  }
+  
+  if (is.null(qbms_globals$config$db)) {
+    stop("No database has been selected yet! You have to set your database first using the `gigwa_set_db()` function")
+  }
+  
+  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/studies?programDbId=", qbms_globals$config$db)
+  
+  gigwa_projects <- brapi_get_call(call_url)
+  
+  gigwa_projects <- gigwa_projects$data[c("studyName")]
+
+  return(gigwa_projects)
+}
+
+# gigwa_list_projects()
