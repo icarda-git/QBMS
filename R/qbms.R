@@ -1515,3 +1515,108 @@ gigwa_get_variants <- function() {
 }
 
 # marker_map <- gigwa_get_variants()
+
+gigwa_get_Gmatrix <- function(max_missing = 1, min_maf = 0, samples = NULL) {
+  if (is.null(qbms_globals$state$study_db_id)) {
+    stop("No project has been selected yet! You have to set your project first using the `gigwa_set_project()` function")
+  }
+  
+  if (max_missing < 0 || max_missing > 1) {
+    stop("The accepted `max_missing` value for the max missing data can range from 0 to 1")
+  }
+  
+  if (min_maf < 0 || min_maf > 0.5) {
+    stop("The accepted `maf` value for the minimum minor allele frequency can range from 0 to 0.5")
+  }
+
+  if (!is.null(samples)) {
+    available_samples <- gigwa_get_samples()
+    missing_samples <- setdiff(samples, available_samples)
+    
+    if (length(missing_samples) > 0) {
+      stop("Some samples are not exists in this project! You may use the `gigwa_get_samples()` function to check the available samples")
+    }
+  } else {
+    samples <- gigwa_get_samples()
+  }
+  
+  # https://gigwa-dev.southgreen.fr/gigwaV2/rest/swagger-ui/index.html?urls.primaryName=GA4GH%20API%20v0.6.0a5#/ga-4gh-rest-controller/searchVariantsUsingPOST
+  # https://ga4gh-schemas.readthedocs.io/en/latest/schemas/variants.proto.html
+  # https://app.swaggerhub.com/apis-docs/PlantBreedingAPI/BrAPI-New-Concept-Preview/0.0.0-proposal#/Genotype-Matrix-Redesign/post_search_variantmatrix
+  # https://github.com/plantbreeding/BrAPI/issues/546
+  
+  call_url <- paste0(qbms_globals$config$base_url, "/ga4gh/variants/search")
+  
+  auth_code <- paste0("Bearer ", qbms_globals$state$token)
+  headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
+  
+  call_body <- list(alleleCount = "2",
+                    searchMode = 0,
+                    variantSetId = qbms_globals$state$study_db_id,
+                    callSetIds = paste0(qbms_globals$state$study_db_id, "§", samples),
+                    minmaf = min_maf * 100,
+                    maxmaf = 50,
+                    missingData = max_missing * 100)
+  
+  response <- httr::POST(url = utils::URLencode(call_url), body = call_body, encode = "json", 
+                         httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
+  
+  results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+  
+  total_variants <- results$count
+  
+  # setup the progress bar
+  pb <- txtProgressBar(min = 0, max = total_variants, initial = 0, style = 3) 
+  pb_step <- round(total_variants/100)
+  
+  call_body <- list(alleleCount = "2",
+                    variantSetId = qbms_globals$state$study_db_id,
+                    callSetIds = paste0(qbms_globals$state$study_db_id, "§", samples),
+                    minmaf = min_maf * 100,
+                    maxmaf = 50,
+                    missingData = max_missing * 100,
+                    getGT = TRUE,
+                    pageToken = "0")
+  
+  g_matrix <- data.frame(matrix(ncol = length(samples) + 1, nrow = 0))
+  
+  repeat{
+    response <- httr::POST(url = utils::URLencode(call_url), body = call_body, encode = "json", 
+                           httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
+    
+    results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+    
+    n <- nrow(results$variants)
+    
+    for(i in 1:n){
+      snp_name <- results$variants[i, "id"]
+      genotype <- unlist(lapply(results$variants[i, "calls"][[1]]$genotype, function(x){ ifelse(length(x) == 0, NA, sum(x)) }))
+      g_matrix <- rbind(g_matrix, c(snp_name, genotype))
+    }
+
+    # update the progress bar
+    setTxtProgressBar(pb, nrow(g_matrix))
+    
+    if (!exists("nextPageToken", results)) {
+      break
+    }
+
+    call_body$pageToken <- results$nextPageToken
+  }
+  
+  setTxtProgressBar(pb, total_variants)
+  close(pb)
+  
+  markers  <- g_matrix[, 1]
+  g_matrix <- g_matrix[,-1]
+  g_matrix <- as.data.frame(sapply(g_matrix, as.numeric))
+  
+  colnames(g_matrix) <- gsub(paste0(qbms_globals$state$study_db_id, "§"), "", results$variants[1, "calls"][[1]]$callSetId)
+  rownames(g_matrix) <- gsub(paste0(qbms_globals$state$study_db_id, "§"), "", markers)
+  
+  return(g_matrix)
+}
+
+# marker_matrix <- gigwa_get_Gmatrix(0.2, 0.05)
+
+# line 810 does not pass the call_body in the httr::POST body parameter
