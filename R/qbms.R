@@ -1420,3 +1420,15 @@ gigwa_list_dbs <- function() {
 }
 
 # gigwa_list_dbs()
+
+gigwa_set_db <- function(db_name) {
+  valid_dbs <- gigwa_list_dbs()
+  
+  if (!db_name %in% valid_dbs) {
+    stop("Your database name is not exists in this connected GIGWA server! You may use the `gigwa_list_dbs()` function to check the available databases")
+  }
+  
+  qbms_globals$config$db <- db_name
+}
+
+# gigwa_set_db("Dummy")
