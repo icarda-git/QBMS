@@ -1404,3 +1404,19 @@ login_gigwa <- function(username = NULL, password = NULL) {
   
   qbms_globals$state$token <- httr::content(response)$token
 }
+
+# login_gigwa("gigwadmin", "nimda")
+
+gigwa_list_dbs <- function() {
+  if (is.null(qbms_globals$state$token)) {
+    stop("No server has been connected yet! You have to connect a server first using the `gigwa_login()` function")
+  }
+  
+  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/programs")
+  
+  gigwa_dbs <- brapi_get_call(call_url)
+  
+  return(gigwa_dbs$data)
+}
+
+# gigwa_list_dbs()
