@@ -62,11 +62,11 @@ debug_qbms <- function() {
 #' Set the connection configuration of the BMS server
 #'
 #' @param url       URL of the BMS login page (default is "http://localhost/ibpworkbench/")
-#' @param path      BMS API path (default is "bmsapi")
+#' @param path      BMS API path (default is NULL)
 #' @param page_size Page size (default is 1000)
 #' @param time_out  Number of seconds to wait for a response until giving up (default is 10)
 #' @param no_auth   TRUE if the server doesn't require authentication/login (default is FALSE)
-#' @param engine    Backend database (qbms default, breedbase)
+#' @param engine    Backend database (qbms default, breedbase, gigwa)
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @return no return value
 #' @examples
@@ -74,9 +74,15 @@ debug_qbms <- function() {
 #' @export
 
 set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth/login",
-                            path = "bmsapi", page_size = 1000, time_out = 120,
+                            path = NULL, page_size = 1000, time_out = 120,
                             no_auth = FALSE, engine = "bms") {
 
+  if (is.null(path)) {
+    if (engine == "bms") { path = "bmsapi" }
+    if (engine == "breedbase") { path = "" }
+    if (engine == "gigwa") { path = "gigwa/rest"}
+  }
+  
   qbms_globals$config$server    <- regmatches(url, regexpr("^(?://|[^/]+)*", url))
   qbms_globals$config$path      <- path
   qbms_globals$config$page_size <- page_size
