@@ -141,10 +141,14 @@ brapi_get_call <- function(call_url, page = 0, nested = TRUE) {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 
 get_login_details <- function() {
+  if (qbms_globals$config$engine == "bms") { server <- "BMS" }
+  if (qbms_globals$config$engine == "breedbase") { server <- "BreedBase" }
+  if (qbms_globals$config$engine == "gigwa") { server <- "GIGWA" }
+  
   tt <- tcltk::tktoplevel()
-  tcltk::tkwm.title(tt, "Login BMS Server")
+  tcltk::tkwm.title(tt, paste("Login", server, "Server"))
 
-  ss <- "Please enter your BMS login details"
+  ss <- paste("Please enter your", server, "login details")
   tcltk::tkgrid(tcltk::tklabel(tt, text = ss), columnspan = 2, padx = 50, pady = 10)
 
   usr <- tcltk::tclVar("")
