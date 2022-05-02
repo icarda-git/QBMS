@@ -1492,3 +1492,26 @@ gigwa_get_samples <- function() {
 }
 
 # gigwa_get_samples()
+
+gigwa_get_variants <- function() {
+  if (is.null(qbms_globals$state$study_db_id)) {
+    stop("No project has been selected yet! You have to set your project first using the `gigwa_set_project()` function")
+  }
+
+  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/variants?referenceDbId=", qbms_globals$state$study_db_id)
+  
+  response <- brapi_get_call(call_url)
+  
+  variants <- as.data.frame(response$data)
+
+  hapmap_metadata <- as.data.frame(cbind(variants$variantNames, 
+                                         paste0(variants$referenceBases, "/", variants$alternate_bases),
+                                         variants$referenceName,
+                                         variants$start))
+  
+  colnames(hapmap_metadata) <- c("rs#", "alleles", "chrom", "pos")
+  
+  return(hapmap_metadata)
+}
+
+# marker_map <- gigwa_get_variants()
