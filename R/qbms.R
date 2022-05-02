@@ -1380,3 +1380,27 @@ get_pedigree_table <- function(data, geno_column = "germplasmName", pedigree_col
 
   return(pedigree_df)
 }
+
+###########################################################################################
+
+# set_qbms_config("http://localhost:59395/gigwa/index.jsp", time_out = 300, engine = "gigwa")
+
+login_gigwa <- function(username = NULL, password = NULL) {
+  if (is.null(username) || is.null(password)) {
+    credentials <- get_login_details()
+  } else {
+    credentials <- c(usr = username, pwd = password)
+  }
+  
+  call_url  <- paste0(qbms_globals$config$base_url, "/gigwa/generateToken")
+  call_body <- list(username = credentials["usr"], password = credentials["pwd"])
+  
+  response <- httr::POST(url = utils::URLencode(call_url), body = call_body, encode = "json",
+                         httr::timeout(qbms_globals$config$time_out))
+  
+  if (response$status_code == 403 || credentials["usr"] == "" || credentials["pwd"] == "") {
+    stop("403 Forbidden")
+  }
+  
+  qbms_globals$state$token <- httr::content(response)$token
+}
