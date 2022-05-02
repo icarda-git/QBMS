@@ -251,7 +251,7 @@ login_bms <- function(username = NULL, password = NULL) {
 
 list_crops <- function() {
   if (is.null(qbms_globals$state$token)) {
-    stop("No BMS server has been connected yet! You have to connect a BMS server first using the `bms_login()` function")
+    stop("No server has been connected yet! You have to connect a server first using the `bms_login()` function")
   }
 
   call_url <- paste0(qbms_globals$config$base_url, "/brapi/v1/crops")
@@ -328,7 +328,7 @@ set_crop <- function(crop_name) {
 
 list_programs <- function() {
   if (is.null(qbms_globals$state$token)) {
-    stop("No BMS server has been connected yet! You have to connect a BMS server first using the `bms_login()` function")
+    stop("No server has been connected yet! You have to connect a server first using the `bms_login()` function")
   }
 
   if (is.null(qbms_globals$config$crop)) {
@@ -1041,6 +1041,7 @@ get_program_studies <- function() {
     response <- httr::GET(url = utils::URLencode(call_url),
                           httr::add_headers("X-Auth-Token" = qbms_globals$state$token, "Accept-Encoding" = "gzip, deflate"),
                           httr::timeout(qbms_globals$config$time_out))
+    
     metadata <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
 
     studies[studies$trialDbId == i, "testEntriesCount"] <- metadata$testEntriesCount
