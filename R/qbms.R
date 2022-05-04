@@ -1539,7 +1539,7 @@ gigwa_get_Gmatrix <- function(max_missing = 1, min_maf = 0, samples = NULL) {
   } else {
     samples <- gigwa_get_samples()
   }
-  
+
   # https://gigwa-dev.southgreen.fr/gigwaV2/rest/swagger-ui/index.html?urls.primaryName=GA4GH%20API%20v0.6.0a5#/ga-4gh-rest-controller/searchVariantsUsingPOST
   # https://ga4gh-schemas.readthedocs.io/en/latest/schemas/variants.proto.html
   # https://app.swaggerhub.com/apis-docs/PlantBreedingAPI/BrAPI-New-Concept-Preview/0.0.0-proposal#/Genotype-Matrix-Redesign/post_search_variantmatrix
@@ -1570,6 +1570,7 @@ gigwa_get_Gmatrix <- function(max_missing = 1, min_maf = 0, samples = NULL) {
   pb_step <- round(total_variants/100)
   
   call_body <- list(alleleCount = "2",
+                    searchMode = 3,
                     variantSetId = qbms_globals$state$study_db_id,
                     callSetIds = paste0(qbms_globals$state$study_db_id, "§", samples),
                     minmaf = min_maf * 100,
@@ -1577,13 +1578,16 @@ gigwa_get_Gmatrix <- function(max_missing = 1, min_maf = 0, samples = NULL) {
                     missingData = max_missing * 100,
                     getGT = TRUE,
                     pageToken = "0")
-  
+
   g_matrix <- data.frame(matrix(ncol = length(samples) + 1, nrow = 0))
   
   repeat{
+    # add 1 second delay to avoid MongoDB error because of a background operation is still running!
+    Sys.sleep(1)
+    
     response <- httr::POST(url = utils::URLencode(call_url), body = call_body, encode = "json", 
                            httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
-    
+
     results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
     
     n <- nrow(results$variants)
@@ -1602,6 +1606,7 @@ gigwa_get_Gmatrix <- function(max_missing = 1, min_maf = 0, samples = NULL) {
     }
 
     call_body$pageToken <- results$nextPageToken
+    call_body$searchMode <- 2
   }
   
   setTxtProgressBar(pb, total_variants)
