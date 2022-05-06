@@ -1582,9 +1582,18 @@ gigwa_get_Gmatrix <- function(max_missing = 1, min_maf = 0, samples = NULL) {
   g_matrix <- data.frame(matrix(ncol = length(samples) + 1, nrow = 0))
   
   repeat{
-    # add 1 second delay to avoid MongoDB error because of a background operation is still running!
-    Sys.sleep(1)
-    
+    repeat {
+      # avoid MongoDB error because of a background operation is still running!
+      # get the progress status of a process from its token. If no current process is associated with this token, returns null.
+      # https://gigwa.southgreen.fr/gigwa/rest/swagger-ui/index.html?urls.primaryName=Gigwa%20API%20v2.5-RELEASE#/gigwa-rest-controller/getProcessProgressUsingGET
+      response <- httr::GET(url = paste0(qbms_globals$config$base_url, "/gigwa/progress"), 
+                            httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
+
+      if (httr::content(response, as = "text", encoding = "UTF-8") == "") {
+        break
+      }
+    }
+
     response <- httr::POST(url = utils::URLencode(call_url), body = call_body, encode = "json", 
                            httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
 
