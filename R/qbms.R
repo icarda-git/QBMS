@@ -1498,7 +1498,7 @@ gigwa_get_variants <- function() {
     stop("No project has been selected yet! You have to set your project first using the `gigwa_set_project()` function")
   }
 
-  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/variants?referenceDbId=", qbms_globals$state$study_db_id)
+  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/variants?variantSetDbId=", qbms_globals$state$study_db_id, "§Run1")
   
   response <- brapi_get_call(call_url)
   
