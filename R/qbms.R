@@ -1496,6 +1496,33 @@ gigwa_list_runs <- function() {
 }
 
 # gigwa_list_runs()
+
+gigwa_set_run <- function(run_name) {
+  valid_runs <- gigwa_list_runs()
+  
+  if (!run_name %in% valid_runs) {
+    stop("Your run name is not exists in this project! You may use the `gigwa_list_runs()` function to check the available runs")
+  }
+  
+  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/variantsets")
+  
+  auth_code <- paste0("Bearer ", qbms_globals$state$token)
+  headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
+  call_body <- stringi::stri_enc_toutf8(paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}'))
+  
+  response <- httr::POST(url = utils::URLencode(call_url), body = call_body, 
+                         encode = "raw", httr::accept_json(), httr::content_type_json(), 
+                         httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
+  
+  results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+  
+  gigwa_runs <- as.data.frame(results$result$data)
+  
+  qbms_globals$state$variant_set_db_id <- gigwa_runs[gigwa_runs$variantSetName == run_name, "variantSetDbId"]
+}
+
+# gigwa_set_run("Run1")
+
 gigwa_get_samples <- function() {
   if (is.null(qbms_globals$state$study_db_id)) {
     stop("No project has been selected yet! You have to set your project first using the `gigwa_set_project()` function")
@@ -1519,11 +1546,11 @@ gigwa_get_samples <- function() {
 # gigwa_get_samples()
 
 gigwa_get_variants <- function() {
-  if (is.null(qbms_globals$state$study_db_id)) {
-    stop("No project has been selected yet! You have to set your project first using the `gigwa_set_project()` function")
+  if (is.null(qbms_globals$state$variant_set_db_id)) {
+    stop("No run has been selected yet! You have to set your run first using the `gigwa_set_run()` function")
   }
 
-  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/variants?variantSetDbId=", qbms_globals$state$study_db_id, "§Run1")
+  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/variants?variantSetDbId=", qbms_globals$state$variant_set_db_id)
   
   response <- brapi_get_call(call_url)
   
