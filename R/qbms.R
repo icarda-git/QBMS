@@ -1424,7 +1424,7 @@ gigwa_list_dbs <- function() {
 gigwa_set_db <- function(db_name) {
   valid_dbs <- gigwa_list_dbs()
   
-  if (!db_name %in% valid_dbs) {
+  if (!db_name %in% valid_dbs[,1]) {
     stop("Your database name is not exists in this connected GIGWA server! You may use the `gigwa_list_dbs()` function to check the available databases")
   }
   
@@ -1456,7 +1456,7 @@ gigwa_list_projects <- function() {
 gigwa_set_project <- function(project_name) {
   valid_projects <- gigwa_list_projects()
   
-  if (!project_name %in% valid_projects) {
+  if (!project_name %in% valid_projects[,1]) {
     stop("Your project name is not exists in this database! You may use the `gigwa_list_projects()` function to check the available projects")
   }
   
