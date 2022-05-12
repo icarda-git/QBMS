@@ -1383,7 +1383,7 @@ get_pedigree_table <- function(data, geno_column = "germplasmName", pedigree_col
 
 ###########################################################################################
 
-# set_qbms_config("http://localhost:59395/gigwa/index.jsp", time_out = 300, engine = "gigwa")
+# set_qbms_config("https://gigwa.southgreen.fr/gigwa/", time_out = 300, engine = "gigwa", no_auth = TRUE)
 
 login_gigwa <- function(username = NULL, password = NULL) {
   if (is.null(username) || is.null(password)) {
@@ -1431,7 +1431,7 @@ gigwa_set_db <- function(db_name) {
   qbms_globals$config$db <- db_name
 }
 
-# gigwa_set_db("Dummy")
+# gigwa_set_db("Sorghum-JGI_v1")
 
 gigwa_list_projects <- function() {
   if (is.null(qbms_globals$state$token)) {
@@ -1469,7 +1469,7 @@ gigwa_set_project <- function(project_name) {
   qbms_globals$state$study_db_id <- gigwa_projects$data[project_row, "studyDbId"]
 }
 
-# gigwa_set_project("Test")
+# gigwa_set_project("Nelson_et_al_2011")
 
 gigwa_list_runs <- function() {
   if (is.null(qbms_globals$state$study_db_id)) {
@@ -1521,7 +1521,7 @@ gigwa_set_run <- function(run_name) {
   qbms_globals$state$variant_set_db_id <- gigwa_runs[gigwa_runs$variantSetName == run_name, "variantSetDbId"]
 }
 
-# gigwa_set_run("Run1")
+# gigwa_set_run("run1")
 
 gigwa_get_samples <- function() {
   if (is.null(qbms_globals$state$study_db_id)) {
@@ -1663,6 +1663,6 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
   return(g_matrix)
 }
 
-# marker_matrix <- gigwa_get_Gmatrix(0.2, 0.05)
+# marker_matrix <- gigwa_get_variants(max_missing = 0.2, min_maf = 0.35, samples = c("ind1", "ind3", "ind7"))
 
 # line 810 does not pass the call_body in the httr::POST body parameter
