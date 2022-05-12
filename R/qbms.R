@@ -1545,30 +1545,7 @@ gigwa_get_samples <- function() {
 
 # gigwa_get_samples()
 
-gigwa_get_variants <- function() {
-  if (is.null(qbms_globals$state$variant_set_db_id)) {
-    stop("No run has been selected yet! You have to set your run first using the `gigwa_set_run()` function")
-  }
-
-  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/variants?variantSetDbId=", qbms_globals$state$variant_set_db_id)
-  
-  response <- brapi_get_call(call_url)
-  
-  variants <- as.data.frame(response$data)
-
-  hapmap_metadata <- as.data.frame(cbind(variants$variantNames, 
-                                         paste0(variants$referenceBases, "/", variants$alternate_bases),
-                                         variants$referenceName,
-                                         variants$start))
-  
-  colnames(hapmap_metadata) <- c("rs#", "alleles", "chrom", "pos")
-  
-  return(hapmap_metadata)
-}
-
-# marker_map <- gigwa_get_variants()
-
-gigwa_get_Gmatrix <- function(max_missing = 1, min_maf = 0, samples = NULL) {
+gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
   if (is.null(qbms_globals$state$study_db_id)) {
     stop("No project has been selected yet! You have to set your project first using the `gigwa_set_project()` function")
   }
@@ -1605,7 +1582,7 @@ gigwa_get_Gmatrix <- function(max_missing = 1, min_maf = 0, samples = NULL) {
   call_body <- list(alleleCount = "2",
                     searchMode = 0,
                     variantSetId = qbms_globals$state$study_db_id,
-                    callSetIds = paste0(qbms_globals$state$study_db_id, "ง", samples),
+                    callSetIds = paste0(qbms_globals$state$study_db_id, "ยง", samples),
                     minmaf = min_maf * 100,
                     maxmaf = 50,
                     missingData = max_missing * 100)
@@ -1624,14 +1601,14 @@ gigwa_get_Gmatrix <- function(max_missing = 1, min_maf = 0, samples = NULL) {
   call_body <- list(alleleCount = "2",
                     searchMode = 3,
                     variantSetId = qbms_globals$state$study_db_id,
-                    callSetIds = paste0(qbms_globals$state$study_db_id, "ง", samples),
+                    callSetIds = paste0(qbms_globals$state$study_db_id, "ยง", samples),
                     minmaf = min_maf * 100,
                     maxmaf = 50,
                     missingData = max_missing * 100,
                     getGT = TRUE,
                     pageToken = "0")
 
-  g_matrix <- data.frame(matrix(ncol = length(samples) + 1, nrow = 0))
+  g_matrix <- data.frame(matrix(ncol = length(samples) + 4, nrow = 0))
   
   repeat{
     repeat {
@@ -1652,11 +1629,14 @@ gigwa_get_Gmatrix <- function(max_missing = 1, min_maf = 0, samples = NULL) {
     results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
     
     n <- nrow(results$variants)
-    
+
     for(i in 1:n){
       snp_name <- results$variants[i, "id"]
+      alleles  <- paste0(results$variants[i, "referenceBases"], "/", results$variants[i, "alternateBases"])
+      chrom    <- results$variants[i, "referenceName"]
+      pos      <- results$variants[i, "start"]
       genotype <- unlist(lapply(results$variants[i, "calls"][[1]]$genotype, function(x){ ifelse(length(x) == 0, NA, sum(x)) }))
-      g_matrix <- rbind(g_matrix, c(snp_name, genotype))
+      g_matrix <- rbind(g_matrix, c(snp_name, alleles, chrom, pos, genotype))
     }
 
     # update the progress bar
@@ -1673,13 +1653,13 @@ gigwa_get_Gmatrix <- function(max_missing = 1, min_maf = 0, samples = NULL) {
   setTxtProgressBar(pb, total_variants)
   close(pb)
   
-  markers  <- g_matrix[, 1]
-  g_matrix <- g_matrix[,-1]
-  g_matrix <- as.data.frame(sapply(g_matrix, as.numeric))
+  g_matrix[,-c(1:4)] <- as.data.frame(sapply(g_matrix[,-c(1:4)], as.numeric))
   
-  colnames(g_matrix) <- gsub(paste0(qbms_globals$state$study_db_id, "ง"), "", results$variants[1, "calls"][[1]]$callSetId)
-  rownames(g_matrix) <- gsub(paste0(qbms_globals$state$study_db_id, "ง"), "", markers)
+  g_matrix[, 1] <- gsub(paste0(qbms_globals$state$study_db_id, "ง"), "", g_matrix[, 1])
   
+  colnames(g_matrix) <- c("rs#", "alleles", "chrom", "pos",
+                          gsub(paste0(qbms_globals$state$study_db_id, "ง"), "", results$variants[1, "calls"][[1]]$callSetId))
+
   return(g_matrix)
 }
 
