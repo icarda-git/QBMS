@@ -1383,7 +1383,10 @@ get_pedigree_table <- function(data, geno_column = "germplasmName", pedigree_col
 
 ###########################################################################################
 
-# set_qbms_config("https://gigwa.southgreen.fr/gigwa/", time_out = 300, engine = "gigwa", no_auth = TRUE)
+#' set_qbms_config("https://gigwa.southgreen.fr/gigwa/", time_out = 300, engine = "gigwa", no_auth = TRUE)
+
+#' login_gigwa("gigwadmin", "nimda")
+#' @export
 
 login_gigwa <- function(username = NULL, password = NULL) {
   if (is.null(username) || is.null(password)) {
@@ -1405,7 +1408,8 @@ login_gigwa <- function(username = NULL, password = NULL) {
   qbms_globals$state$token <- httr::content(response)$token
 }
 
-# login_gigwa("gigwadmin", "nimda")
+#' gigwa_list_dbs()
+#' @export
 
 gigwa_list_dbs <- function() {
   if (is.null(qbms_globals$state$token)) {
@@ -1419,7 +1423,8 @@ gigwa_list_dbs <- function() {
   return(gigwa_dbs$data)
 }
 
-# gigwa_list_dbs()
+#' gigwa_set_db("Sorghum-JGI_v1")
+#' @export
 
 gigwa_set_db <- function(db_name) {
   valid_dbs <- gigwa_list_dbs()
@@ -1431,7 +1436,8 @@ gigwa_set_db <- function(db_name) {
   qbms_globals$config$db <- db_name
 }
 
-# gigwa_set_db("Sorghum-JGI_v1")
+#' gigwa_list_projects()
+#' @export
 
 gigwa_list_projects <- function() {
   if (is.null(qbms_globals$state$token)) {
@@ -1451,7 +1457,8 @@ gigwa_list_projects <- function() {
   return(gigwa_projects)
 }
 
-# gigwa_list_projects()
+#' gigwa_set_project("Nelson_et_al_2011")
+#' @export
 
 gigwa_set_project <- function(project_name) {
   valid_projects <- gigwa_list_projects()
@@ -1469,7 +1476,8 @@ gigwa_set_project <- function(project_name) {
   qbms_globals$state$study_db_id <- gigwa_projects$data[project_row, "studyDbId"]
 }
 
-# gigwa_set_project("Nelson_et_al_2011")
+#' gigwa_list_runs()
+#' @export
 
 gigwa_list_runs <- function() {
   if (is.null(qbms_globals$state$study_db_id)) {
@@ -1495,7 +1503,8 @@ gigwa_list_runs <- function() {
   return(gigwa_runs)
 }
 
-# gigwa_list_runs()
+#' gigwa_set_run("run1")
+#' @export
 
 gigwa_set_run <- function(run_name) {
   valid_runs <- gigwa_list_runs()
@@ -1521,7 +1530,8 @@ gigwa_set_run <- function(run_name) {
   qbms_globals$state$variant_set_db_id <- gigwa_runs[gigwa_runs$variantSetName == run_name, "variantSetDbId"]
 }
 
-# gigwa_set_run("run1")
+#' gigwa_get_samples()
+#' @export
 
 gigwa_get_samples <- function() {
   if (is.null(qbms_globals$state$study_db_id)) {
@@ -1543,7 +1553,8 @@ gigwa_get_samples <- function() {
   return(results$result$data$germplasmName)
 }
 
-# gigwa_get_samples()
+#' marker_matrix <- gigwa_get_variants(max_missing = 0.2, min_maf = 0.35, samples = c("ind1", "ind3", "ind7"))
+#' @export
 
 gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
   if (is.null(qbms_globals$state$study_db_id)) {
@@ -1595,7 +1606,7 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
   total_variants <- results$count
   
   # setup the progress bar
-  pb <- txtProgressBar(min = 0, max = total_variants, initial = 0, style = 3) 
+  pb <- utils::txtProgressBar(min = 0, max = total_variants, initial = 0, style = 3) 
   pb_step <- round(total_variants/100)
   
   call_body <- list(alleleCount = "2",
@@ -1640,7 +1651,7 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
     }
 
     # update the progress bar
-    setTxtProgressBar(pb, nrow(g_matrix))
+    utils::setTxtProgressBar(pb, nrow(g_matrix))
     
     if (!exists("nextPageToken", results)) {
       break
@@ -1650,19 +1661,17 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
     call_body$searchMode <- 2
   }
   
-  setTxtProgressBar(pb, total_variants)
+  utils::setTxtProgressBar(pb, total_variants)
   close(pb)
   
   g_matrix[,-c(1:4)] <- as.data.frame(sapply(g_matrix[,-c(1:4)], as.numeric))
   
-  g_matrix[, 1] <- gsub(paste0(qbms_globals$state$study_db_id, "ง"), "", g_matrix[, 1])
+  g_matrix[, 1] <- gsub(paste0(qbms_globals$state$study_db_id, "ยง"), "", g_matrix[, 1])
   
   colnames(g_matrix) <- c("rs#", "alleles", "chrom", "pos",
-                          gsub(paste0(qbms_globals$state$study_db_id, "ง"), "", results$variants[1, "calls"][[1]]$callSetId))
+                          gsub(paste0(qbms_globals$state$study_db_id, "ยง"), "", results$variants[1, "calls"][[1]]$callSetId))
 
   return(g_matrix)
 }
-
-# marker_matrix <- gigwa_get_variants(max_missing = 0.2, min_maf = 0.35, samples = c("ind1", "ind3", "ind7"))
 
 # line 810 does not pass the call_body in the httr::POST body parameter

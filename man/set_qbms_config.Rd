@@ -6,7 +6,7 @@
 \usage{
 set_qbms_config(
   url = "http://localhost/ibpworkbench/controller/auth/login",
-  path = "bmsapi",
+  path = NULL,
   page_size = 1000,
   time_out = 120,
   no_auth = FALSE,
@@ -16,7 +16,7 @@ set_qbms_config(
 \arguments{
 \item{url}{URL of the BMS login page (default is "http://localhost/ibpworkbench/")}
 
-\item{path}{BMS API path (default is "bmsapi")}
+\item{path}{BMS API path (default is NULL)}
 
 \item{page_size}{Page size (default is 1000)}
 
@@ -24,7 +24,7 @@ set_qbms_config(
 
 \item{no_auth}{TRUE if the server doesn't require authentication/login (default is FALSE)}
 
-\item{engine}{Backend database (qbms default, breedbase)}
+\item{engine}{Backend database (qbms default, breedbase, gigwa)}
 }
 \value{
 no return value

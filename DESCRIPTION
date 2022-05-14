@@ -25,7 +25,8 @@ Imports:
     httr,
     jsonlite,
     tcltk,
-    utils
+    utils,
+    stringi
 Suggests: 
     knitr,
     rmarkdown
