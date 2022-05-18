@@ -1,10 +1,10 @@
 ---
-title: "QBMS Tutorial"
+title: "BMS Example"
 author: "Khaled Al-Shamaa"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{QBMS Tutorial}
+  %\VignetteIndexEntry{BMS Example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
