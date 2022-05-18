@@ -1,6 +1,6 @@
 Type: Package
 Package: QBMS
-Title: Query the Breeding Management System 'BMS'
+Title: Query the Breeding Management System(s)
 Version: 0.8.0
 Date: 2022-05-18
 Authors@R: c(
@@ -12,10 +12,10 @@ Authors@R: c(
 Author: Khaled Al-Shamaa [aut, cre], Mariano Omar Crimi [ctb], Zakaria
     Kehel [ctb], ICARDA [cph]
 Maintainer: Khaled Al-Shamaa <k.el-shamaa@cgiar.org>
-Description: Query the Breeding Management System 'BMS'
-    <https://bmspro.io> database (using 'BrAPI' <https://brapi.org> calls)
-    to help breeders as targeted end-users retrieving data directly into
-    their analyzing pipelines.
+Description: Query the Breeding Management System(s) like BMS <https://bmspro.io>, 
+    BreeBase <https://breedbase.org>, and GIGWA <https://southgreen.fr/content/gigwa> 
+    (using 'BrAPI' <https://brapi.org> calls) to help breeders as targeted end-users 
+    retrieve phenotypic and genotypic data directly into their analyzing pipelines.
 License: GPL (>= 3)
 URL: https://github.com/icarda-git/QBMS
 BugReports: https://github.com/icarda-git/QBMS/issues
