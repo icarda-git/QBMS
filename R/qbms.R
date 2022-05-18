@@ -811,8 +811,6 @@ get_germplasm_list <- function() {
                        "/programs/", qbms_globals$state$program_db_id,
                        "/studies/", qbms_globals$state$trial_db_id, "/entries")
 
-    call_body <- paste0('{"filter":{"entryNumbers": ["', paste0(germplasm_list$entryNumber, collapse = '","'), '"]}}')
-
     response <- httr::POST(url = utils::URLencode(call_url), body = "", encode = "json",
                            httr::add_headers(c("X-Auth-Token" = qbms_globals$state$token), "Accept-Encoding" = "gzip, deflate"),
                            httr::timeout(qbms_globals$config$time_out))
