@@ -1488,7 +1488,7 @@ gigwa_list_runs <- function() {
   
   auth_code <- paste0("Bearer ", qbms_globals$state$token)
   headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
-  call_body <- stringi::stri_enc_toutf8(paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}'))
+  call_body <- paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}')
   
   response <- httr::POST(url = utils::URLencode(call_url), body = call_body, 
                          encode = "raw", httr::accept_json(), httr::content_type_json(), 
@@ -1517,7 +1517,7 @@ gigwa_set_run <- function(run_name) {
   
   auth_code <- paste0("Bearer ", qbms_globals$state$token)
   headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
-  call_body <- stringi::stri_enc_toutf8(paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}'))
+  call_body <- paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}')
   
   response <- httr::POST(url = utils::URLencode(call_url), body = call_body, 
                          encode = "raw", httr::accept_json(), httr::content_type_json(), 
@@ -1542,7 +1542,7 @@ gigwa_get_samples <- function() {
 
   auth_code <- paste0("Bearer ", qbms_globals$state$token)
   headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
-  call_body <- stringi::stri_enc_toutf8(paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}'))
+  call_body <- paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}')
   
   response <- httr::POST(url = utils::URLencode(call_url), body = call_body, 
                          encode = "raw", httr::accept_json(), httr::content_type_json(), 
