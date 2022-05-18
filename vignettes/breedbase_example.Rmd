@@ -29,7 +29,7 @@ remotes::install_github("icarda-git/QBMS")
 >*You can find a set of Breedbase based servers available for several crops and accessible with no authentication required are listed at the BrAPI website on the following page under the group of **Boyce Thompson Institute (BTI)**, discovery and innovation in the life sciences: [https://brapi.org/servers](https://brapi.org/servers).*
 
 ## _Example_
-```{r example}
+```r
 # load the QBMS library
 library(QBMS)
 
@@ -44,19 +44,13 @@ list_crops()
 set_crop("Cassava")
 
 # list all breeding programs in the selected crop
-programs <- list_programs()
-
-# show the first 6 programs on the list of programs
-head(programs)
+list_programs()
 
 # select a breeding program by name
 set_program("IITA")
 
 # list all studies/trials in the selected program
-trials <- list_trials()
-
-# show the first 6 trials on the list of trials
-head(trials)
+list_trials()
 
 # select a specific study/trial by name
 set_trial("20_Abuja")
