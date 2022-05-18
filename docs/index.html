@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="Query the Breeding Management System BMS
-    &lt;https://bmspro.io&gt; database (using BrAPI &lt;https://brapi.org&gt; calls)
-    to help breeders as targeted end-users retrieving data directly into
-    their analyzing pipelines.">
-<title>Query the Breeding Management System BMS • QBMS</title>
+<meta name="description" content="Query the Breeding Management System(s) like BMS &lt;https://bmspro.io&gt;, 
+    BreeBase &lt;https://breedbase.org&gt;, and GIGWA &lt;https://southgreen.fr/content/gigwa&gt; 
+    (using BrAPI &lt;https://brapi.org&gt; calls) to help breeders as targeted end-users 
+    retrieve phenotypic and genotypic data directly into their analyzing pipelines.">
+<title>Query the Breeding Management System(s) • QBMS</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
@@ -20,11 +20,11 @@
 <link href="deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Query the Breeding Management System BMS">
-<meta property="og:description" content="Query the Breeding Management System BMS
-    &lt;https://bmspro.io&gt; database (using BrAPI &lt;https://brapi.org&gt; calls)
-    to help breeders as targeted end-users retrieving data directly into
-    their analyzing pipelines.">
+<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Query the Breeding Management System(s)">
+<meta property="og:description" content="Query the Breeding Management System(s) like BMS &lt;https://bmspro.io&gt;, 
+    BreeBase &lt;https://breedbase.org&gt;, and GIGWA &lt;https://southgreen.fr/content/gigwa&gt; 
+    (using BrAPI &lt;https://brapi.org&gt; calls) to help breeders as targeted end-users 
+    retrieve phenotypic and genotypic data directly into their analyzing pipelines.">
 <meta property="og:image" content="https://github.com/icarda-git/QBMS/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -39,7 +39,7 @@
     
     <a class="navbar-brand me-2" href="index.html">QBMS</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,8 +54,9 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="articles/bms_example.html">BMS Example</a>
     <a class="dropdown-item" href="articles/breedbase_example.html">BreedBase Example</a>
-    <a class="dropdown-item" href="articles/tutorial.html">QBMS Tutorial</a>
+    <a class="dropdown-item" href="articles/gigwa_example.html">GIGWA Example</a>
   </div>
 </li>
 <li class="nav-item">
@@ -90,7 +91,7 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>Linking data management systems to analytics is an important step in breeding digitalization. Breeders can use this R package to Query the <a href="https://bmspro.io/" class="external-link">Breeding Management System</a> database (using <a href="https://brapi.org/" class="external-link">BrAPI</a> calls) and help them to retrieve their experiments data directly into R statistical analyzing environment.</p>
+<p>Linking data management systems to analytics is an important step in breeding digitalization. Breeders can use this R package to Query the Breeding Management System(s) like <a href="https://bmspro.io/" class="external-link">BMS</a>, <a href="https://breedbase.org" class="external-link">BreeBase</a>, and <a href="https://southgreen.fr/content/gigwa" class="external-link">GIGWA</a> (using <a href="https://brapi.org/" class="external-link">BrAPI</a> calls) and help them to retrieve phenotypic and genotypic data directly into their analyzing pipelines developed in R statistical environment.</p>
 <blockquote>
 <p><em><strong>Author and Maintainer:</strong> <a href="https://github.com/khaled-alshamaa" class="external-link">Khaled Al-Shamaa</a> &lt;k.el-shamaa (at) cgiar (dot) org&gt;</em></p>
 <p><em><strong>Contributor:</strong> <a href="https://github.com/mcrimi" class="external-link">Mariano Omar CRIMI</a> &lt;m.crimi (at) cgiar (dot) org&gt;</em></p>
@@ -99,9 +100,19 @@
 </blockquote>
 </div>
 <div class="section level2">
-<h2 id="breeding-management-system">Breeding Management System<a class="anchor" aria-label="anchor" href="#breeding-management-system"></a>
+<h2 id="breeding-management-system-bms">Breeding Management System (BMS)<a class="anchor" aria-label="anchor" href="#breeding-management-system-bms"></a>
 </h2>
 <p>Breeding Management System (<a href="https://bmspro.io/" class="external-link">BMS</a>) is an information management system developed by the Integrated Breeding Platform to help breeders manage the breeding process, from programme planning to decision-making. The BMS is customizable for most crop breeding programs, and comes pre-loaded with curated ontology terms for many crops (bean, cassava, chickpea, cowpea, groundnut, maize, rice, sorghum, soybean, wheat, and others). The BMS is available as a cloud application, which can be installed on local or remote servers and accessed by multiple users.</p>
+</div>
+<div class="section level2">
+<h2 id="breedbase">BreedBase<a class="anchor" aria-label="anchor" href="#breedbase"></a>
+</h2>
+<p><a href="https://breedbase.org/" class="external-link">Breedbase</a> is a comprehensive breeding management and analysis software. It can be used to design field layouts, collect phenotypic information using tablets, support the collection of genotyping samples in a field, store large amounts of high density genotypic information, and provide Genomic Selection related analyses and predictions.</p>
+</div>
+<div class="section level2">
+<h2 id="gigwa">GIGWA<a class="anchor" aria-label="anchor" href="#gigwa"></a>
+</h2>
+<p><a href="https://southgreen.fr/content/gigwa" class="external-link">GIGWA</a> is a web-based tool which provides an easy and intuitive way to explore large amounts of genotyping data by filtering the latter based not only on variant features, including functional annotations, but also on genotype patterns. The data storage relies on MongoDB, which offers good scalability perspectives. GIGWA can handle multiple databases and may be deployed in either single or multi-user mode. Finally, it provides a wide range of popular export formats.</p>
 </div>
 <div class="section level2">
 <h2 id="brapi">BrAPI<a class="anchor" aria-label="anchor" href="#brapi"></a>
@@ -113,9 +124,6 @@
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"QBMS"</span><span class="op">)</span></code></pre></div>
-<blockquote>
-<p><em>If you are not already an active BMS user, you can contact <a href="https://ibplatform.atlassian.net/servicedesk/customer/portal/4/group/30/create/60" class="external-link">IBP support</a> to get access to a trial BMS server.</em></p>
-</blockquote>
 <div class="section level3">
 <h3 id="development-version">
 <em>Development version</em><a class="anchor" aria-label="anchor" href="#development-version"></a>
@@ -127,72 +135,6 @@
 </div>
 </div>
 <div class="section level2">
-<h2 id="usage">
-<em>Usage</em><a class="anchor" aria-label="anchor" href="#usage"></a>
-</h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># load the QBMS library</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/icarda-git/QBMS">QBMS</a></span><span class="op">)</span>
-
-<span class="co"># config your BMS connection (by providing your BMS login page URL)</span>
-<span class="fu"><a href="reference/set_qbms_config.html">set_qbms_config</a></span><span class="op">(</span><span class="st">"https://www.bms-uat-test.net/ibpworkbench/controller/auth/login"</span><span class="op">)</span>
-
-<span class="co"># login using your BMS account (interactive mode)</span>
-<span class="co"># or pass your BMS username and password as parameters (batch mode)</span>
-<span class="fu"><a href="reference/login_bms.html">login_bms</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># list supported crops in the current bms server</span>
-<span class="fu"><a href="reference/list_crops.html">list_crops</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># select a crop by name</span>
-<span class="fu"><a href="reference/set_crop.html">set_crop</a></span><span class="op">(</span><span class="st">"maize"</span><span class="op">)</span>
-
-<span class="co"># list all breeding programs in the selected crop</span>
-<span class="fu"><a href="reference/list_programs.html">list_programs</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># select a breeding program by name</span>
-<span class="fu"><a href="reference/set_program.html">set_program</a></span><span class="op">(</span><span class="st">"MC Maize"</span><span class="op">)</span>
-
-<span class="co"># list all studies/trials in the selected program</span>
-<span class="fu"><a href="reference/list_trials.html">list_trials</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># filtered by year of starting date</span>
-<span class="fu"><a href="reference/list_trials.html">list_trials</a></span><span class="op">(</span><span class="fl">2020</span><span class="op">)</span>
-
-<span class="co"># select a specific study/trial by name</span>
-<span class="fu"><a href="reference/set_trial.html">set_trial</a></span><span class="op">(</span><span class="st">"2018 PVT"</span><span class="op">)</span>
-
-<span class="co"># get observation variable ontology in the selected study/trial</span>
-<span class="va">ontology</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_trial_obs_ontology.html">get_trial_obs_ontology</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># list all environments/locations information in the selected study/trial</span>
-<span class="fu"><a href="reference/list_studies.html">list_studies</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># select a specific environment/location by name</span>
-<span class="fu"><a href="reference/set_study.html">set_study</a></span><span class="op">(</span><span class="st">"2018 PVT Environment Number 1"</span><span class="op">)</span>
-
-<span class="co"># select a specific study by location name (first match)</span>
-<span class="va">studies</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/list_studies.html">list_studies</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="reference/set_study.html">set_study</a></span><span class="op">(</span><span class="va">studies</span><span class="op">[</span><span class="va">studies</span><span class="op">$</span><span class="va">locationName</span> <span class="op">==</span> <span class="st">"BASF Bremen"</span>, <span class="st">"studyName"</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>
-
-<span class="co"># retrieve data, general information, and germplasm list of the selected environment/location</span>
-<span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_study_data.html">get_study_data</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">info</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_study_info.html">get_study_info</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">germplasm</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_germplasm_list.html">get_germplasm_list</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># get the pedigree table</span>
-<span class="va">pedigree_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_pedigree_table.html">get_pedigree_table</a></span><span class="op">(</span><span class="va">germplasm</span>, <span class="st">"germplasmName"</span>, <span class="st">"pedigree"</span><span class="op">)</span>
-
-<span class="co"># retrieve multi-environment trial data of the selected study/trial</span>
-<span class="va">MET</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_trial_data.html">get_trial_data</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># retrieve all environments/locations information in the selected program</span>
-<span class="va">program_studies</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_program_studies.html">get_program_studies</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># retrieve observations data of given germplasm aggregated from all trials in the selected program</span>
-<span class="va">germplasm_observations</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_germplasm_data.html">get_germplasm_data</a></span><span class="op">(</span><span class="st">"BASFCORN-2-1"</span><span class="op">)</span></code></pre></div>
-</div>
-<div class="section level2">
 <h2 id="troubleshooting-the-installation">
 <em>Troubleshooting the installation</em><a class="anchor" aria-label="anchor" href="#troubleshooting-the-installation"></a>
 </h2>
@@ -200,7 +142,7 @@
 <li><p>If the installation of QBMS generates errors saying that some of the existing packages cannot be removed, you can try to quit any R session, and try to start R in administrator (Windows) or SUDO mode (Linux/Ubuntu) then try installing again.</p></li>
 <li><p>If you get an error related to packages built under a current version of R, and updating your packages doesn’t help, you can consider overriding the error with the following code. <em>Note: This might help you install QBMS but may result in other problems. If possible, it’s best to resolve the errors rather than ignoring them.</em></p></li>
 </ol>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span><span class="st">"R_REMOTES_NO_ERRORS_FROM_WARNINGS"</span> <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"icarda-git/QBMS"</span>, upgrade <span class="op">=</span> <span class="st">"always"</span><span class="op">)</span></code></pre></div>

@@ -68,7 +68,8 @@ set_study("20NCRP12yrtAB")
 # studies <- list_studies()
 # set_study(studies[studies$locationName == "Abuja", "studyName"][1])
 
-# retrieve general information, data, and germplasm list of the selected environment/location
+# retrieve general information, data, and germplasm list 
+# of the selected environment/location
 info <- get_study_info()
 data <- get_study_data()
 germplasm <- get_germplasm_list()

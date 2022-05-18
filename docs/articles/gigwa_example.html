@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="QBMS">
-<title>BreedBase Example • QBMS</title>
+<title>GIGWA Example • QBMS</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="BreedBase Example">
+<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="GIGWA Example">
 <meta property="og:description" content="QBMS">
 <meta property="og:image" content="https://github.com/icarda-git/QBMS/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -80,13 +80,13 @@
 
 <div class="row">
   <main id="main"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>BreedBase Example</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>GIGWA Example</h1>
                         <h4 data-toc-skip class="author">Khaled Al-Shamaa</h4>
             
             <h4 data-toc-skip class="date">2022-05-19</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/icarda-git/QBMS/blob/HEAD/vignettes/breedbase_example.Rmd"><code>vignettes/breedbase_example.Rmd</code></a></small>
-      <div class="d-none name"><code>breedbase_example.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/icarda-git/QBMS/blob/HEAD/vignettes/gigwa_example.Rmd"><code>vignettes/gigwa_example.Rmd</code></a></small>
+      <div class="d-none name"><code>gigwa_example.Rmd</code></div>
     </div>
 
     
@@ -95,12 +95,11 @@
 <h2 id="qbms">QBMS<a class="anchor" aria-label="anchor" href="#qbms"></a>
 </h2>
 <p>Linking data management systems to analytics is an important step in breeding digitalization. Breeders can use this R package to Query the <a href="https://bmspro.io/" class="external-link">Breeding Management System</a> database (using <a href="https://brapi.org/" class="external-link">BrAPI</a> calls) and help them to retrieve their experiments data directly into R statistical analyzing environment.</p>
-<p>Well, because <strong>Breedbase</strong> supports the <strong>BrAPI</strong> standard, most of the QBMS functionalities work smoothly with minor changes. For example, you need to give special attention to the <code>set_qbms_config</code> parameters (check the example below). Currently, some functions are not supported when working with BreedBase, like <code>get_program_studies</code>, <code>get_germplasm_data</code>, and <code>list_trials</code> filtered by year!</p>
 </div>
 <div class="section level2">
-<h2 id="breedbase">BreedBase<a class="anchor" aria-label="anchor" href="#breedbase"></a>
+<h2 id="gigwa">GIGWA<a class="anchor" aria-label="anchor" href="#gigwa"></a>
 </h2>
-<p><a href="https://breedbase.org/" class="external-link">Breedbase</a> is a comprehensive breeding management and analysis software. It can be used to design field layouts, collect phenotypic information using tablets, support the collection of genotyping samples in a field, store large amounts of high density genotypic information, and provide Genomic Selection related analyses and predictions.</p>
+<p><a href="https://southgreen.fr/content/gigwa" class="external-link">GIGWA</a> is a web-based tool which provides an easy and intuitive way to explore large amounts of genotyping data by filtering the latter based not only on variant features, including functional annotations, but also on genotype patterns. The data storage relies on MongoDB, which offers good scalability perspectives. GIGWA can handle multiple databases and may be deployed in either single or multi-user mode. Finally, it provides a wide range of popular export formats.</p>
 </div>
 <div class="section level2">
 <h2 id="brapi">BrAPI<a class="anchor" aria-label="anchor" href="#brapi"></a>
@@ -114,9 +113,6 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"icarda-git/QBMS"</span><span class="op">)</span></code></pre></div>
-<blockquote>
-<p><em>You can find a set of Breedbase based servers available for several crops and accessible with no authentication required are listed at the BrAPI website on the following page under the group of <strong>Boyce Thompson Institute (BTI)</strong>, discovery and innovation in the life sciences: <a href="https://brapi.org/servers" class="external-link">https://brapi.org/servers</a>.</em></p>
-</blockquote>
 </div>
 <div class="section level2">
 <h2 id="example">
@@ -126,49 +122,57 @@
 <code class="sourceCode R"><span class="co"># load the QBMS library</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/icarda-git/QBMS">QBMS</a></span><span class="op">)</span>
 
-<span class="co"># Cassava BreedBase server</span>
-<span class="fu"><a href="../reference/set_qbms_config.html">set_qbms_config</a></span><span class="op">(</span><span class="st">"https://cassavabase.org/brapi/v1/calls/"</span>, 
-                time_out <span class="op">=</span> <span class="fl">300</span>, no_auth <span class="op">=</span> <span class="cn">TRUE</span>, engine <span class="op">=</span> <span class="st">"breedbase"</span><span class="op">)</span>
+<span class="co"># The public GIGWA testing server required no authentication. If your GIGWA server </span>
+<span class="co"># requires authentication, then make sure that no_auth parameter value is FALSE</span>
+<span class="fu"><a href="../reference/set_qbms_config.html">set_qbms_config</a></span><span class="op">(</span><span class="st">"https://gigwa.southgreen.fr/gigwa/"</span>, 
+                time_out <span class="op">=</span> <span class="fl">300</span>, engine <span class="op">=</span> <span class="st">"gigwa"</span>, no_auth <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
-<span class="co"># list supported crops in the current bms server</span>
-<span class="fu"><a href="../reference/list_crops.html">list_crops</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co"># If login is required, then you can use your GIGWA account (interactive mode)</span>
+<span class="co"># or pass your GIGWA username and password as parameters (batch mode)</span>
+<span class="co"># login_gigwa()</span>
+<span class="co"># login_gigwa("gigwadmin", "nimda")</span>
 
-<span class="co"># select a crop by name</span>
-<span class="fu"><a href="../reference/set_crop.html">set_crop</a></span><span class="op">(</span><span class="st">"Cassava"</span><span class="op">)</span>
+<span class="co"># list existing databases in the current GIGWA server</span>
+<span class="fu"><a href="../reference/gigwa_list_dbs.html">gigwa_list_dbs</a></span><span class="op">(</span><span class="op">)</span>
 
-<span class="co"># list all breeding programs in the selected crop</span>
-<span class="fu"><a href="../reference/list_programs.html">list_programs</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co"># select a database by name</span>
+<span class="fu"><a href="../reference/gigwa_set_db.html">gigwa_set_db</a></span><span class="op">(</span><span class="st">"Sorghum-JGI_v1"</span><span class="op">)</span>
 
-<span class="co"># select a breeding program by name</span>
-<span class="fu"><a href="../reference/set_program.html">set_program</a></span><span class="op">(</span><span class="st">"IITA"</span><span class="op">)</span>
+<span class="co"># list all projects in the selected database</span>
+<span class="fu"><a href="../reference/gigwa_list_projects.html">gigwa_list_projects</a></span><span class="op">(</span><span class="op">)</span>
 
-<span class="co"># list all studies/trials in the selected program</span>
-<span class="fu"><a href="../reference/list_trials.html">list_trials</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co"># select a project by name</span>
+<span class="fu"><a href="../reference/gigwa_set_project.html">gigwa_set_project</a></span><span class="op">(</span><span class="st">"Nelson_et_al_2011"</span><span class="op">)</span>
 
-<span class="co"># select a specific study/trial by name</span>
-<span class="fu"><a href="../reference/set_trial.html">set_trial</a></span><span class="op">(</span><span class="st">"20_Abuja"</span><span class="op">)</span>
+<span class="co"># list all runs in the selected project</span>
+<span class="fu"><a href="../reference/gigwa_list_runs.html">gigwa_list_runs</a></span><span class="op">(</span><span class="op">)</span>
 
-<span class="co"># get observation variable ontology in the selected study/trial</span>
-<span class="fu"><a href="../reference/get_trial_obs_ontology.html">get_trial_obs_ontology</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co"># select a specific run by name</span>
+<span class="fu"><a href="../reference/gigwa_set_run.html">gigwa_set_run</a></span><span class="op">(</span><span class="st">"run1"</span><span class="op">)</span>
 
-<span class="co"># list all environments/locations information in the selected study/trial</span>
-<span class="fu"><a href="../reference/list_studies.html">list_studies</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co"># get a list of all samples in the selected run</span>
+<span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gigwa_get_samples.html">gigwa_get_samples</a></span><span class="op">(</span><span class="op">)</span>
 
-<span class="co"># select a specific environment/location by name</span>
-<span class="fu"><a href="../reference/set_study.html">set_study</a></span><span class="op">(</span><span class="st">"20NCRP12yrtAB"</span><span class="op">)</span>
+<span class="co"># show the first 6 individuals on the list of samples</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span>
 
-<span class="co"># another option, select a specific study by location name (first match)</span>
-<span class="co"># studies &lt;- list_studies()</span>
-<span class="co"># set_study(studies[studies$locationName == "Abuja", "studyName"][1])</span>
+<span class="co"># query the variants (e.g., SNPs markers) in the selected run </span>
+<span class="co"># that match the given criteria:</span>
+<span class="co"># - max_missing: maximum missing ratio (by sample) [0-1] (default is 1 for 100%) </span>
+<span class="co"># - min_maf: minimum Minor Allele Frequency (MAF) [0-1] (default is 0 for 0%) </span>
+<span class="co"># - samples: a list of a samples subset (default is NULL will retrieve for all samples) </span>
+<span class="va">marker_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gigwa_get_variants.html">gigwa_get_variants</a></span><span class="op">(</span>max_missing <span class="op">=</span> <span class="fl">0.2</span>, 
+                                    min_maf <span class="op">=</span> <span class="fl">0.35</span>, 
+                                    samples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ind1"</span>, <span class="st">"ind3"</span>, <span class="st">"ind7"</span><span class="op">)</span><span class="op">)</span>
 
-<span class="co"># retrieve general information, data, and germplasm list </span>
-<span class="co"># of the selected environment/location</span>
-<span class="va">info</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_study_info.html">get_study_info</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_study_data.html">get_study_data</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">germplasm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_germplasm_list.html">get_germplasm_list</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># retrieve multi-environment trial data of the selected study/trial</span>
-<span class="va">MET</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_trial_data.html">get_trial_data</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<span class="co"># Data returns in data.frame format. The first 4 columns describe attributes of the SNP </span>
+<span class="co"># - rs#: variant name</span>
+<span class="co"># - alleles: reference allele / alternative allele</span>
+<span class="co"># - chrom: chromosome name</span>
+<span class="co"># - pos: position in bp</span>
+<span class="co"># while the following columns describe the SNP value for a single sample line using </span>
+<span class="co"># numerical coding 0, 1, and 2 for reference, heterozygous, alternative/minor alleles.</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">marker_matrix</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="troubleshooting-the-installation">

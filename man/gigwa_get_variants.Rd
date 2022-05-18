@@ -7,9 +7,9 @@
 gigwa_get_variants(max_missing = 1, min_maf = 0, samples = NULL)
 }
 \arguments{
-\item{max_missing}{maximum missing ratio (by sample) between 0 and 1 (default is 1 for 100%).}
+\item{max_missing}{maximum missing ratio (by sample) between 0 and 1 (default is 1 for 100\%).}
 
-\item{min_maf}{minimum Minor Allele Frequency (MAF) between 0 and 1 (default is 0 for 0%).}
+\item{min_maf}{minimum Minor Allele Frequency (MAF) between 0 and 1 (default is 0 for 0\%).}
 
 \item{samples}{a list of a samples subset (default is NULL will retrieve for all samples).}
 }
@@ -42,9 +42,6 @@ marker_matrix <- gigwa_get_variants(max_missing = 0.2,
                                     min_maf = 0.35, 
                                     samples = c("ind1", "ind3", "ind7"))
 }
-}
-\seealso{
-\code{\link{set_qbms_config}}, \code{\link{gigwa_set_run}}
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

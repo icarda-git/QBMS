@@ -81,7 +81,8 @@ set_study("2018 PVT Environment Number 1")
 studies <- list_studies()
 set_study(studies[studies$locationName == "BASF Bremen", "studyName"][1])
 
-# retrieve data, general information, and germplasm list of the selected environment/location
+# retrieve data, general information, and germplasm list 
+# of the selected environment/location
 data <- get_study_data()
 info <- get_study_info()
 germplasm <- get_germplasm_list()
@@ -95,7 +96,8 @@ MET <- get_trial_data()
 # retrieve all environments/locations information in the selected program
 program_studies <- get_program_studies()
 
-# retrieve observations data of given germplasm aggregated from all trials in the selected program
+# retrieve observations data of given germplasm aggregated from all trials 
+# in the selected program
 germplasm_observations <- get_germplasm_data("BASFCORN-2-1")
 
 ```

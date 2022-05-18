@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">QBMS</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,8 +24,9 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/bms_example.html">BMS Example</a>
     <a class="dropdown-item" href="../articles/breedbase_example.html">BreedBase Example</a>
-    <a class="dropdown-item" href="../articles/tutorial.html">QBMS Tutorial</a>
+    <a class="dropdown-item" href="../articles/gigwa_example.html">GIGWA Example</a>
   </div>
 </li>
 <li class="nav-item">
@@ -138,6 +139,46 @@
         <dd>Get the traits ontology/metadata of the current active trial</dd>
       </dl><dl><dt>
           
+          <code><a href="gigwa_get_samples.html">gigwa_get_samples()</a></code> 
+        </dt>
+        <dd>Get the samples list of the current active GIGWA run</dd>
+      </dl><dl><dt>
+          
+          <code><a href="gigwa_get_variants.html">gigwa_get_variants()</a></code> 
+        </dt>
+        <dd>Get variants in the selected GIGWA run</dd>
+      </dl><dl><dt>
+          
+          <code><a href="gigwa_list_dbs.html">gigwa_list_dbs()</a></code> 
+        </dt>
+        <dd>Get the list of existing databases in the current GIGWA server</dd>
+      </dl><dl><dt>
+          
+          <code><a href="gigwa_list_projects.html">gigwa_list_projects()</a></code> 
+        </dt>
+        <dd>Get the list of all projects in the selected GIGWA database</dd>
+      </dl><dl><dt>
+          
+          <code><a href="gigwa_list_runs.html">gigwa_list_runs()</a></code> 
+        </dt>
+        <dd>Get the list of run names in the selected GIGWA project</dd>
+      </dl><dl><dt>
+          
+          <code><a href="gigwa_set_db.html">gigwa_set_db()</a></code> 
+        </dt>
+        <dd>Set the current active GIGWA database by name</dd>
+      </dl><dl><dt>
+          
+          <code><a href="gigwa_set_project.html">gigwa_set_project()</a></code> 
+        </dt>
+        <dd>Set the current active GIGWA project</dd>
+      </dl><dl><dt>
+          
+          <code><a href="gigwa_set_run.html">gigwa_set_run()</a></code> 
+        </dt>
+        <dd>Set the current active GIGWA run</dd>
+      </dl><dl><dt>
+          
           <code><a href="list_crops.html">list_crops()</a></code> 
         </dt>
         <dd>Get the list of supported crops</dd>
@@ -160,7 +201,12 @@
           
           <code><a href="login_bms.html">login_bms()</a></code> 
         </dt>
-        <dd>Login to the BMS server</dd>
+        <dd>Login to the server</dd>
+      </dl><dl><dt>
+          
+          <code><a href="login_gigwa.html">login_gigwa()</a></code> 
+        </dt>
+        <dd>Login to the GIGWA server</dd>
       </dl><dl><dt>
           
           <code><a href="rbindlistx.html">rbindlistx()</a></code> 

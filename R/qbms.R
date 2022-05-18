@@ -1740,8 +1740,8 @@ gigwa_get_samples <- function() {
 #' @description
 #' Query the variants (e.g., SNPs markers) in the selected GIGWA run that match a given criteria.
 #' 
-#' @param max_missing maximum missing ratio (by sample) between 0 and 1 (default is 1 for 100%).
-#' @param min_maf minimum Minor Allele Frequency (MAF) between 0 and 1 (default is 0 for 0%).
+#' @param max_missing maximum missing ratio (by sample) between 0 and 1 (default is 1 for 100\%).
+#' @param min_maf minimum Minor Allele Frequency (MAF) between 0 and 1 (default is 0 for 0\%).
 #' @param samples a list of a samples subset (default is NULL will retrieve for all samples).
 #' @return A data.frame that has the first 4 columns describe attributes of the SNP 
 #'         (rs#: variant name, alleles: reference allele / alternative allele, chrom: chromosome name, 
@@ -1749,7 +1749,6 @@ gigwa_get_samples <- function() {
 #'         single sample line using numerical coding 0, 1, and 2 for reference, heterozygous, and 
 #'         alternative/minor alleles.
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
-#' @seealso \code{\link{set_qbms_config}}, \code{\link{gigwa_set_run}}
 #' @examples
 #' if(interactive()) {
 #' # config your GIGWA connection

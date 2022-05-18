@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">QBMS</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,8 +24,9 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/bms_example.html">BMS Example</a>
     <a class="dropdown-item" href="../articles/breedbase_example.html">BreedBase Example</a>
-    <a class="dropdown-item" href="../articles/tutorial.html">QBMS Tutorial</a>
+    <a class="dropdown-item" href="../articles/gigwa_example.html">GIGWA Example</a>
   </div>
 </li>
 <li class="active nav-item">
@@ -52,8 +53,15 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.8.0" id="qbms-080-2022-05-18">QBMS 0.8.0 <em>2022-05-18</em>
+<a class="anchor" aria-label="anchor" href="#qbms-080-2022-05-18"></a></h2>
+<ul><li>Add GIGWA support to query and retrieve SNPs data for GWAS and GS analysis pipelines.</li>
+<li>Tiny usability enhancements (e.g., automate path parameter setting, show the server name in the login window, add progress bar to the get_program_studies function).</li>
+<li>Fix mistakenly redundant location names/info returned by the get_program_studies function.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7.0" id="qbms-070-2022-03-03">QBMS 0.7.0 <em>2022-03-03</em>
-<a class="anchor" aria-label="anchor" href="#qbms-070-2022-03-03"></a></h2>
+<a class="anchor" aria-label="anchor" href="#qbms-070-2022-03-03"></a></h2><p class="text-muted">CRAN release: 2022-03-02</p>
 <ul><li>Add BreedBase support using BrAPI v1 calls.</li>
 <li>Add functionality to get the pedigree table starting from germplasm dataset.</li>
 <li>Improve set_qbms_config to generalize the way of getting the server domain from the URL.</li>
