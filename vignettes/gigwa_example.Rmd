@@ -60,7 +60,7 @@ gigwa_set_run("run1")
 # get a list of all samples in the selected run
 samples <- gigwa_get_samples()
 
-# shows the first 6 individuals on the list of samples
+# show the first 6 individuals on the list of samples
 head(samples)
 ```
 
