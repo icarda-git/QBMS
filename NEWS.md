@@ -1,3 +1,8 @@
+# QBMS 0.8.0 _2022-05-18_ 
+  * Add GIGWA support to query and retrieve SNPs data for GWAS and GS analysis pipelines.
+  * Tiny usability enhancements (e.g., automate path parameter setting, show the server name in the login window, add progress bar to the get_program_studies function).
+  * Fix mistakenly redundant location names returned by the get_program_studies function.
+
 # QBMS 0.7.0 _2022-03-03_ 
   * Add BreedBase support using BrAPI v1 calls.
   * Add functionality to get the pedigree table starting from germplasm dataset.

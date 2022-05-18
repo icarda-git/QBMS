@@ -1014,7 +1014,7 @@ get_program_studies <- function() {
   colnames(program_trials) <- gsub("additionalInfo.", "", colnames(program_trials))
 
   for (row in 1:nrow(program_trials)) {
-    trial <- program_trials[row, -7]
+    trial <- program_trials[row, ]
     trial_studies <- rbindlistx(program_trials[row, "studies"])
     if (nrow(trial_studies) > 0) {
       if (row == 1) {
@@ -1025,7 +1025,8 @@ get_program_studies <- function() {
     }
   }
 
-  studies <- studies[, unique(colnames(studies))]
+  # remove locationDbId, active, studies, and locationName columns coming from the trial data.frame
+  studies <- studies[, -c(6, 7, 8, 14)]
 
   crop_locations <- get_crop_locations()
 
@@ -1034,9 +1035,15 @@ get_program_studies <- function() {
   studies$testEntriesCount <- 0
 
   crop_url <- paste0(qbms_globals$config$base_url, "/crops/", qbms_globals$config$crop)
+  
+  all_trials <- unique(studies$trialDbId)
+  num_trials <- length(all_trials)
+  
+  pb <- utils::txtProgressBar(min = 0, max = num_trials, initial = 0, style = 3) 
+  pb_step <- round(num_trials/100)
 
-  for (i in unique(studies$trialDbId)) {
-    call_url <- paste0(crop_url, "/programs/", qbms_globals$state$program_db_id, "/studies/", i, "/entries/metadata")
+  for (i in 1:num_trials) {
+    call_url <- paste0(crop_url, "/programs/", qbms_globals$state$program_db_id, "/studies/", all_trials[i], "/entries/metadata")
 
     response <- httr::GET(url = utils::URLencode(call_url),
                           httr::add_headers("X-Auth-Token" = qbms_globals$state$token, "Accept-Encoding" = "gzip, deflate"),
@@ -1044,9 +1051,15 @@ get_program_studies <- function() {
     
     metadata <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
 
-    studies[studies$trialDbId == i, "testEntriesCount"] <- metadata$testEntriesCount
-    studies[studies$trialDbId == i, "checkEntriesCount"] <- metadata$checkEntriesCount
+    studies[studies$trialDbId == all_trials[i], "testEntriesCount"] <- metadata$testEntriesCount
+    studies[studies$trialDbId == all_trials[i], "checkEntriesCount"] <- metadata$checkEntriesCount
+    
+    # update the progress bar
+    utils::setTxtProgressBar(pb, i)
   }
+  
+  utils::setTxtProgressBar(pb, num_trials)
+  close(pb)
 
   return(studies)
 }
