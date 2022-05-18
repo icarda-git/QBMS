@@ -10,7 +10,7 @@
 <!-- badges: end -->
 
 ## Overview
-Linking data management systems to analytics is an important step in breeding digitalization. Breeders can use this R package to Query the [Breeding Management System](https://bmspro.io/) database (using [BrAPI](https://brapi.org/) calls) and help them to retrieve their experiments data directly into R statistical analyzing environment.
+Linking data management systems to analytics is an important step in breeding digitalization. Breeders can use this R package to Query the Breeding Management System(s) like [BMS](https://bmspro.io/), [BreeBase](https://breedbase.org), and [GIGWA](https://southgreen.fr/content/gigwa) (using [BrAPI](https://brapi.org/) calls) and help them to retrieve phenotypic and genotypic data directly into their analyzing pipelines developed in R statistical environment.
 
 >___Author and Maintainer:__ [Khaled Al-Shamaa](https://github.com/khaled-alshamaa) <k.el-shamaa (at) cgiar (dot) org>_
 >
@@ -20,8 +20,14 @@ Linking data management systems to analytics is an important step in breeding di
 >
 >___Copyright Holder:__ [International Center for Agricultural Research in the Dry Areas (ICARDA)](https://www.icarda.org/)_
 
-## Breeding Management System
+## Breeding Management System (BMS)
 Breeding Management System ([BMS](https://bmspro.io/)) is an information management system developed by the Integrated Breeding Platform to help breeders manage the breeding process, from programme planning to decision-making. The BMS is customizable for most crop breeding programs, and comes pre-loaded with curated ontology terms for many crops (bean, cassava, chickpea, cowpea, groundnut, maize, rice, sorghum, soybean, wheat, and others). The BMS is available as a cloud application, which can be installed on local or remote servers and accessed by multiple users.
+
+## BreedBase
+[Breedbase](https://breedbase.org/) is a comprehensive breeding management and analysis software. It can be used to design field layouts, collect phenotypic information using tablets, support the collection of genotyping samples in a field, store large amounts of high density genotypic information, and provide Genomic Selection related analyses and predictions.
+
+## GIGWA
+[GIGWA](https://southgreen.fr/content/gigwa) is a web-based tool which provides an easy and intuitive way to explore large amounts of genotyping data by filtering the latter based not only on variant features, including functional annotations, but also on genotype patterns. The data storage relies on MongoDB, which offers good scalability perspectives. GIGWA can handle multiple databases and may be deployed in either single or multi-user mode. Finally, it provides a wide range of popular export formats.
 
 ## BrAPI
 The Breeding API ([BrAPI](https://brapi.org/)) project is an effort to enable interoperability among plant breeding databases. BrAPI is a standardized RESTful web service API specification for communicating plant breeding data. This community driven standard is free to be used by anyone interested in plant breeding data management.
@@ -30,8 +36,6 @@ The Breeding API ([BrAPI](https://brapi.org/)) project is an effort to enable in
 ```r
 install.packages("QBMS")
 ```
-
-> _If you are not already an active BMS user, you can contact [IBP support](https://ibplatform.atlassian.net/servicedesk/customer/portal/4/group/30/create/60) to get access to a trial BMS server._
 
 ### _Development version_
 
@@ -42,70 +46,6 @@ install.packages("remotes")
 remotes::install_github("icarda-git/QBMS")
 ```
 
-## _Usage_
-```r
-# load the QBMS library
-library(QBMS)
-
-# config your BMS connection (by providing your BMS login page URL)
-set_qbms_config("https://www.bms-uat-test.net/ibpworkbench/controller/auth/login")
-
-# login using your BMS account (interactive mode)
-# or pass your BMS username and password as parameters (batch mode)
-login_bms()
-
-# list supported crops in the current bms server
-list_crops()
-
-# select a crop by name
-set_crop("maize")
-
-# list all breeding programs in the selected crop
-list_programs()
-
-# select a breeding program by name
-set_program("MC Maize")
-
-# list all studies/trials in the selected program
-list_trials()
-
-# filtered by year of starting date
-list_trials(2020)
-
-# select a specific study/trial by name
-set_trial("2018 PVT")
-
-# get observation variable ontology in the selected study/trial
-ontology <- get_trial_obs_ontology()
-
-# list all environments/locations information in the selected study/trial
-list_studies()
-
-# select a specific environment/location by name
-set_study("2018 PVT Environment Number 1")
-
-# select a specific study by location name (first match)
-studies <- list_studies()
-set_study(studies[studies$locationName == "BASF Bremen", "studyName"][1])
-
-# retrieve data, general information, and germplasm list of the selected environment/location
-data <- get_study_data()
-info <- get_study_info()
-germplasm <- get_germplasm_list()
-
-# get the pedigree table
-pedigree_table <- get_pedigree_table(germplasm, "germplasmName", "pedigree")
-
-# retrieve multi-environment trial data of the selected study/trial
-MET <- get_trial_data()
-
-# retrieve all environments/locations information in the selected program
-program_studies <- get_program_studies()
-
-# retrieve observations data of given germplasm aggregated from all trials in the selected program
-germplasm_observations <- get_germplasm_data("BASFCORN-2-1")
-
-```
 ## _Troubleshooting the installation_
 
 1. If the installation of QBMS generates errors saying that some of the existing packages cannot be removed, you can try to quit any R session, and try to start R in administrator (Windows) or SUDO mode (Linux/Ubuntu) then try installing again.
