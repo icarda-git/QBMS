@@ -1,0 +1,92 @@
+---
+title: "GIGWA Example"
+author: "Khaled Al-Shamaa"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{GIGWA Example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## QBMS
+Linking data management systems to analytics is an important step in breeding digitalization. Breeders can use this R package to Query the [Breeding Management System](https://bmspro.io/) database (using [BrAPI](https://brapi.org/) calls) and help them to retrieve their experiments data directly into R statistical analyzing environment.
+
+## GIGWA
+[GIGWA](https://southgreen.fr/content/gigwa) is a web-based tool which provides an easy and intuitive way to explore large amounts of genotyping data by filtering the latter based not only on variant features, including functional annotations, but also on genotype patterns. The data storage relies on MongoDB, which offers good scalability perspectives. GIGWA can handle multiple databases and may be deployed in either single or multi-user mode. Finally, it provides a wide range of popular export formats.
+
+## BrAPI
+The Breeding API ([BrAPI](https://brapi.org/)) project is an effort to enable interoperability among plant breeding databases. BrAPI is a standardized RESTful web service API specification for communicating plant breeding data. This community driven standard is free to be used by anyone interested in plant breeding data management.
+
+## _Install_
+```r
+install.packages("remotes")
+remotes::install_github("icarda-git/QBMS")
+```
+
+## _Example_
+```r
+# load the QBMS library
+library(QBMS)
+
+# The public GIGWA testing server required no authentication. If your GIGWA server 
+# requires authentication, then make sure that no_auth parameter value is FALSE
+set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
+                time_out = 300, engine = "gigwa", no_auth = TRUE)
+
+# If login is required, then you can use your GIGWA account (interactive mode)
+# or pass your GIGWA username and password as parameters (batch mode)
+# login_gigwa()
+# login_gigwa("gigwadmin", "nimda")
+
+# list existing databases in the current GIGWA server
+gigwa_list_dbs()
+
+# select a database by name
+gigwa_set_db("Sorghum-JGI_v1")
+
+# list all projects in the selected database
+gigwa_list_projects()
+
+# select a project by name
+gigwa_set_project("Nelson_et_al_2011")
+
+# list all runs in the selected project
+gigwa_list_runs()
+
+# select a specific run by name
+gigwa_set_run("run1")
+
+# get a list of all samples in the selected run
+samples <- gigwa_get_samples()
+
+# shows the first 6 individuals on the list of samples
+head(samples)
+
+# query the variants (e.g., SNPs markers) in the selected run that match the given criteria:
+# - max_missing: maximum missing ratio (by sample) between 0 and 1 (default is 1 for 100%) 
+# - min_maf: minimum Minor Allele Frequency (MAF) between 0 and 1 (default is 0 for 0%) 
+# - samples: a list of a samples subset (default is NULL will retrieve for all samples) 
+marker_matrix <- gigwa_get_variants(max_missing = 0.2, 
+                                    min_maf = 0.35, 
+                                    samples = c("ind1", "ind3", "ind7"))
+
+# Data returns in data.frame format. The first 4 columns describe attributes of the SNP 
+# (rs#: variant name, alleles: reference allele / alternative allele, chrom: chromosome name, 
+# and pos: position in bp), while the following columns describe the SNP value for a 
+# single sample line using numerical coding 0, 1, and 2 for reference, heterozygous, and 
+# alternative/minor alleles.
+View(marker_matrix)
+
+```
+## _Troubleshooting the installation_
+
+1. If the installation of QBMS generates errors saying that some of the existing packages cannot be removed, you can try to quit any R session, and try to start R in administrator (Windows) or SUDO mode (Linux/Ubuntu) then try installing again.
+
+2. If you get an error related to packages built under a current version of R, and updating your packages doesn’t help, you can consider overriding the error with the following code. _Note: This might help you install QBMS but may result in other problems. If possible, it’s best to resolve the errors rather than ignoring them._
+
+```r
+Sys.setenv("R_REMOTES_NO_ERRORS_FROM_WARNINGS" = TRUE)
+
+remotes::install_github("icarda-git/QBMS", upgrade = "always")
+```
