@@ -1735,8 +1735,11 @@ gigwa_get_samples <- function() {
   return(results$result$data$germplasmName)
 }
 
-#' Query the variants (e.g., SNPs markers) in the selected GIGWA run that match a given criteria
+#' Get variants in the selected GIGWA run
 #'
+#' @description
+#' Query the variants (e.g., SNPs markers) in the selected GIGWA run that match a given criteria.
+#' 
 #' @param max_missing maximum missing ratio (by sample) between 0 and 1 (default is 1 for 100%).
 #' @param min_maf minimum Minor Allele Frequency (MAF) between 0 and 1 (default is 0 for 0%).
 #' @param samples a list of a samples subset (default is NULL will retrieve for all samples).

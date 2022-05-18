@@ -2,10 +2,39 @@
 % Please edit documentation in R/qbms.R
 \name{gigwa_get_samples}
 \alias{gigwa_get_samples}
-\title{gigwa_get_samples()}
+\title{Get the samples list of the current active GIGWA run}
 \usage{
 gigwa_get_samples()
 }
+\value{
+a vector of all samples in the selected run
+}
 \description{
-gigwa_get_samples()
+This function will retrieve the samples list of the current active run
+as configured in the internal state object using `gigwa_set_run()` function.
+}
+\examples{
+if(interactive()) {
+# config your GIGWA connection
+set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
+                time_out = 300, engine = "gigwa", no_auth = TRUE)
+
+# select a database by name
+gigwa_set_db("Sorghum-JGI_v1")
+
+# select a project by name
+gigwa_set_project("Nelson_et_al_2011")
+
+# select a specific run by name
+gigwa_set_run("run1")
+
+# get a list of all samples in the selected run
+samples <- gigwa_get_samples()
+}
+}
+\seealso{
+\code{\link{set_qbms_config}}, \code{\link{gigwa_set_run}}
+}
+\author{
+Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 }

@@ -2,10 +2,39 @@
 % Please edit documentation in R/qbms.R
 \name{gigwa_set_run}
 \alias{gigwa_set_run}
-\title{gigwa_set_run("run1")}
+\title{Set the current active GIGWA run}
 \usage{
 gigwa_set_run(run_name)
 }
+\arguments{
+\item{run_name}{the name of the run}
+}
+\value{
+no return value
+}
 \description{
+This function will update the current active run in the internal state object using the 
+`studyDbIds` retrieved from GIGWA which is associated to the given run_name parameter.
+}
+\examples{
+if(interactive()) {
+# config your GIGWA connection
+set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
+                time_out = 300, engine = "gigwa", no_auth = TRUE)
+
+# select a database by name
+gigwa_set_db("Sorghum-JGI_v1")
+
+# select a project by name
+gigwa_set_project("Nelson_et_al_2011")
+
+# select a specific run by name
 gigwa_set_run("run1")
+}
+}
+\seealso{
+\code{\link{set_qbms_config}}, \code{\link{gigwa_set_project}}, \code{\link{gigwa_list_runs}}
+}
+\author{
+Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 }

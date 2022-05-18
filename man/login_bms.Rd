@@ -2,20 +2,20 @@
 % Please edit documentation in R/qbms.R
 \name{login_bms}
 \alias{login_bms}
-\title{Login to the BMS server}
+\title{Login to the server}
 \usage{
 login_bms(username = NULL, password = NULL)
 }
 \arguments{
-\item{username}{the BMS username (optional, default is NULL)}
+\item{username}{the username (optional, default is NULL)}
 
-\item{password}{the BMS password (optional, default is NULL)}
+\item{password}{the password (optional, default is NULL)}
 }
 \value{
 no return value
 }
 \description{
-Connect to the BMS server. If username or password parameters are missing,
+Connect to the server. If username or password parameters are missing,
 then a login window will pop-up to insert username and password.
 
 All other connection parameters (i.e. server IP or domain, connection port,

@@ -25,7 +25,7 @@ remotes::install_github("icarda-git/QBMS")
 ```
 
 ## _Example_
-```{r example}
+```r
 # load the QBMS library
 library(QBMS)
 
@@ -62,9 +62,7 @@ samples <- gigwa_get_samples()
 
 # show the first 6 individuals on the list of samples
 head(samples)
-```
 
-```{r snp_query, results = "hide"}
 # query the variants (e.g., SNPs markers) in the selected run that match the given criteria:
 # - max_missing: maximum missing ratio (by sample) between 0 and 1 (default is 1 for 100%) 
 # - min_maf: minimum Minor Allele Frequency (MAF) between 0 and 1 (default is 0 for 0%) 
@@ -72,9 +70,7 @@ head(samples)
 marker_matrix <- gigwa_get_variants(max_missing = 0.2, 
                                     min_maf = 0.35, 
                                     samples = c("ind1", "ind3", "ind7"))
-```
 
-```{r snp_results}
 # Data returns in data.frame format. The first 4 columns describe attributes of the SNP 
 # (rs#: variant name, alleles: reference allele / alternative allele, chrom: chromosome name, 
 # and pos: position in bp), while the following columns describe the SNP value for a 

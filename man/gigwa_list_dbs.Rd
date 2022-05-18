@@ -2,10 +2,29 @@
 % Please edit documentation in R/qbms.R
 \name{gigwa_list_dbs}
 \alias{gigwa_list_dbs}
-\title{gigwa_list_dbs()}
+\title{Get the list of existing databases in the current GIGWA server}
 \usage{
 gigwa_list_dbs()
 }
+\value{
+a list of existing databases
+}
 \description{
+Get the list of existing databases in the current GIGWA server
+}
+\examples{
+if(interactive()) {
+# config your GIGWA connection
+set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
+                time_out = 300, engine = "gigwa", no_auth = TRUE)
+
+# list existing databases in the GIGWA server
 gigwa_list_dbs()
+}
+}
+\seealso{
+\code{\link{set_qbms_config}}
+}
+\author{
+Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 }

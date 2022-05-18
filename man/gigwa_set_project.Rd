@@ -2,10 +2,37 @@
 % Please edit documentation in R/qbms.R
 \name{gigwa_set_project}
 \alias{gigwa_set_project}
-\title{gigwa_set_project("Nelson_et_al_2011")}
+\title{Set the current active GIGWA project}
 \usage{
 gigwa_set_project(project_name)
 }
+\arguments{
+\item{project_name}{the name of the project}
+}
+\value{
+no return value
+}
 \description{
+This function will update the current active project in the internal state object 
+using the programDbId retrieved from GIGWA which is associated to the given 
+`project_name` parameter.
+}
+\examples{
+if(interactive()) {
+# config your GIGWA connection
+set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
+                time_out = 300, engine = "gigwa", no_auth = TRUE)
+
+# select a database by name
+gigwa_set_db("Sorghum-JGI_v1")
+
+# select a project by name
 gigwa_set_project("Nelson_et_al_2011")
+}
+}
+\seealso{
+\code{\link{set_qbms_config}}, \code{\link{gigwa_set_db}}, \code{\link{gigwa_list_projects}}
+}
+\author{
+Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 }
