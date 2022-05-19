@@ -1807,7 +1807,7 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
   call_body <- list(alleleCount = "2",
                     searchMode = 0,
                     variantSetId = qbms_globals$state$study_db_id,
-                    callSetIds = paste0(qbms_globals$state$study_db_id, "§", samples),
+                    callSetIds = paste0(qbms_globals$state$study_db_id, "\u00A7", samples),
                     minmaf = min_maf * 100,
                     maxmaf = 50,
                     missingData = max_missing * 100)
@@ -1826,7 +1826,7 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
   call_body <- list(alleleCount = "2",
                     searchMode = 3,
                     variantSetId = qbms_globals$state$study_db_id,
-                    callSetIds = paste0(qbms_globals$state$study_db_id, "§", samples),
+                    callSetIds = paste0(qbms_globals$state$study_db_id, "\u00A7", samples),
                     minmaf = min_maf * 100,
                     maxmaf = 50,
                     missingData = max_missing * 100,
@@ -1880,10 +1880,10 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
   
   g_matrix[,-c(1:4)] <- as.data.frame(sapply(g_matrix[,-c(1:4)], as.numeric))
   
-  g_matrix[, 1] <- gsub(paste0(qbms_globals$state$study_db_id, "§"), "", g_matrix[, 1])
+  g_matrix[, 1] <- gsub(paste0(qbms_globals$state$study_db_id, "\u00A7"), "", g_matrix[, 1])
   
   colnames(g_matrix) <- c("rs#", "alleles", "chrom", "pos",
-                          gsub(paste0(qbms_globals$state$study_db_id, "§"), "", results$variants[1, "calls"][[1]]$callSetId))
+                          gsub(paste0(qbms_globals$state$study_db_id, "\u00A7"), "", results$variants[1, "calls"][[1]]$callSetId))
 
   return(g_matrix)
 }
