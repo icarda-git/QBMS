@@ -1024,7 +1024,7 @@ get_program_studies <- function() {
   }
 
   # remove locationDbId, active, studies, and locationName columns coming from the trial data.frame
-  studies <- studies[, -c(6, 7, 8, 14)]
+  studies <- studies[, -c(6:8, ncol(studies))]
 
   crop_locations <- get_crop_locations()
 
