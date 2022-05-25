@@ -1831,6 +1831,7 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
                     maxmaf = 50,
                     missingData = max_missing * 100,
                     getGT = TRUE,
+                    pageSize = qbms_globals$config$page_size,
                     pageToken = "0")
 
   g_matrix <- data.frame(matrix(ncol = length(samples) + 4, nrow = 0))
