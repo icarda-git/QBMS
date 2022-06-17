@@ -1893,31 +1893,37 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
 #' Get TerraClimate data for a given location
 #'
 #' @description
-#' Scientific Paper:    https://www.nature.com/articles/sdata2017191
-#' About the Dataset:   https://www.climatologylab.org/terraclimate.html
-#' Hosting Catalog:     http://thredds.northwestknowledge.net:8080/thredds/terraclimate_aggregated.html
-#' Service Provider:    https://hpc.uidaho.edu/
-#' Climate Variables:   https://www.climatologylab.org/terraclimate-variables.html
-#' Bioclimatic Vars:    https://www.worldclim.org/data/bioclim.html
-#' Calculating biovars: https://github.com/rspatial/dismo/blob/master/R/biovars.R
+#' \enumerate{
+#' \item \href{https://www.nature.com/articles/sdata2017191}{Scientific Paper}
+#' \item \href{https://www.climatologylab.org/terraclimate.html}{About the Dataset}
+#' \item \href{http://thredds.northwestknowledge.net:8080/thredds/terraclimate_aggregated.html}{Hosting Catalog}
+#' \item \href{https://hpc.uidaho.edu/}{Service Provider}
+#' \item \href{https://www.climatologylab.org/terraclimate-variables.html}{Climate Variables}
+#' \item \href{https://www.worldclim.org/data/bioclim.html}{Bioclimatic Vars}
+#' \item \href{https://github.com/rspatial/dismo/blob/master/R/biovars.R}{Calculating biovars}
+#' }
 #'
-#' TerraClimate vs. WorldClim: https://www.worldclim.org/data/worldclim21.html
-#' 1958-2020 vs. 1970-2000
-#' 14 vs. 7 climate variables
-#' ~4 km vs. ~1 km spatial resolution
-#' need to calculate vs. pre-calculated 19 bioclimatic variables
+#' \strong{TerraClimate vs. \href{https://www.worldclim.org/data/worldclim21.html}{WorldClim}}
+#' \itemize{
+#' \item 1958-2020 vs. 1970-2000
+#' \item 14 vs. 7 climate variables
+#' \item ~4 km vs. ~1 km spatial resolution
+#' \item need to calculate vs. pre-calculated 19 bioclimatic variables
+#' }
 #' 
 #' @param lat  Latitude in decimal degree format.
 #' @param lon  Longitude in decimal degree format.
 #' @param from Start date as a string in the 'YYYY-MM-DD' format.
 #' @param to   End date as a string in the 'YYYY-MM-DD' format.
-#' @param clim_vars A list of all climate variables to be imported. Valid list includes: aet, def, pet,
-#'                  ppt, q, soil, srad, swe, tmax, tmin, vap, ws, vpd, and PDSI. Default is NULL for all.
-#' @param month_mask A list of all months of interest (e.g., planting season: c(10:12,1:5)). 
+#' @param clim_vars A list of all climate variables to be imported. Valid list includes: \emph{aet, def, pet,
+#'                  ppt, q, soil, srad, swe, tmax, tmin, vap, ws, vpd, and PDSI}. Default is NULL for all.
+#' @param month_mask A list of all months of interest (e.g., planting season: \code{c(10:12,1:5)}). 
 #'                   Default is NULL for all.
 #' @return A list of two data.frame(s):
-#'         - climate: includes the climate variables (https://www.climatologylab.org/terraclimate-variables.html).
-#'         - biovars: includes the calculated bioclimatic variables (https://www.worldclim.org/data/bioclim.html).
+#' \enumerate{
+#' \item \emph{climate:} includes the climate variables (\href{https://www.climatologylab.org/terraclimate-variables.html}{reference}).
+#' \item \emph{biovars:} includes the calculated bioclimatic variables (\href{https://www.worldclim.org/data/bioclim.html}{reference}).
+#' }
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @examples
 #' if(interactive()) {
