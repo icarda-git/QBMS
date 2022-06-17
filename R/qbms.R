@@ -1888,3 +1888,258 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
 
   return(g_matrix)
 }
+
+
+#' Get TerraClimate data for a given location
+#'
+#' @description
+#' Scientific Paper:    https://www.nature.com/articles/sdata2017191
+#' About the Dataset:   https://www.climatologylab.org/terraclimate.html
+#' Hosting Catalog:     http://thredds.northwestknowledge.net:8080/thredds/terraclimate_aggregated.html
+#' Service Provider:    https://hpc.uidaho.edu/
+#' Climate Variables:   https://www.climatologylab.org/terraclimate-variables.html
+#' Bioclimatic Vars:    https://www.worldclim.org/data/bioclim.html
+#' Calculating biovars: https://github.com/rspatial/dismo/blob/master/R/biovars.R
+#'
+#' TerraClimate vs. WorldClim: https://www.worldclim.org/data/worldclim21.html
+#' 1958-2020 vs. 1970-2000
+#' 14 vs. 7 climate variables
+#' ~4 km vs. ~1 km spatial resolution
+#' need to calculate vs. pre-calculated 19 bioclimatic variables
+#' 
+#' @param lat  Latitude in decimal degree format.
+#' @param lon  Longitude in decimal degree format.
+#' @param from Start date as a string in the 'YYYY-MM-DD' format.
+#' @param to   End date as a string in the 'YYYY-MM-DD' format.
+#' @param clim_vars A list of all climate variables to be imported. Valid list includes: aet, def, pet,
+#'                  ppt, q, soil, srad, swe, tmax, tmin, vap, ws, vpd, and PDSI. Default is NULL for all.
+#' @param month_mask A list of all months of interest (e.g., planting season: c(10:12,1:5)). 
+#'                   Default is NULL for all.
+#' @return A list of two data.frame(s):
+#'         - climate: includes the climate variables (https://www.climatologylab.org/terraclimate-variables.html).
+#'         - biovars: includes the calculated bioclimatic variables (https://www.worldclim.org/data/bioclim.html).
+#' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' @examples
+#' if(interactive()) {
+#' # data <- get_climate(36.016, 36.943, '1979-09-01', '2012-06-30', c('ppt', 'tmin', 'tmax'), c(10:12,1:5))
+#' data <- get_climate(36.016, 36.943, '1979-09-01', '2012-06-30')
+#' 
+#' View(data$climate)
+#' 
+#' View(data$biovars)
+#' }
+#' @export
+
+get_climate <- function(lat, lon, from = '1958-01-01', to = '2020-12-31', clim_vars = NULL, month_mask = NULL){
+  # check if the given lat and lon coordinate values are valid
+  # check if the given from and to date values are valid
+  start_date <- as.Date(from)
+  final_date <- as.Date(to)   
+  
+  if (is.null(clim_vars)) {
+    clim_vars <- c('aet', 'def', 'pet', 'ppt', 'q', 'soil', 'srad', 'swe', 'tmax', 'tmin', 'vap', 'ws', 'vpd', 'PDSI')
+  } else {
+    # check if the given list of vars are supported/existed in TerraClimate vars
+  }
+  
+  if (is.null(month_mask)) {
+    if (is.null(month_mask)) month_mask <- 1:12
+  } else {
+    # check if the given month_mask values are valid
+  }
+  
+  clim_data  <- NULL
+  
+  start_month <- as.numeric(format(start_date, '%m'))
+  start_year  <- as.numeric(format(start_date, '%Y'))
+  start_row   <- (start_year - 1958) * 12 + start_month
+  
+  final_month <- as.numeric(format(final_date, '%m'))
+  final_year  <- as.numeric(format(final_date, '%Y'))
+  final_row   <- (final_year - 1958) * 12 + final_month
+  
+  # setup the progress bar
+  pb <- utils::txtProgressBar(min = 0, max = length(clim_vars), initial = 0, style = 3) 
+  pb_step <- round(length(clim_vars) / 100)
+  
+  for(var in clim_vars){
+    aggregate_url <- paste0('http://thredds.northwestknowledge.net:8080/thredds/dodsC/agg_terraclimate_', var, '_1958_CurrentYear_GLOBE.nc')
+    nc_metadata   <- ncdf4::nc_open(aggregate_url)
+    
+    lat_available <- ncdf4::ncvar_get(nc_metadata, 'lat')
+    lon_available <- ncdf4::ncvar_get(nc_metadata, 'lon')
+    
+    obs_available <- length(ncdf4::ncvar_get(nc_metadata, 'time'))
+    if (is.null(clim_data)) clim_data <- data.frame(matrix(nrow = obs_available, ncol = 0))
+    
+    lat_selected  <- match(abs(lat_available - lat) < 1/48, 1)
+    lon_selected  <- match(abs(lon_available - lon) < 1/48, 1)
+    
+    lat_index <- which(lat_selected %in% 1)
+    lon_index <- which(lon_selected %in% 1)
+    
+    start <- c(lon_index, lat_index, 1)
+    count <- c(1, 1, -1)
+    
+    # read in the full period of record using aggregated files
+    values <- as.numeric(ncdf4::ncvar_get(nc_metadata, varid = var, start = start, count = count))
+    
+    clim_data <- cbind(clim_data, values)
+    
+    # update the progress bar
+    utils::setTxtProgressBar(pb, which(clim_vars == var))
+  }
+  
+  close(pb)
+  
+  colnames(clim_data) <- clim_vars
+  
+  years <- obs_available / 12
+  last  <- 1958 + years - 1
+  month <- rep(1:12, times = years)
+  year  <- rep(1958:last, each = 12)
+  
+  clim_data <- cbind(year, month, clim_data)
+  
+  if (all(c('ppt', 'tmin', 'tmax') %in% clim_vars)) {
+    biovars <- calc_biovars(clim_data[(start_row - (start_month - 1)):(final_row + (12 - final_month)), ])
+  } else {
+    biovars <- NULL
+  }
+  
+  clim_data <- clim_data[start_row:final_row, ]
+  clim_data <- clim_data[clim_data$month %in% month_mask, ]
+  
+  return(list(climate = clim_data, biovars = biovars))
+}
+
+# Source R Package: dismo R package (https://CRAN.R-project.org/package=dismo) with GPL-3 license
+# Derivative From:  https://github.com/rspatial/dismo/blob/master/R/biovars.R
+calc_biovars <- function(data) {
+  year <- unique(data$year)
+  
+  if (length(which(table(data$year) != 12)) != 0) { 
+    stop(paste('You have to have 12 rows (months) for each year in your dataset.',  
+               'That is not the case for:', paste(attributes(which(table(data$year) != 12))$names, collapse = ', ')))
+  }
+  
+  required_vars <- c('ppt', 'tmin', 'tmax')
+  var_not_found <- required_vars[!(required_vars %in% colnames(data))]
+  
+  if(length(var_not_found) != 0) {
+    stop(paste('Missing required column(s) in your dataset:', paste(var_not_found, collapse = ', ')))
+  }
+  
+  prec <- matrix(data$ppt,  ncol = 12, byrow = TRUE)
+  tmin <- matrix(data$tmin, ncol = 12, byrow = TRUE)
+  tmax <- matrix(data$tmax, ncol = 12, byrow = TRUE)
+  
+  # can't have missing values in a row
+  nas <- apply(prec, 1, function(x){ any(is.na(x)) } )
+  nas <- nas | apply(tmin, 1, function(x){ any(is.na(x)) } )
+  nas <- nas | apply(tmax, 1, function(x){ any(is.na(x)) } )
+  
+  p <- matrix(nrow = nrow(prec), ncol = 20)
+  colnames(p) = c(paste0('bio', 1:19), 'year')
+  
+  if (all(nas)) { return(p) }
+  
+  prec[nas,] <- NA
+  tmin[nas,] <- NA
+  tmax[nas,] <- NA
+  
+  window <- function(x) { 
+    lng <- length(x)
+    x <- c(x,  x[1:3])
+    m <- matrix(ncol = 3, nrow = lng)
+    for (i in 1:3) { m[,i] <- x[i:(lng+i-1)] }
+    apply(m, MARGIN = 1, FUN = sum)
+  }
+  
+  cv <- function(x) {
+    return(sd(x) / mean(x) * 100)
+  }
+  
+  tavg <- (tmin + tmax) / 2
+  
+  # P1. Annual Mean Temperature 
+  p[, 1] <- apply(tavg, 1, mean)
+  
+  # P2. Mean Diurnal Range(Mean(period max-min)) 
+  p[, 2] <- apply(tmax - tmin, 1, mean)
+  
+  # P4. Temperature Seasonality (standard deviation) 
+  p[,4] <- 100 * apply(tavg, 1, sd)
+  
+  # P5. Max Temperature of Warmest Period 
+  p[, 5] <- apply(tmax, 1, max)
+  
+  # P6. Min Temperature of Coldest Period 
+  p[, 6] <- apply(tmin, 1, min)
+  
+  # P7. Temperature Annual Range (P5-P6) 
+  p[, 7] <- p[, 5] - p[, 6]
+  
+  # P3. Isothermality (P2 / P7) 
+  p[, 3] <- 100 * p[, 2] / p[, 7]
+  
+  # P12. Annual Precipitation 
+  p[, 12] <- apply(prec, 1, sum)
+  
+  # P13. Precipitation of Wettest Period 
+  p[, 13] <-  apply(prec, 1, max)
+  
+  # P14. Precipitation of Driest Period 
+  p[, 14] <-  apply(prec, 1, min)
+  
+  # P15. Precipitation Seasonality(Coefficient of Variation) 
+  # the "1 +" is to avoid strange CVs for areas where mean rainfall is < 1)
+  p[, 15] <- apply(prec+1, 1, cv)
+  
+  # precipitation by quarter (3 months)		
+  wet <- t(apply(prec, 1, window))
+  
+  # P16. Precipitation of Wettest Quarter 
+  p[, 16] <- apply(wet, 1, max)
+  
+  # P17. Precipitation of Driest Quarter 
+  p[, 17] <- apply(wet, 1, min)
+  
+  tmp <- t(apply(tavg, 1, window)) / 3
+  
+  if (all(is.na(wet))) {
+    p[, 8] <- NA		
+    p[, 9] <- NA		
+  } else {
+    # P8. Mean Temperature of Wettest Quarter 
+    wetqrt <- cbind(1:nrow(p), as.integer(apply(wet, 1, which.max)))
+    p[, 8] <- tmp[wetqrt]
+    
+    # P9. Mean Temperature of Driest Quarter 
+    dryqrt <- cbind(1:nrow(p), as.integer(apply(wet, 1, which.min)))
+    p[, 9] <- tmp[dryqrt]
+  }
+  
+  # P10. Mean Temperature of Warmest Quarter 
+  p[, 10] <- apply(tmp, 1, max)
+  
+  # P11. Mean Temperature of Coldest Quarter
+  p[, 11] <- apply(tmp, 1, min) 
+  
+  if (all(is.na(tmp))) {
+    p[, 18] <- NA		
+    p[, 19] <- NA
+  } else {
+    # P18. Precipitation of Warmest Quarter 
+    hot <- cbind(1:nrow(p), as.integer(apply(tmp, 1, which.max)))
+    p[, 18] <- wet[hot]
+    
+    # P19. Precipitation of Coldest Quarter 
+    cold <- cbind(1:nrow(p), as.integer(apply(tmp, 1, which.min)))
+    p[, 19] <- wet[cold]
+  }
+  
+  p[, 20] <- year
+  
+  return(as.data.frame(p))
+}
