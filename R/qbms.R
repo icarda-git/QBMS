@@ -2021,6 +2021,47 @@ get_climate <- function(lat, lon, from = '1958-01-01', to = '2020-12-31', clim_v
 
 # Source R Package: dismo R package (https://CRAN.R-project.org/package=dismo) with GPL-3 license
 # Derivative From:  https://github.com/rspatial/dismo/blob/master/R/biovars.R
+#
+# based on:
+# Author: Robert Hijmans
+# November 2009
+# License GPL3
+#
+# which was based on:
+# MkBCvars.AML 
+# Author Robert Hijmans
+# January 2006  
+# Museum of Vertebrate Zoology, UC Berkeley
+#
+# Version 2.3
+#
+# function to create19 BIOCLIM variables from 
+# monthly T-min, T-max, and Precipitation data
+#
+# BIO1 = Annual Mean Temperature
+# BIO2 = Mean Diurnal Range (Mean of monthly (max temp - min temp))
+# BIO3 = Isothermality (P2/P7) (* 100)
+# BIO4 = Temperature Seasonality (standard deviation *100)
+# BIO5 = Max Temperature of Warmest Month
+# BIO6 = Min Temperature of Coldest Month
+# BIO7 = Temperature Annual Range (P5-P6)
+# BIO8 = Mean Temperature of Wettest Quarter
+# BIO9 = Mean Temperature of Driest Quarter
+# BIO10 = Mean Temperature of Warmest Quarter
+# BIO11 = Mean Temperature of Coldest Quarter
+# BIO12 = Annual Precipitation
+# BIO13 = Precipitation of Wettest Month
+# BIO14 = Precipitation of Driest Month
+# BIO15 = Precipitation Seasonality (Coefficient of Variation)
+# BIO16 = Precipitation of Wettest Quarter
+# BIO17 = Precipitation of Driest Quarter
+# BIO18 = Precipitation of Warmest Quarter
+# BIO19 = Precipitation of Coldest Quarter
+# 
+# These summary Bioclimatic variables are after:
+#   Nix, 1986. A biogeographic analysis of Australian elapid snakes. In: R. Longmore (ed.).
+#      Atlas of elapid snakes of Australia. Australian Flora and Fauna Series 7.
+#      Australian Government Publishing Service, Canberra.
 calc_biovars <- function(data) {
   year <- unique(data$year)
   
