@@ -81,6 +81,16 @@ marker_matrix <- gigwa_get_variants(max_missing = 0.2,
 # numerical coding 0, 1, and 2 for reference, heterozygous, alternative/minor alleles.
 head(marker_matrix)
 
+# get the metadata associated with the samples in the current active run
+gigwa_set_db("3kG_8-5M")
+gigwa_set_project("SNP")
+gigwa_set_run("1")
+
+# get a list of all samples in the selected run
+metadata <- gigwa_get_metadata()
+
+View(metadata)
+
 ```
 ## _Troubleshooting the installation_
 

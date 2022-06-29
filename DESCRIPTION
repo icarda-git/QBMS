@@ -26,7 +26,8 @@ Imports:
     jsonlite,
     tcltk,
     utils,
-    ncdf4
+    ncdf4,
+    stats
 Suggests: 
     knitr,
     rmarkdown
