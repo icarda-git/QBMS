@@ -1,0 +1,52 @@
+---
+title: "GIGWA Example"
+author: "Khaled Al-Shamaa"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{GIGWA Example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## QBMS
+Linking data management systems to analytics is an important step in breeding digitalization. Breeders can use this R package to Query the [Breeding Management System](https://bmspro.io/) database (using [BrAPI](https://brapi.org/) calls) and help them to retrieve their experiments data directly into R statistical analyzing environment.
+
+## TerraClimate
+[TerraClimate](https://www.climatologylab.org/terraclimate.html) is a dataset of monthly climate and climatic water balance for global terrestrial surfaces from 1958-2019. These data provide important inputs for ecological and hydrological studies at global scales that require high spatial resolution and time-varying data. All data have monthly temporal resolution and a ~4-km (1/24th degree) spatial resolution. The data cover the period from 1958-2020. We plan to update these data periodically (annually).
+
+###Reference:
+Abatzoglou, J., Dobrowski, S., Parks, S. et al. TerraClimate, a high-resolution global dataset of monthly climate and climatic water balance from 1958–2015. Sci Data 5, 170191 (2018). [https://doi.org/10.1038/sdata.2017.191](https://doi.org/10.1038/sdata.2017.191)
+
+## BrAPI
+The Breeding API ([BrAPI](https://brapi.org/)) project is an effort to enable interoperability among plant breeding databases. BrAPI is a standardized RESTful web service API specification for communicating plant breeding data. This community driven standard is free to be used by anyone interested in plant breeding data management.
+
+## _Install_
+```r
+install.packages("remotes")
+remotes::install_github("icarda-git/QBMS")
+```
+
+## _Example_
+```r
+# load the QBMS library
+library(QBMS)
+
+data <- get_climate(36.016, 36.943, '1979-09-01', '2012-06-30')
+
+View(data$climate)
+
+View(data$biovars)
+
+```
+## _Troubleshooting the installation_
+
+1. If the installation of QBMS generates errors saying that some of the existing packages cannot be removed, you can try to quit any R session, and try to start R in administrator (Windows) or SUDO mode (Linux/Ubuntu) then try installing again.
+
+2. If you get an error related to packages built under a current version of R, and updating your packages doesn’t help, you can consider overriding the error with the following code. _Note: This might help you install QBMS but may result in other problems. If possible, it’s best to resolve the errors rather than ignoring them._
+
+```r
+Sys.setenv("R_REMOTES_NO_ERRORS_FROM_WARNINGS" = TRUE)
+
+remotes::install_github("icarda-git/QBMS", upgrade = "always")
+```
