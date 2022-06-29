@@ -1665,7 +1665,7 @@ gigwa_list_runs <- function() {
 gigwa_set_run <- function(run_name) {
   valid_runs <- gigwa_list_runs()
   
-  if (!run_name %in% valid_runs) {
+  if (!run_name %in% unlist(valid_runs)) {
     stop("Your run name is not exists in this project! You may use the `gigwa_list_runs()` function to check the available runs")
   }
   
@@ -1927,8 +1927,8 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @examples
 #' if(interactive()) {
-#' # data <- get_climate(36.016, 36.943, '1979-09-01', '2012-06-30', c('ppt', 'tmin', 'tmax'), c(10:12,1:5))
-#' data <- get_climate(36.016, 36.943, '1979-09-01', '2012-06-30')
+#' # data <- get_terraclimate(36.016, 36.943, '1979-09-01', '2012-06-30', c('ppt', 'tmin', 'tmax'), c(10:12,1:5))
+#' data <- get_terraclimate(36.016, 36.943, '1979-09-01', '2012-06-30')
 #' 
 #' View(data$climate)
 #' 
@@ -1936,7 +1936,7 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
 #' }
 #' @export
 
-get_climate <- function(lat, lon, from = '1958-01-01', to = '2020-12-31', clim_vars = NULL, month_mask = NULL){
+get_terraclimate <- function(lat, lon, from = '1958-01-01', to = '2020-12-31', clim_vars = NULL, month_mask = NULL){
   # check if the given lat and lon coordinate values are valid
   # check if the given from and to date values are valid
   start_date <- as.Date(from)
@@ -2019,49 +2019,51 @@ get_climate <- function(lat, lon, from = '1958-01-01', to = '2020-12-31', clim_v
   return(list(climate = clim_data, biovars = biovars))
 }
 
-# Source R Package: dismo R package (https://CRAN.R-project.org/package=dismo) with GPL-3 license
-# Derivative From:  https://github.com/rspatial/dismo/blob/master/R/biovars.R
-#
-# based on:
-# Author: Robert Hijmans
-# November 2009
-# License GPL3
-#
-# which was based on:
-# MkBCvars.AML 
-# Author Robert Hijmans
-# January 2006  
-# Museum of Vertebrate Zoology, UC Berkeley
-#
-# Version 2.3
-#
-# function to create19 BIOCLIM variables from 
-# monthly T-min, T-max, and Precipitation data
-#
-# BIO1 = Annual Mean Temperature
-# BIO2 = Mean Diurnal Range (Mean of monthly (max temp - min temp))
-# BIO3 = Isothermality (P2/P7) (* 100)
-# BIO4 = Temperature Seasonality (standard deviation *100)
-# BIO5 = Max Temperature of Warmest Month
-# BIO6 = Min Temperature of Coldest Month
-# BIO7 = Temperature Annual Range (P5-P6)
-# BIO8 = Mean Temperature of Wettest Quarter
-# BIO9 = Mean Temperature of Driest Quarter
-# BIO10 = Mean Temperature of Warmest Quarter
-# BIO11 = Mean Temperature of Coldest Quarter
-# BIO12 = Annual Precipitation
-# BIO13 = Precipitation of Wettest Month
-# BIO14 = Precipitation of Driest Month
-# BIO15 = Precipitation Seasonality (Coefficient of Variation)
-# BIO16 = Precipitation of Wettest Quarter
-# BIO17 = Precipitation of Driest Quarter
-# BIO18 = Precipitation of Warmest Quarter
-# BIO19 = Precipitation of Coldest Quarter
-# 
-# These summary Bioclimatic variables are after:
-#   Nix, 1986. A biogeographic analysis of Australian elapid snakes. In: R. Longmore (ed.).
-#      Atlas of elapid snakes of Australia. Australian Flora and Fauna Series 7.
-#      Australian Government Publishing Service, Canberra.
+#' Create 19 BIOCLIM variables from monthly T-min, T-max, and Precipitation data
+#' 
+#' @description
+#' \enumerate{
+#' \item BIO1 = Annual Mean Temperature
+#' \item BIO2 = Mean Diurnal Range (Mean of monthly (max temp - min temp))
+#' \item BIO3 = Isothermality (P2/P7) (* 100)
+#' \item BIO4 = Temperature Seasonality (standard deviation *100)
+#' \item BIO5 = Max Temperature of Warmest Month
+#' \item BIO6 = Min Temperature of Coldest Month
+#' \item BIO7 = Temperature Annual Range (P5-P6)
+#' \item BIO8 = Mean Temperature of Wettest Quarter
+#' \item BIO9 = Mean Temperature of Driest Quarter
+#' \item BIO10 = Mean Temperature of Warmest Quarter
+#' \item BIO11 = Mean Temperature of Coldest Quarter
+#' \item BIO12 = Annual Precipitation
+#' \item BIO13 = Precipitation of Wettest Month
+#' \item BIO14 = Precipitation of Driest Month
+#' \item BIO15 = Precipitation Seasonality (Coefficient of Variation)
+#' \item BIO16 = Precipitation of Wettest Quarter
+#' \item BIO17 = Precipitation of Driest Quarter
+#' \item BIO18 = Precipitation of Warmest Quarter
+#' \item BIO19 = Precipitation of Coldest Quarter
+#' }
+#' 
+#' These summary Bioclimatic variables are after:
+#'   Nix, 1986. A biogeographic analysis of Australian elapid snakes. In: R. Longmore (ed.).
+#'      Atlas of elapid snakes of Australia. Australian Flora and Fauna Series 7.
+#'      Australian Government Publishing Service, Canberra.
+#'      
+#' This work is derivative from the \href{https://github.com/rspatial/dismo/blob/master/R/biovars.R}{dismo R package}
+#'
+#' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' @author Robert Hijmans, Museum of Vertebrate Zoology, UC Berkeley
+#' 
+#' @param data xxx
+#' @return xxx
+#' 
+#' @examples
+#' if(interactive()) {
+#' 
+#' }
+#' 
+#' @export
+
 calc_biovars <- function(data) {
   year <- unique(data$year)
   
@@ -2189,4 +2191,68 @@ calc_biovars <- function(data) {
   p[, 20] <- year
   
   return(as.data.frame(p))
+}
+
+
+#' Get the metadate of the current active GIGWA run
+#'
+#' @description
+#' This function will retrieve the metadata of the current active run
+#' as configured in the internal state object using `gigwa_set_run()` function.
+#'
+#' @return a data.frame of all metadata associated to the samples in the selected run
+#' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' @seealso \code{\link{set_qbms_config}}, \code{\link{gigwa_set_run}}
+#' @examples
+#' if(interactive()) {
+#' # config your GIGWA connection
+#' set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
+#'                 time_out = 300, engine = "gigwa", no_auth = TRUE)
+#'
+#' # select a database by name
+#' gigwa_set_db("3kG_8-5M")
+#'
+#' # select a project by name
+#' gigwa_set_project("SNP")
+#' 
+#' # select a specific run by name
+#' gigwa_set_run("1")
+#' 
+#' # get a list of all samples in the selected run
+#' metadata <- gigwa_get_metadata()
+#' }
+#' @export
+
+gigwa_get_metadata <- function() {
+  if (is.null(qbms_globals$state$study_db_id)) {
+    stop("No project has been selected yet! You have to set your project first using the `gigwa_set_project()` function")
+  }
+  
+  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/germplasm")
+  
+  auth_code <- paste0("Bearer ", qbms_globals$state$token)
+  headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
+  call_body <- paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}')
+  
+  response <- httr::POST(url = utils::URLencode(call_url), body = call_body, 
+                         encode = "raw", httr::accept_json(), httr::content_type_json(), 
+                         httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
+  
+  results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+  
+  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/attributevalues")
+  
+  germplasmDbIds <- paste(results$result$data$germplasmDbId, collapse = '","')
+  call_body <- paste0('{"germplasmDbIds": ["', germplasmDbIds, '"]}')
+
+  response <- httr::POST(url = utils::URLencode(call_url), body = call_body, 
+                         encode = "raw", httr::accept_json(), httr::content_type_json(), 
+                         httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
+  
+  results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+  
+  metadata <- stats::reshape(results$result$data[,-1], idvar = "germplasmName", timevar = "attributeValueDbId", direction = "wide")
+  colnames(metadata) <- gsub("value\\.", "", colnames(metadata))
+  
+  return(metadata)
 }
