@@ -1915,7 +1915,7 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
 #' @param lon  Longitude in decimal degree format.
 #' @param from Start date as a string in the 'YYYY-MM-DD' format.
 #' @param to   End date as a string in the 'YYYY-MM-DD' format.
-#' @param clim_vars A list of all climate variables to be imported. Valid list includes: \emph{aet, def, pet,
+#' @param clim_vars List of all climate variables to be imported. Valid list includes: \emph{aet, def, pet,
 #'                  ppt, q, soil, srad, swe, tmax, tmin, vap, ws, vpd, and PDSI}. Default is NULL for all.
 #' @param month_mask A list of all months of interest (e.g., planting season: \code{c(10:12,1:5)}). 
 #'                   Default is NULL for all.
@@ -2025,11 +2025,11 @@ get_terraclimate <- function(lat, lon, from = '1958-01-01', to = '2020-12-31', c
 #' \enumerate{
 #' \item BIO1 = Annual Mean Temperature
 #' \item BIO2 = Mean Diurnal Range (Mean of monthly (max temp - min temp))
-#' \item BIO3 = Isothermality (P2/P7) (* 100)
+#' \item BIO3 = Isothermality (BIO2/BIO7) (* 100)
 #' \item BIO4 = Temperature Seasonality (standard deviation *100)
 #' \item BIO5 = Max Temperature of Warmest Month
 #' \item BIO6 = Min Temperature of Coldest Month
-#' \item BIO7 = Temperature Annual Range (P5-P6)
+#' \item BIO7 = Temperature Annual Range (BIO5-BIO6)
 #' \item BIO8 = Mean Temperature of Wettest Quarter
 #' \item BIO9 = Mean Temperature of Driest Quarter
 #' \item BIO10 = Mean Temperature of Warmest Quarter
@@ -2054,13 +2054,10 @@ get_terraclimate <- function(lat, lon, from = '1958-01-01', to = '2020-12-31', c
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @author Robert Hijmans, Museum of Vertebrate Zoology, UC Berkeley
 #' 
-#' @param data xxx
-#' @return xxx
-#' 
-#' @examples
-#' if(interactive()) {
-#' 
-#' }
+#' @param data Data.frame has 4 mandatory columns (year, ppt, tmin, and tmax), 
+#'             and 12 rows (months) for each year sorted from Jan to Dec.
+#' @return Data.frame has 19 columns for "bioclim" variables (bio1-bio19) and 
+#'         last column for year (you will get one row per year).
 #' 
 #' @export
 

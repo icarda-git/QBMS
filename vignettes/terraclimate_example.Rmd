@@ -1,10 +1,10 @@
 ---
-title: "GIGWA Example"
+title: "TerraClimate Example"
 author: "Khaled Al-Shamaa"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{GIGWA Example}
+  %\VignetteIndexEntry{TerraClimate Example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -32,11 +32,29 @@ remotes::install_github("icarda-git/QBMS")
 # load the QBMS library
 library(QBMS)
 
-data <- get_climate(36.016, 36.943, '1979-09-01', '2012-06-30')
+# ICARDA Tal-Hadya station, Syria
+data <- get_terraclimate(36.016, 36.943, '1979-09-01', '2012-06-30')
 
 View(data$climate)
 
 View(data$biovars)
+
+# ICARDA Terbol station, Lebanon (WorldClim temporal range)
+worldclim_range <- get_terraclimate(33.8333, 35.9167, '1970-01-01', '2000-12-31', c('ppt', 'tmin', 'tmax'))
+
+# ?calc_biovars
+worldclim_norm  <- apply(worldclim_range$biovars[,1:19], 2, mean)
+
+# biovars       bio1   bio2   bio3   bio4   bio5   bio6   bio7   bio8   bio9  bio10  bio11
+# terraclimate  16.2   13.5   41.4   713.5  33.8   1.0    32.8   8.0    24.3  24.5   7.4
+# worldclim/10  15.5   13.6   43.0   631.0  33.0   1.6    31.4   7.3    23.2  23.2   7.3
+#
+# NOTE: all worldcim biovars derivative from temperature (i.e., bio1-bio11) have a scale factor of 10 
+#       except bio3 because it is a ratio.
+#
+# biovars(cont) bio12  bio13  bio14  bio15  bio16  bio17  bio18  bio19
+# terraclimate  661.0  182.1  0.0    113.5  419.2  0.3    0.9    398.5
+# worldclim     592.0  140.0  0.0    99.0   368.0  1.0    2.0    368.0
 
 ```
 ## _Troubleshooting the installation_

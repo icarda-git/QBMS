@@ -1,3 +1,8 @@
+<!--
+# QBMS 0.9.0 _2022-10-??_
+  * Add TerraClimate support to query and retrieve climate data (including the 19 BIOCLIM variables).
+  * Add a new gigwa_get_metadata function to retrieve metadata from GIGWA database.
+-->
 # QBMS 0.8.0 _2022-05-18_ 
   * Add GIGWA support to query and retrieve SNPs data for GWAS and GS analysis pipelines.
   * Tiny usability enhancements (e.g., automate path parameter setting, show the server name in the login window, add progress bar to the get_program_studies function).
