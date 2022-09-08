@@ -524,11 +524,11 @@ list_trials <- function(year = NULL) {
 #' @export
 
 set_trial <- function(trial_name) {
-  valid_trials <- list_trials()
-
-  if (!trial_name %in% valid_trials$trialName) {
-    stop("Your trial name is not exists in this breeding program! You may use the `list_trials()` function to check the available trials")
-  }
+  # valid_trials <- list_trials()
+  # 
+  # if (!trial_name %in% valid_trials$trialName) {
+  #   stop("Your trial name is not exists in this breeding program! You may use the `list_trials()` function to check the available trials")
+  # }
 
   bms_trials <- get_program_trials()
 
@@ -619,11 +619,11 @@ list_studies <- function() {
 #' @export
 
 set_study <- function(study_name) {
-  valid_studies <- list_studies()
-
-  if (!study_name %in% valid_studies$studyName) {
-    stop("Your location name is not exists in this trial! You may use the `list_studies()` function to check the available study location names")
-  }
+  # valid_studies <- list_studies()
+  # 
+  # if (!study_name %in% valid_studies$studyName) {
+  #   stop("Your location name is not exists in this trial! You may use the `list_studies()` function to check the available study location names")
+  # }
 
   bms_trials <- get_program_trials()
 
