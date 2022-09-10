@@ -3,6 +3,7 @@
   * Add TerraClimate support to query and retrieve climate data (including the 19 BIOCLIM variables).
   * Add a new gigwa_get_metadata function to retrieve metadata from GIGWA database.
   * Speed up internal get_program_trials() function by caching the list. Thanks to Thanks to [Johan Steven Aparicio](https://github.com/AparicioJohan)
+  * Suppress warning message when gigwa_get_variants() function returns a data.frame that has NA values.
 -->
 # QBMS 0.8.0 _2022-05-18_ 
   * Add GIGWA support to query and retrieve SNPs data for GWAS and GS analysis pipelines.
