@@ -1918,15 +1918,15 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
 #' \item need to calculate vs. pre-calculated 19 bioclimatic variables
 #' }
 #' 
-#' @param lat  Latitude in decimal degree format.
-#' @param lon  Longitude in decimal degree format.
+#' @param lat  Vector of Latitude(s) in decimal degree format.
+#' @param lon  Vector of Longitude(s) in decimal degree format.
 #' @param from Start date as a string in the 'YYYY-MM-DD' format.
 #' @param to   End date as a string in the 'YYYY-MM-DD' format.
 #' @param clim_vars List of all climate variables to be imported. Valid list includes: \emph{aet, def, pet,
 #'                  ppt, q, soil, srad, swe, tmax, tmin, vap, ws, vpd, and PDSI}. Default is NULL for all.
 #' @param month_mask A list of all months of interest (e.g., planting season: \code{c(10:12,1:5)}). 
 #'                   Default is NULL for all.
-#' @return A list of two data.frame(s):
+#' @return A list of two data.frame(s) for each pair of coordinates:
 #' \enumerate{
 #' \item \emph{climate:} includes the climate variables (\href{https://www.climatologylab.org/terraclimate-variables.html}{reference}).
 #' \item \emph{biovars:} includes the calculated bioclimatic variables (\href{https://www.worldclim.org/data/bioclim.html}{reference}).
@@ -1937,14 +1937,31 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
 #' # data <- get_terraclimate(36.016, 36.943, '1979-09-01', '2012-06-30', c('ppt', 'tmin', 'tmax'), c(10:12,1:5))
 #' data <- get_terraclimate(36.016, 36.943, '1979-09-01', '2012-06-30')
 #' 
-#' View(data$climate)
+#' View(data$climate[[1]])
 #' 
-#' View(data$biovars)
+#' View(data$biovars[[1]])
 #' }
 #' @export
 
 get_terraclimate <- function(lat, lon, from = '1958-01-01', to = '2020-12-31', clim_vars = NULL, month_mask = NULL){
-  # check if the given lat and lon coordinate values are valid
+  # check if the given lat coordinate values are valid
+  lat <- as.numeric(lat)
+  if (!all(lat >= -90 & lat <= 90)) {
+    stop("The Latitude should be in decimal degree format and range from -90 to +90")
+  }
+  
+  # check if the given lon coordinate values are valid
+  lon <- as.numeric(lon)
+  if (!all(lon >= -180 & lon <= 180)) {
+    stop("The Longitude should be in decimal degree format and range from -180 to +180")
+  }
+  
+  if (length(lat) == length(lon)) {
+    loc_num <- length(lat)
+  } else {
+    stop("The number of Latitude/Longitude values should be the same!")
+  }
+
   # check if the given from and to date values are valid
   start_date <- as.Date(from)
   final_date <- as.Date(to)   
@@ -1961,7 +1978,8 @@ get_terraclimate <- function(lat, lon, from = '1958-01-01', to = '2020-12-31', c
     # check if the given month_mask values are valid
   }
   
-  clim_data  <- NULL
+  #clim_data <- NULL
+  clim_data <- list()
   
   start_month <- as.numeric(format(start_date, '%m'))
   start_year  <- as.numeric(format(start_date, '%Y'))
@@ -1972,10 +1990,10 @@ get_terraclimate <- function(lat, lon, from = '1958-01-01', to = '2020-12-31', c
   final_row   <- (final_year - 1958) * 12 + final_month
   
   # setup the progress bar
-  pb <- utils::txtProgressBar(min = 0, max = length(clim_vars), initial = 0, style = 3) 
-  pb_step <- round(length(clim_vars) / 100)
+  pb <- utils::txtProgressBar(min = 0, max = loc_num * length(clim_vars), initial = 0, style = 3) 
+  pb_step <- round(loc_num * length(clim_vars) / 100)
   
-  for(var in clim_vars){
+  for (var in clim_vars) {
     aggregate_url <- paste0('http://thredds.northwestknowledge.net:8080/thredds/dodsC/agg_terraclimate_', var, '_1958_CurrentYear_GLOBE.nc')
     nc_metadata   <- ncdf4::nc_open(aggregate_url)
     
@@ -1983,45 +2001,52 @@ get_terraclimate <- function(lat, lon, from = '1958-01-01', to = '2020-12-31', c
     lon_available <- ncdf4::ncvar_get(nc_metadata, 'lon')
     
     obs_available <- length(ncdf4::ncvar_get(nc_metadata, 'time'))
-    if (is.null(clim_data)) clim_data <- data.frame(matrix(nrow = obs_available, ncol = 0))
     
-    lat_selected  <- match(abs(lat_available - lat) < 1/48, 1)
-    lon_selected  <- match(abs(lon_available - lon) < 1/48, 1)
-    
-    lat_index <- which(lat_selected %in% 1)
-    lon_index <- which(lon_selected %in% 1)
-    
-    start <- c(lon_index, lat_index, 1)
-    count <- c(1, 1, -1)
-    
-    # read in the full period of record using aggregated files
-    values <- as.numeric(ncdf4::ncvar_get(nc_metadata, varid = var, start = start, count = count))
-    
-    clim_data <- cbind(clim_data, values)
-    
-    # update the progress bar
-    utils::setTxtProgressBar(pb, which(clim_vars == var))
+    for (i in 1:loc_num) {
+      if (length(clim_data) < i) clim_data[[i]] <- data.frame(matrix(nrow = obs_available, ncol = 0))
+
+      lat_selected  <- match(abs(lat_available - lat[i]) < 1/48, 1)
+      lon_selected  <- match(abs(lon_available - lon[i]) < 1/48, 1)
+      
+      lat_index <- which(lat_selected %in% 1)
+      lon_index <- which(lon_selected %in% 1)
+      
+      start <- c(lon_index, lat_index, 1)
+      count <- c(1, 1, -1)
+      
+      # read in the full period of record using aggregated files
+      values <- as.numeric(ncdf4::ncvar_get(nc_metadata, varid = var, start = start, count = count))
+      
+      clim_data[[i]] <- cbind(clim_data[[i]], values)
+      
+      # update the progress bar
+      utils::setTxtProgressBar(pb, loc_num * which(clim_vars == var) - (loc_num - i))
+    }
   }
   
   close(pb)
   
-  colnames(clim_data) <- clim_vars
+  biovars <- list()
   
-  years <- obs_available / 12
-  last  <- 1958 + years - 1
-  month <- rep(1:12, times = years)
-  year  <- rep(1958:last, each = 12)
-  
-  clim_data <- cbind(year, month, clim_data)
-  
-  if (all(c('ppt', 'tmin', 'tmax') %in% clim_vars)) {
-    biovars <- calc_biovars(clim_data[(start_row - (start_month - 1)):(final_row + (12 - final_month)), ])
-  } else {
-    biovars <- NULL
+  for (i in 1:loc_num) {
+    colnames(clim_data[[i]]) <- clim_vars
+    
+    years <- obs_available / 12
+    last  <- 1958 + years - 1
+    month <- rep(1:12, times = years)
+    year  <- rep(1958:last, each = 12)
+    
+    clim_data[[i]] <- cbind(year, month, clim_data[[i]])
+    
+    if (all(c('ppt', 'tmin', 'tmax') %in% clim_vars)) {
+      biovars[[i]] <- calc_biovars(clim_data[[i]][(start_row - (start_month - 1)):(final_row + (12 - final_month)), ])
+    } else {
+      biovars[[i]] <- NULL
+    }
+    
+    clim_data[[i]] <- clim_data[[i]][start_row:final_row, ]
+    clim_data[[i]] <- clim_data[[i]][clim_data[[i]]$month %in% month_mask, ]
   }
-  
-  clim_data <- clim_data[start_row:final_row, ]
-  clim_data <- clim_data[clim_data$month %in% month_mask, ]
   
   return(list(climate = clim_data, biovars = biovars))
 }
