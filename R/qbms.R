@@ -1373,22 +1373,25 @@ get_pedigree_table <- function(data, geno_column = "germplasmName", pedigree_col
   # replace index by the genotype name
   check <- cbind(roots[check[, 1]], roots[check[, 2]])
 
-  # for each pair of similar genotype names
-  for (i in 1:nrow(check)) {
-    # go through all letters of the given pair
-    for (j in 1:max(nchar(check[i, ]))) {
-      # if the given letters in the j offset are same, then move to the next letter
-      if (substr(check[i, 1], j, j) == substr(check[i, 2], j, j)) next
-
-      # if they are not the same, then check
-      # if the different letter is one of this group: <space>, -, _, .
-      # then update the geno_list and pedigree_list to be the same
-      if (substr(check[i, 1], j, j) %in% c(" ", "-", "_", ".")) {
-        geno_list     <- gsub(check[i, 2], check[i, 1], geno_list,     ignore.case = TRUE)
-        pedigree_list <- gsub(check[i, 2], check[i, 1], pedigree_list, ignore.case = TRUE)
-      } else if (substr(check[i, 2], j, j) %in% c(" ", "-", "_", ".")) {
-        geno_list     <- gsub(check[i, 1], check[i, 2], geno_list,     ignore.case = TRUE)
-        pedigree_list <- gsub(check[i, 1], check[i, 2], pedigree_list, ignore.case = TRUE)
+  # if there are cases of similar genotype names
+  if (nrow(check) > 0) {
+    # for each pair of similar genotype names
+    for (i in 1:nrow(check)) {
+      # go through all letters of the given pair
+      for (j in 1:max(nchar(check[i, ]))) {
+        # if the given letters in the j offset are same, then move to the next letter
+        if (substr(check[i, 1], j, j) == substr(check[i, 2], j, j)) next
+        
+        # if they are not the same, then check
+        # if the different letter is one of this group: <space>, -, _, .
+        # then update the geno_list and pedigree_list to be the same
+        if (substr(check[i, 1], j, j) %in% c(" ", "-", "_", ".")) {
+          geno_list     <- gsub(check[i, 2], check[i, 1], geno_list,     ignore.case = TRUE)
+          pedigree_list <- gsub(check[i, 2], check[i, 1], pedigree_list, ignore.case = TRUE)
+        } else if (substr(check[i, 2], j, j) %in% c(" ", "-", "_", ".")) {
+          geno_list     <- gsub(check[i, 1], check[i, 2], geno_list,     ignore.case = TRUE)
+          pedigree_list <- gsub(check[i, 1], check[i, 2], pedigree_list, ignore.case = TRUE)
+        }
       }
     }
   }
