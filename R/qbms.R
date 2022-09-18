@@ -1831,6 +1831,10 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
   results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
   
   total_variants <- results$count
+
+  if (total_variants == 0) {
+    stop("No variants match your filtering criteria!")
+  }
   
   # setup the progress bar
   pb <- utils::txtProgressBar(min = 0, max = total_variants, initial = 0, style = 3) 

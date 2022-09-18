@@ -5,7 +5,8 @@
   * Speed up internal get_program_trials() function by caching the list. Thanks to [Johan Steven Aparicio](https://github.com/AparicioJohan) for initiating this.
   * Fix the error message when calling the get_pedigree_table() function if there is no case of similar genotype names. Thanks to [Johan Steven Aparicio](https://github.com/AparicioJohan) for reporting this.
   * Suppress warning message when gigwa_get_variants() function returns a data.frame that has NA values.
-  * unnest the data.frame returned by the get_study_info() function.
+  * Unnest the data.frame returned by the get_study_info() function.
+  * Check if the gigwa_get_variants() function returns 0 records.
 -->
 # QBMS 0.8.0 _2022-05-18_ 
   * Add GIGWA support to query and retrieve SNPs data for GWAS and GS analysis pipelines.
