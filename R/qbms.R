@@ -689,8 +689,11 @@ get_study_info <- function() {
 
   study_info <- brapi_get_call(call_url)
   study_info <- as.data.frame(t(as.matrix(do.call(c, unlist(study_info, recursive = FALSE)))))
+  
+  study_info_df <- data.frame(study_info[, 1])
+  for(i in 2:ncol(study_info)) study_info_df[, i] <- study_info[, i]
 
-  return(study_info)
+  return(study_info_df)
 }
 
 
