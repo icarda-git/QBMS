@@ -31,7 +31,7 @@ library(QBMS)
 
 # The public GIGWA testing server required no authentication. If your GIGWA server 
 # requires authentication, then make sure that no_auth parameter value is FALSE
-# IMPORTENT NOTE: QBMS supports GIGWA version 2.4.1 or higher
+# IMPORTENT NOTE: QBMS required GIGWA version 2.4.1 or higher
 set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
                 time_out = 300, engine = "gigwa", no_auth = TRUE)
 
