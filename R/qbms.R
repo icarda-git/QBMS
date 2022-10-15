@@ -1944,7 +1944,9 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @examples
 #' if(interactive()) {
-#' # data <- get_terraclimate(36.016, 36.943, '1979-09-01', '2012-06-30', c('ppt', 'tmin', 'tmax'), c(10:12,1:5))
+#' # data <- get_terraclimate(36.016, 36.943, 
+#' #                          '1979-09-01', '2012-06-30', 
+#' #                          c('ppt', 'tmin', 'tmax'), c(10:12,1:5))
 #' data <- get_terraclimate(36.016, 36.943, '1979-09-01', '2012-06-30')
 #' 
 #' View(data$climate[[1]])
@@ -2145,7 +2147,7 @@ calc_biovars <- function(data) {
   }
   
   cv <- function(x) {
-    return(sd(x) / mean(x) * 100)
+    return(stats::sd(x) / mean(x) * 100)
   }
   
   tavg <- (tmin + tmax) / 2
@@ -2157,7 +2159,7 @@ calc_biovars <- function(data) {
   p[, 2] <- apply(tmax - tmin, 1, mean)
   
   # P4. Temperature Seasonality (standard deviation) 
-  p[,4] <- 100 * apply(tavg, 1, sd)
+  p[,4] <- 100 * apply(tavg, 1, stats::sd)
   
   # P5. Max Temperature of Warmest Period 
   p[, 5] <- apply(tmax, 1, max)

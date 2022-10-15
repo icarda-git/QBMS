@@ -14,9 +14,9 @@ get_terraclimate(
 )
 }
 \arguments{
-\item{lat}{Latitude in decimal degree format.}
+\item{lat}{Vector of Latitude(s) in decimal degree format.}
 
-\item{lon}{Longitude in decimal degree format.}
+\item{lon}{Vector of Longitude(s) in decimal degree format.}
 
 \item{from}{Start date as a string in the 'YYYY-MM-DD' format.}
 
@@ -29,7 +29,7 @@ ppt, q, soil, srad, swe, tmax, tmin, vap, ws, vpd, and PDSI}. Default is NULL fo
 Default is NULL for all.}
 }
 \value{
-A list of two data.frame(s):
+A list of two data.frame(s) for each pair of coordinates:
 \enumerate{
 \item \emph{climate:} includes the climate variables (\href{https://www.climatologylab.org/terraclimate-variables.html}{reference}).
 \item \emph{biovars:} includes the calculated bioclimatic variables (\href{https://www.worldclim.org/data/bioclim.html}{reference}).
@@ -56,12 +56,14 @@ A list of two data.frame(s):
 }
 \examples{
 if(interactive()) {
-# data <- get_terraclimate(36.016, 36.943, '1979-09-01', '2012-06-30', c('ppt', 'tmin', 'tmax'), c(10:12,1:5))
+# data <- get_terraclimate(36.016, 36.943, 
+#                          '1979-09-01', '2012-06-30', 
+#                          c('ppt', 'tmin', 'tmax'), c(10:12,1:5))
 data <- get_terraclimate(36.016, 36.943, '1979-09-01', '2012-06-30')
 
-View(data$climate)
+View(data$climate[[1]])
 
-View(data$biovars)
+View(data$biovars[[1]])
 }
 }
 \author{
