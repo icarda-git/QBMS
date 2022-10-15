@@ -1190,21 +1190,21 @@ get_parents <- function(pedigree) {
   if (length(cross[[1]]) != 0) {
     # find the highest cross order to cut at it and get parents sub-pedigree
     last_cross <- max(as.numeric(gsub("/", "", cross[[1]])))
-    parents    <- strsplit(pedigree, paste0("/", last_cross, "/"))[[1]]
+    parents    <- regmatches(pedigree, regexpr(paste0("/", last_cross, "/"), pedigree), invert = TRUE)[[1]]
   } else {
     # 2. if it is not of type /#/, then try double backslash //
     cross <- regmatches(pedigree, gregexpr("//", pedigree))
 
     if (length(cross[[1]]) != 0) {
       # get parents sub-pedigree if it is crossed using //
-      parents <- strsplit(pedigree, "//")[[1]]
+      parents <- regmatches(pedigree, regexpr("//", pedigree), invert = TRUE)[[1]]
     } else {
       # 3. if it is not // then try with single backslash /
       cross <- regmatches(pedigree, gregexpr("/", pedigree))
 
       if (length(cross[[1]]) != 0) {
         # get parents names
-        parents <- strsplit(pedigree, "/")[[1]]
+        parents <- regmatches(pedigree, regexpr("/", pedigree), invert = TRUE)[[1]]
       } else {
         # 4. else, there is no more cross info in this pedigree, so parents are unknown
         parents <- c(NA, NA)
@@ -1248,8 +1248,8 @@ build_pedigree_table <- function(geno_list = NULL, pedigree_list = NULL, pedigre
     pedigree_df   <- data.frame(Variety = factor(), Female = factor(), Male = factor())
 
     # make sure that all strings of genotype/germplasm and pedigree lists are in small letters (needs only first time)
-    geno_list     <- tolower(geno_list)
-    pedigree_list <- tolower(pedigree_list)
+    geno_list     <- tolower(iconv(geno_list, 'WINDOWS-1252', 'UTF-8'))
+    pedigree_list <- tolower(iconv(pedigree_list, 'WINDOWS-1252', 'UTF-8'))
   }
 
   # create an empty dummy list of previous generation parents
