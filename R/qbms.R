@@ -2017,11 +2017,14 @@ get_terraclimate <- function(lat, lon, from = '1958-01-01', to = '2020-12-31', c
     for (i in 1:loc_num) {
       if (length(clim_data) < i) clim_data[[i]] <- data.frame(matrix(nrow = obs_available, ncol = 0))
 
-      lat_selected  <- match(abs(lat_available - lat[i]) < 1/48, 1)
-      lon_selected  <- match(abs(lon_available - lon[i]) < 1/48, 1)
+      # lat_selected  <- match(abs(lat_available - lat[i]) < 1/48, 1)
+      # lon_selected  <- match(abs(lon_available - lon[i]) < 1/48, 1)
+      # 
+      # lat_index <- which(lat_selected %in% 1)
+      # lon_index <- which(lon_selected %in% 1)
       
-      lat_index <- which(lat_selected %in% 1)
-      lon_index <- which(lon_selected %in% 1)
+      lat_index <- which.min(abs(lat_available - lat[i]))
+      lon_index <- which.min(abs(lon_available - lon[i]))
       
       start <- c(lon_index, lat_index, 1)
       count <- c(1, 1, -1)
