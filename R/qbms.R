@@ -1548,6 +1548,8 @@ gigwa_set_db <- function(db_name) {
   }
   
   qbms_globals$config$db <- db_name
+  
+  qbms_globals$state$gigwa_projects <- NULL
 }
 
 #' Get the list of all projects in the selected GIGWA database
@@ -1583,11 +1585,17 @@ gigwa_list_projects <- function() {
     stop("No database has been selected yet! You have to set your database first using the `gigwa_set_db()` function")
   }
   
-  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/studies?programDbId=", qbms_globals$config$db)
-  
-  gigwa_projects <- brapi_get_call(call_url)
-  
-  gigwa_projects <- gigwa_projects$data[c("studyName")]
+  if (!is.null(qbms_globals$state$gigwa_projects)) {
+    gigwa_projects <- qbms_globals$state$gigwa_projects
+  } else {
+    call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/studies?programDbId=", qbms_globals$config$db)
+    
+    gigwa_projects <- brapi_get_call(call_url)
+    
+    gigwa_projects <- gigwa_projects$data[c("studyName")]
+    
+    qbms_globals$state$gigwa_projects <- gigwa_projects
+  }
 
   return(gigwa_projects)
 }
