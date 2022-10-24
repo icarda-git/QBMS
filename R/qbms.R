@@ -141,6 +141,10 @@ brapi_get_call <- function(call_url, page = 0, nested = TRUE) {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 
 get_login_details <- function() {
+  if (is.null(qbms_globals$config$engine)) {
+    stop("No server has been defined yet! You have to set your server configurations first using the `set_qbms_config()` function")
+  }
+  
   if (qbms_globals$config$engine == "bms") { server <- "BMS" }
   if (qbms_globals$config$engine == "breedbase") { server <- "BreedBase" }
   if (qbms_globals$config$engine == "gigwa") { server <- "GIGWA" }
