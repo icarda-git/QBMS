@@ -93,6 +93,8 @@ set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth
   if (no_auth == TRUE) {
     qbms_globals$state$token <- NA
   }
+  
+  qbms_globals$state$crops <- NULL
 }
 
 
@@ -258,11 +260,17 @@ list_crops <- function() {
     stop("No server has been connected yet! You have to connect a server first using the `bms_login()` function")
   }
 
-  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v1/crops")
+  if (!is.null(qbms_globals$state$crops)) {
+    bms_crops <- qbms_globals$state$crops
+  } else {
+    call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v1/crops")
+    bms_crops <- brapi_get_call(call_url)
+    bms_crops <- bms_crops$data
+    
+    qbms_globals$state$crops <- bms_crops
+  }
 
-  bms_crops <- brapi_get_call(call_url)
-
-  return(bms_crops$data)
+  return(bms_crops)
 }
 
 
