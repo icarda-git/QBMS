@@ -563,6 +563,8 @@ set_trial <- function(trial_name) {
   trial_row <- which(bms_trials$trialName == trial_name)[1]
 
   qbms_globals$state$trial_db_id <- as.character(bms_trials[trial_row, c("trialDbId")])
+  
+  qbms_globals$state$studies <- NULL
 }
 
 
@@ -601,13 +603,19 @@ list_studies <- function() {
   if (is.null(qbms_globals$state$trial_db_id)) {
     stop("No trial has been selected yet! You have to set your trial first using the `set_trial()` function")
   }
-
-  bms_trials <- get_program_trials()
-
-  trial_row <- which(bms_trials$trialDbId == qbms_globals$state$trial_db_id)
-
-  studies <- bms_trials[trial_row, c("studies")][[1]][, c("studyName", "locationName")]
-
+  
+  if (!is.null(qbms_globals$state$studies)) {
+    studies <- qbms_globals$state$studies
+  } else {
+    bms_trials <- get_program_trials()
+    
+    trial_row <- which(bms_trials$trialDbId == qbms_globals$state$trial_db_id)
+    
+    studies <- bms_trials[trial_row, c("studies")][[1]][, c("studyName", "locationName")]
+    
+    qbms_globals$state$studies <- studies
+  }
+  
   return(studies)
 }
 
@@ -983,18 +991,24 @@ get_crop_locations <- function() {
   if (is.null(qbms_globals$config$crop)) {
     stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
   }
-
-  call_url  <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/locations")
-  locations <- brapi_get_call(call_url, 0, FALSE)
-
-  location_list <- as.data.frame(locations$data)
-
-  if (qbms_globals$state$total_pages > 1 && is.null(qbms_globals$state$errors)) {
-    last_page <- qbms_globals$state$total_pages - 1
-    for (n in 1:last_page) {
-      locations     <- brapi_get_call(call_url, n, FALSE)
-      location_list <- rbindx(location_list, as.data.frame(locations$data))
+  
+  if (!is.null(qbms_globals$state$locations)) {
+    location_list <- qbms_globals$state$locations
+  } else {
+    call_url  <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/locations")
+    locations <- brapi_get_call(call_url, 0, FALSE)
+    
+    location_list <- as.data.frame(locations$data)
+    
+    if (qbms_globals$state$total_pages > 1 && is.null(qbms_globals$state$errors)) {
+      last_page <- qbms_globals$state$total_pages - 1
+      for (n in 1:last_page) {
+        locations     <- brapi_get_call(call_url, n, FALSE)
+        location_list <- rbindx(location_list, as.data.frame(locations$data))
+      }
     }
+
+    qbms_globals$state$locations <- location_list
   }
 
   return(location_list)
