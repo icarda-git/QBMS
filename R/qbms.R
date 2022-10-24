@@ -309,6 +309,9 @@ set_crop <- function(crop_name) {
   } else {
     qbms_globals$config$crop <- crop_name
   }
+  
+  qbms_globals$state$programs  <- NULL
+  qbms_globals$state$locations <- NULL
 }
 
 
@@ -347,16 +350,22 @@ list_programs <- function() {
     stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
   }
 
-  call_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/programs")
-
-  bms_programs <- brapi_get_call(call_url)
-
-  if (qbms_globals$config$engine == "breedbase") {
-    bms_programs <- bms_programs$data[c("programName")]
+  if (!is.null(qbms_globals$state$programs)) {
+    bms_programs <- qbms_globals$state$programs
   } else {
-    bms_programs <- bms_programs$data[c("name")]
-  }
+    call_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/programs")
+    
+    bms_programs <- brapi_get_call(call_url)
+    
+    if (qbms_globals$config$engine == "breedbase") {
+      bms_programs <- bms_programs$data[c("programName")]
+    } else {
+      bms_programs <- bms_programs$data[c("name")]
+    }
 
+    qbms_globals$state$programs <- bms_programs
+  }
+  
   return(bms_programs)
 }
 
