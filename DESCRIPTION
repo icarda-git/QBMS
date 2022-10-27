@@ -30,7 +30,8 @@ Imports:
     stats
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    async
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

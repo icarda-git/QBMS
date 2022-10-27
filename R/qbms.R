@@ -97,6 +97,27 @@ set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth
   qbms_globals$state$crops <- NULL
 }
 
+brapi_headers <- function() {
+  auth_code <- paste0("Bearer ", qbms_globals$state$token)
+  headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
+
+  headers
+}
+
+get_async_page <- async::async(function(full_url, nested) {
+  async::http_get(full_url, headers = brapi_headers())$
+    then(async::http_stop_for_status)$
+    then(function(resp) {
+      jsonlite::fromJSON(rawToChar(resp$content), flatten = !nested)
+    })
+})
+
+get_async_pages <- async::async(function(pages, nested) {
+  reqs <- lapply(pages, get_async_page, nested)
+  async::when_all(.list = reqs)$
+    then(function(x) x)
+})
+
 
 #' Internal function used for core BrAPI GET calls
 #'
@@ -114,15 +135,28 @@ set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth
 brapi_get_call <- function(call_url, page = 0, nested = TRUE) {
   separator <- if (grepl("\\?", call_url)) "&" else "?"
   full_url  <- paste0(call_url, separator, "page=", page, "&pageSize=", qbms_globals$config$page_size)
+  
+  if (requireNamespace("async", quietly = TRUE)) {
+    if (page == 0) {
+      result_object <- async::synchronise(get_async_page(full_url, nested))
+      total_pages   <- result_object$metadata$pagination$totalPages
+      if (total_pages > 1) {
+        pages <- c(seq(1, total_pages - 1))
+        full_urls <- paste0(call_url, separator, "page=", pages, "&pageSize=", qbms_globals$config$page_size)
+        qbms_globals$state$pages <- async::synchronise(get_async_pages(full_urls, nested))
+      }
+    } else {
+      result_object <- qbms_globals$state$pages[[page]]
+    }
+  } else {
+    headers  <- brapi_headers()
+    response <- httr::GET(url = utils::URLencode(full_url),
+                          httr::add_headers(headers),
+                          httr::timeout(qbms_globals$config$time_out))
+    
+    result_object <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
+  }
 
-  auth_code <- paste0("Bearer ", qbms_globals$state$token)
-  headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
-
-  response  <- httr::GET(url = utils::URLencode(full_url),
-                         httr::add_headers(headers),
-                         httr::timeout(qbms_globals$config$time_out))
-
-  result_object <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
   result_info   <- result_object$result
 
   qbms_globals$state$current_page <- result_object$metadata$pagination$currentPage
@@ -992,7 +1026,7 @@ get_trial_obs_ontology <- function() {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}
 
-get_crop_locations <- function() {
+list_locations <- function() {
   if (is.null(qbms_globals$config$crop)) {
     stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
   }
@@ -1076,7 +1110,7 @@ get_program_studies <- function() {
   # remove locationDbId, active, studies, and locationName columns coming from the trial data.frame
   studies <- studies[, -c(6:8, ncol(studies))]
 
-  crop_locations <- get_crop_locations()
+  crop_locations <- list_locations()
 
   studies <- merge(studies, crop_locations, by = "locationDbId", all.x = TRUE, all.y = FALSE)
 
@@ -1203,7 +1237,7 @@ get_germplasm_data <- function(germplasm_name) {
     results_df[, i] <- unlist(temp)
   }
 
-  crop_locations <- get_crop_locations()
+  crop_locations <- list_locations()
   results_df <- merge(results_df, crop_locations, by.x = "studyLocationDbId", by.y = "locationDbId", all.x = TRUE)
 
   return(results_df)
