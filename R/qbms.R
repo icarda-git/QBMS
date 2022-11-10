@@ -2107,12 +2107,12 @@ get_terraclimate <- function(lat, lon, from = '1958-01-01', to = '2020-12-31', c
   
   for (var in clim_vars) {
     aggregate_url <- paste0('http://thredds.northwestknowledge.net:8080/thredds/dodsC/agg_terraclimate_', var, '_1958_CurrentYear_GLOBE.nc')
-    nc_metadata   <- ncdf4::nc_open(aggregate_url)
+    nc_metadata   <- RNetCDF::open.nc(aggregate_url)
     
-    lat_available <- ncdf4::ncvar_get(nc_metadata, 'lat')
-    lon_available <- ncdf4::ncvar_get(nc_metadata, 'lon')
+    lat_available <- RNetCDF::var.get.nc(nc_metadata, 'lat')
+    lon_available <- RNetCDF::var.get.nc(nc_metadata, 'lon')
     
-    obs_available <- length(ncdf4::ncvar_get(nc_metadata, 'time'))
+    obs_available <- length(RNetCDF::var.get.nc(nc_metadata, 'time'))
     
     for (i in 1:loc_num) {
       if (length(clim_data) < i) clim_data[[i]] <- data.frame(matrix(nrow = obs_available, ncol = 0))
@@ -2127,10 +2127,10 @@ get_terraclimate <- function(lat, lon, from = '1958-01-01', to = '2020-12-31', c
       lon_index <- which.min(abs(lon_available - lon[i]))
       
       start <- c(lon_index, lat_index, 1)
-      count <- c(1, 1, -1)
+      count <- c(1, 1, NA)
       
       # read in the full period of record using aggregated files
-      values <- as.numeric(ncdf4::ncvar_get(nc_metadata, varid = var, start = start, count = count))
+      values <- as.numeric(RNetCDF::var.get.nc(nc_metadata, variable = var, start = start, count = count, unpack = TRUE))
       
       clim_data[[i]] <- cbind(clim_data[[i]], values)
       
