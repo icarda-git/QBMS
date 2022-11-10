@@ -2400,3 +2400,75 @@ gigwa_get_metadata <- function() {
   
   return(metadata)
 }
+
+#' Get all germplasm for a given crop
+#'
+#' @param crop_name the name of the crop
+#'
+#' @return data.frame with all germplasm information
+#' @export
+#'
+#' @examples
+#' # In progress
+get_germplasm <- function(crop_name = "bean") {
+  if (is.null(qbms_globals$config$crop)) {
+    stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
+  }
+  call_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/germplasm")
+  bms_germplasm <- brapi_get_call(call_url, page = 0, nested = FALSE)
+  bms_germplasm_data <- bms_germplasm$data
+  
+  if (qbms_globals$state$total_pages > 1 && is.null(qbms_globals$state$errors)) {
+    last_page <- qbms_globals$state$total_pages - 1
+    for (n in 1:last_page) {
+      bms_germplasm    <- brapi_get_call(call_url, n, FALSE)
+      bms_germplasm_data <- rbindx(bms_germplasm_data, bms_germplasm$data)
+    }
+  }
+  return(bms_germplasm_data)
+}
+
+#' Get germplasm attributes for a given germplasmDbId in a crop
+#'
+#' @param crop_name the name of the crop
+#' @param germplasmDbId id in the database
+#'
+#' @return data.frame with attributes
+#' @export
+#'
+#' @examples
+#' # In progress
+get_germplasm_attributes <- function(crop_name = "bean",
+                                     germplasmDbId = "49f77560-7874-11eb-91c9-0242ac140003") {
+  if (is.null(qbms_globals$config$crop)) {
+    stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
+  }
+  call_url <- paste0(
+    qbms_globals$config$base_url,
+    "/",
+    qbms_globals$config$crop,
+    "/brapi/v1/germplasm/",
+    germplasmDbId[1],
+    "/",
+    "attributes"
+  )
+  bms_germplasm_attributes <- brapi_get_call(call_url)
+  results <- data.frame(bms_germplasm_attributes$data)
+  
+  if (length(germplasmDbId) > 1) {
+    for (k in germplasmDbId) {
+      call_url <- paste0(
+        qbms_globals$config$base_url,
+        "/",
+        qbms_globals$config$crop,
+        "/brapi/v1/germplasm/",
+        k,
+        "/",
+        "attributes"
+      )
+      bms_germplasm_attributes <- brapi_get_call(call_url)
+      results <- rbind.data.frame(results, bms_germplasm_attributes$data)
+    }
+  }
+  return(results)
+}
