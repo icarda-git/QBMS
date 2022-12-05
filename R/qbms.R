@@ -1477,6 +1477,29 @@ build_pedigree_table <- function(geno_list = NULL, pedigree_list = NULL, pedigre
     cross   <- as.character(pedigree_list[i])
     parents <- get_parents(cross)
 
+    # check for backcross cases and handle them properly
+    female_bc <- regmatches(parents[1], regexec("(.+)\\*(\\d+)$", parents[1]))
+
+    if (length(female_bc[[1]]) != 0) {
+      n <- as.numeric(female_bc[[1]][3])
+      if (n > 2) {
+        parents <- c(female_bc[[1]][2], sub(parents[1], paste0(female_bc[[1]][2], "*", n - 1), cross, fixed = TRUE))
+      } else {
+        parents <- c(female_bc[[1]][2], sub(parents[1], female_bc[[1]][2], cross, fixed = TRUE))
+      }
+    } else {
+      male_bc <- regmatches(parents[2], regexec("^(\\d+)\\*(.+)", parents[2]))
+      
+      if (length(male_bc[[1]]) != 0) {
+        n <- as.numeric(male_bc[[1]][2])
+        if (n > 2) {
+          parents <- c(sub(parents[2], paste0(n - 1, "*", male_bc[[1]][3]), cross, fixed = TRUE), male_bc[[1]][3])
+        } else {
+          parents <- c(sub(parents[2], male_bc[[1]][3], cross, fixed = TRUE), male_bc[[1]][3])
+        }
+      }
+    }
+    
     # update the pedigree data.frame and dummy list of previous generation parents
     pedigree_df     <- rbind(c(geno, parents), pedigree_df)
     prev_generation <- c(prev_generation, parents)
