@@ -1244,6 +1244,148 @@ get_germplasm_data <- function(germplasm_name) {
 }
 
 
+#' Get all germplasm for a given crop
+#'
+#' @param crop_name the name of the crop
+#'
+#' @return data.frame with all germplasm information
+#' @export
+#'
+#' @examples
+#' # In progress
+get_germplasm <- function(crop_name = "bean") {
+  if (is.null(qbms_globals$config$crop)) {
+    stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
+  }
+  call_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/germplasm")
+  bms_germplasm <- brapi_get_call(call_url, page = 0, nested = FALSE)
+  bms_germplasm_data <- bms_germplasm$data
+  
+  if (qbms_globals$state$total_pages > 1 && is.null(qbms_globals$state$errors)) {
+    last_page <- qbms_globals$state$total_pages - 1
+    for (n in 1:last_page) {
+      bms_germplasm    <- brapi_get_call(call_url, n, FALSE)
+      bms_germplasm_data <- rbindx(bms_germplasm_data, bms_germplasm$data)
+    }
+  }
+  return(bms_germplasm_data)
+}
+
+
+#' Get germplasm attributes for a given germplasmDbId in a crop
+#'
+#' @param crop_name the name of the crop
+#' @param germplasmDbId id in the database
+#'
+#' @return data.frame with attributes
+#' @export
+#'
+#' @examples
+#' # In progress
+get_germplasm_attributes <- function(crop_name = "bean",
+                                     germplasmDbId = "49f77560-7874-11eb-91c9-0242ac140003") {
+  if (is.null(qbms_globals$config$crop)) {
+    stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
+  }
+  call_url <- paste0(
+    qbms_globals$config$base_url,
+    "/",
+    qbms_globals$config$crop,
+    "/brapi/v1/germplasm/",
+    germplasmDbId[1],
+    "/",
+    "attributes"
+  )
+  bms_germplasm_attributes <- brapi_get_call(call_url)
+  results <- data.frame(bms_germplasm_attributes$data)
+  
+  if (length(germplasmDbId) > 1) {
+    for (k in germplasmDbId) {
+      call_url <- paste0(
+        qbms_globals$config$base_url,
+        "/",
+        qbms_globals$config$crop,
+        "/brapi/v1/germplasm/",
+        k,
+        "/",
+        "attributes"
+      )
+      bms_germplasm_attributes <- brapi_get_call(call_url)
+      results <- rbind.data.frame(results, bms_germplasm_attributes$data)
+    }
+  }
+  return(results)
+}
+
+
+#' Search germplasm for a given program
+#'
+#' @param string string to search
+#' @param type_of_search c("STARTSWITH", "CONTAINS") "STARTSWITH" by default
+#'
+#' @return data.frame with the search results
+#' @export
+#'
+#' @examples
+#' # In progress
+search_program_germplasm <- function(string = "INB841", type_of_search = "STARTSWITH") {
+  if (is.null(qbms_globals$state$token)) {
+    stop("No server has been connected yet! You have to connect a server first using the `bms_login()` function")
+  }
+  if (is.null(qbms_globals$config$crop)) {
+    stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
+  }
+  if (is.null(qbms_globals$state$program_db_id)) {
+    stop("No program has been selected yet! You have to set your program first using the `set_program()` function")
+  }
+  
+  call_url <- paste0(
+    qbms_globals$config$base_url, "/crops/", qbms_globals$config$crop,
+    "/germplasm/search?programUUID=", qbms_globals$state$program_db_id
+  )
+  
+  auth_code <- paste0("Bearer ", qbms_globals$state$token)
+  headers <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
+  
+  string <- paste0('"', string, '"')
+  type_of_search <- paste0('"', type_of_search, '"')
+  call_body <- paste0(
+    '{"nameFilter":{"type":',
+    type_of_search,
+    ',"value":',
+    string,
+    '},"addedColumnsPropertyIds":[]}'
+  )
+  
+  response <- httr::POST(
+    url = utils::URLencode(call_url), 
+    body = call_body,
+    encode = "raw", httr::accept_json(),
+    httr::content_type_json(),
+    httr::add_headers(headers), 
+    httr::timeout(qbms_globals$config$time_out)
+  )
+  
+  if (!is.null(httr::content(response)$errors)) {
+    stop(httr::content(response)$errors[[1]]$message)
+  }
+  
+  search <- httr::content(response)$searchResultDbId
+  
+  call_url <- paste0(
+    qbms_globals$config$base_url, "/crops/", qbms_globals$config$crop,
+    "/germplasm/search?programUUID=", qbms_globals$state$program_db_id,
+    "&searchRequestId=", search
+  )
+  separator <- if (grepl("\\?", call_url)) "&" else "?"
+  full_url <- paste0(call_url, separator, "page=", 0, "&pageSize=", qbms_globals$config$page_size)
+  result_object <- async::synchronise(get_async_page(full_url, TRUE))
+  return(result_object)
+}
+
+
+## Pedigree ###############################################################################
+
 #' Get Direct Parents
 #'
 #' @description
@@ -1479,7 +1621,8 @@ get_pedigree_table <- function(data, geno_column = "germplasmName", pedigree_col
   return(pedigree_df)
 }
 
-###########################################################################################
+
+## GIGWA ##################################################################################
 
 #' Login to the GIGWA server
 #'
@@ -2007,6 +2150,72 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
 }
 
 
+#' Get the metadate of the current active GIGWA run
+#'
+#' @description
+#' This function will retrieve the metadata of the current active run
+#' as configured in the internal state object using `gigwa_set_run()` function.
+#'
+#' @return a data.frame of all metadata associated to the samples in the selected run
+#' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' @seealso \code{\link{set_qbms_config}}, \code{\link{gigwa_set_run}}
+#' @examples
+#' if(interactive()) {
+#' # config your GIGWA connection
+#' set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
+#'                 time_out = 300, engine = "gigwa", no_auth = TRUE)
+#'
+#' # select a database by name
+#' gigwa_set_db("3kG_8-5M")
+#'
+#' # select a project by name
+#' gigwa_set_project("SNP")
+#' 
+#' # select a specific run by name
+#' gigwa_set_run("1")
+#' 
+#' # get a list of all samples in the selected run
+#' metadata <- gigwa_get_metadata()
+#' }
+#' @export
+
+gigwa_get_metadata <- function() {
+  if (is.null(qbms_globals$state$study_db_id)) {
+    stop("No project has been selected yet! You have to set your project first using the `gigwa_set_project()` function")
+  }
+  
+  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/germplasm")
+  
+  auth_code <- paste0("Bearer ", qbms_globals$state$token)
+  headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
+  call_body <- paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}')
+  
+  response <- httr::POST(url = utils::URLencode(call_url), body = call_body, 
+                         encode = "raw", httr::accept_json(), httr::content_type_json(), 
+                         httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
+  
+  results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+  
+  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/attributevalues")
+  
+  germplasmDbIds <- paste(results$result$data$germplasmDbId, collapse = '","')
+  call_body <- paste0('{"germplasmDbIds": ["', germplasmDbIds, '"]}')
+  
+  response <- httr::POST(url = utils::URLencode(call_url), body = call_body, 
+                         encode = "raw", httr::accept_json(), httr::content_type_json(), 
+                         httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
+  
+  results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+  
+  metadata <- stats::reshape(results$result$data[,-1], idvar = "germplasmName", timevar = "attributeValueDbId", direction = "wide")
+  colnames(metadata) <- gsub("value\\.", "", colnames(metadata))
+  
+  return(metadata)
+}
+
+
+## TerraClimate ###########################################################################
+
 #' Get TerraClimate data for a given location
 #'
 #' @description
@@ -2336,206 +2545,3 @@ calc_biovars <- function(data) {
   
   return(as.data.frame(p))
 }
-
-
-#' Get the metadate of the current active GIGWA run
-#'
-#' @description
-#' This function will retrieve the metadata of the current active run
-#' as configured in the internal state object using `gigwa_set_run()` function.
-#'
-#' @return a data.frame of all metadata associated to the samples in the selected run
-#' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
-#' @seealso \code{\link{set_qbms_config}}, \code{\link{gigwa_set_run}}
-#' @examples
-#' if(interactive()) {
-#' # config your GIGWA connection
-#' set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
-#'                 time_out = 300, engine = "gigwa", no_auth = TRUE)
-#'
-#' # select a database by name
-#' gigwa_set_db("3kG_8-5M")
-#'
-#' # select a project by name
-#' gigwa_set_project("SNP")
-#' 
-#' # select a specific run by name
-#' gigwa_set_run("1")
-#' 
-#' # get a list of all samples in the selected run
-#' metadata <- gigwa_get_metadata()
-#' }
-#' @export
-
-gigwa_get_metadata <- function() {
-  if (is.null(qbms_globals$state$study_db_id)) {
-    stop("No project has been selected yet! You have to set your project first using the `gigwa_set_project()` function")
-  }
-  
-  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/germplasm")
-  
-  auth_code <- paste0("Bearer ", qbms_globals$state$token)
-  headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
-  call_body <- paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}')
-  
-  response <- httr::POST(url = utils::URLencode(call_url), body = call_body, 
-                         encode = "raw", httr::accept_json(), httr::content_type_json(), 
-                         httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
-  
-  results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
-  
-  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/attributevalues")
-  
-  germplasmDbIds <- paste(results$result$data$germplasmDbId, collapse = '","')
-  call_body <- paste0('{"germplasmDbIds": ["', germplasmDbIds, '"]}')
-
-  response <- httr::POST(url = utils::URLencode(call_url), body = call_body, 
-                         encode = "raw", httr::accept_json(), httr::content_type_json(), 
-                         httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
-  
-  results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
-  
-  metadata <- stats::reshape(results$result$data[,-1], idvar = "germplasmName", timevar = "attributeValueDbId", direction = "wide")
-  colnames(metadata) <- gsub("value\\.", "", colnames(metadata))
-  
-  return(metadata)
-}
-
-#' Get all germplasm for a given crop
-#'
-#' @param crop_name the name of the crop
-#'
-#' @return data.frame with all germplasm information
-#' @export
-#'
-#' @examples
-#' # In progress
-get_germplasm <- function(crop_name = "bean") {
-  if (is.null(qbms_globals$config$crop)) {
-    stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
-  }
-  call_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/germplasm")
-  bms_germplasm <- brapi_get_call(call_url, page = 0, nested = FALSE)
-  bms_germplasm_data <- bms_germplasm$data
-  
-  if (qbms_globals$state$total_pages > 1 && is.null(qbms_globals$state$errors)) {
-    last_page <- qbms_globals$state$total_pages - 1
-    for (n in 1:last_page) {
-      bms_germplasm    <- brapi_get_call(call_url, n, FALSE)
-      bms_germplasm_data <- rbindx(bms_germplasm_data, bms_germplasm$data)
-    }
-  }
-  return(bms_germplasm_data)
-}
-
-#' Get germplasm attributes for a given germplasmDbId in a crop
-#'
-#' @param crop_name the name of the crop
-#' @param germplasmDbId id in the database
-#'
-#' @return data.frame with attributes
-#' @export
-#'
-#' @examples
-#' # In progress
-get_germplasm_attributes <- function(crop_name = "bean",
-                                     germplasmDbId = "49f77560-7874-11eb-91c9-0242ac140003") {
-  if (is.null(qbms_globals$config$crop)) {
-    stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
-  }
-  call_url <- paste0(
-    qbms_globals$config$base_url,
-    "/",
-    qbms_globals$config$crop,
-    "/brapi/v1/germplasm/",
-    germplasmDbId[1],
-    "/",
-    "attributes"
-  )
-  bms_germplasm_attributes <- brapi_get_call(call_url)
-  results <- data.frame(bms_germplasm_attributes$data)
-  
-  if (length(germplasmDbId) > 1) {
-    for (k in germplasmDbId) {
-      call_url <- paste0(
-        qbms_globals$config$base_url,
-        "/",
-        qbms_globals$config$crop,
-        "/brapi/v1/germplasm/",
-        k,
-        "/",
-        "attributes"
-      )
-      bms_germplasm_attributes <- brapi_get_call(call_url)
-      results <- rbind.data.frame(results, bms_germplasm_attributes$data)
-    }
-  }
-  return(results)
-}
-
-#' Search germplasm for a given program
-#'
-#' @param string string to search
-#' @param type_of_search c("STARTSWITH", "CONTAINS") "STARTSWITH" by default
-#'
-#' @return data.frame with the search results
-#' @export
-#'
-#' @examples
-#' # In progress
-search_program_germplasm <- function(string = "INB841", type_of_search = "STARTSWITH") {
-  if (is.null(qbms_globals$state$token)) {
-    stop("No server has been connected yet! You have to connect a server first using the `bms_login()` function")
-  }
-  if (is.null(qbms_globals$config$crop)) {
-    stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
-  }
-  if (is.null(qbms_globals$state$program_db_id)) {
-    stop("No program has been selected yet! You have to set your program first using the `set_program()` function")
-  }
-  
-  call_url <- paste0(
-    qbms_globals$config$base_url, "/crops/", qbms_globals$config$crop,
-    "/germplasm/search?programUUID=", qbms_globals$state$program_db_id
-  )
-  
-  auth_code <- paste0("Bearer ", qbms_globals$state$token)
-  headers <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
-  
-  string <- paste0('"', string, '"')
-  type_of_search <- paste0('"', type_of_search, '"')
-  call_body <- paste0(
-    '{"nameFilter":{"type":',
-    type_of_search,
-    ',"value":',
-    string,
-    '},"addedColumnsPropertyIds":[]}'
-  )
-  
-  response <- httr::POST(
-    url = utils::URLencode(call_url), 
-    body = call_body,
-    encode = "raw", httr::accept_json(),
-    httr::content_type_json(),
-    httr::add_headers(headers), 
-    httr::timeout(qbms_globals$config$time_out)
-  )
-  
-  if (!is.null(httr::content(response)$errors)) {
-    stop(httr::content(response)$errors[[1]]$message)
-  }
-  
-  search <- httr::content(response)$searchResultDbId
-  
-  call_url <- paste0(
-    qbms_globals$config$base_url, "/crops/", qbms_globals$config$crop,
-    "/germplasm/search?programUUID=", qbms_globals$state$program_db_id,
-    "&searchRequestId=", search
-  )
-  separator <- if (grepl("\\?", call_url)) "&" else "?"
-  full_url <- paste0(call_url, separator, "page=", 0, "&pageSize=", qbms_globals$config$page_size)
-  result_object <- async::synchronise(get_async_page(full_url, TRUE))
-  return(result_object)
-}
-
-
