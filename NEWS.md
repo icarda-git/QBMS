@@ -10,6 +10,7 @@
   * Unnest the data.frame returned by the get_study_info() function.
   * Check if the gigwa_get_variants() function returns 0 records.
 -->
+
 # QBMS 0.8.0 _2022-05-18_ 
   * Add GIGWA support (required version 2.4.1 or higher) to query and retrieve SNPs data for GWAS and GS analysis pipelines.
   * Tiny usability enhancements (e.g., automate path parameter setting, show the server name in the login window, add progress bar to the get_program_studies function).
