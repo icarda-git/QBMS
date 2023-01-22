@@ -1,5 +1,5 @@
 <!--
-# QBMS 0.9.0 _2022-11-??_
+# QBMS 0.9.0 _2023-01-??_
   * Add TerraClimate support to query and retrieve climate data (including the [19 BIOCLIM variables](https://www.worldclim.org/data/bioclim.html)).
   * Add a new gigwa_get_metadata() function to retrieve metadata from GIGWA database.
   * The get_pedigree_table() function can detect and handle backcross cases properly in the pedigree strings.
