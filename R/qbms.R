@@ -118,7 +118,6 @@ get_async_pages <- async::async(function(pages, nested) {
     then(function(x) x)
 })
 
-
 #' Internal function used for core BrAPI GET calls
 #'
 #' @description
@@ -893,7 +892,7 @@ get_germplasm_list <- function() {
                            httr::add_headers(c("X-Auth-Token" = qbms_globals$state$token), "Accept-Encoding" = "gzip, deflate"),
                            httr::timeout(qbms_globals$config$time_out))
 
-    results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+    results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
 
     germplasm_list <- merge(germplasm_list, results[, c("entryNumber", "properties.8255.value")], by = "entryNumber")
 
@@ -1009,7 +1008,7 @@ get_trial_obs_ontology <- function() {
                           httr::add_headers("X-Auth-Token" = qbms_globals$state$token, "Accept-Encoding" = "gzip, deflate"),
                           httr::timeout(qbms_globals$config$time_out))
 
-    ontology <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+    ontology <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
   }
 
   return(ontology)
@@ -1131,7 +1130,7 @@ get_program_studies <- function() {
                           httr::add_headers("X-Auth-Token" = qbms_globals$state$token, "Accept-Encoding" = "gzip, deflate"),
                           httr::timeout(qbms_globals$config$time_out))
     
-    metadata <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+    metadata <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
 
     studies[studies$trialDbId == all_trials[i], "testEntriesCount"] <- metadata$testEntriesCount
     studies[studies$trialDbId == all_trials[i], "checkEntriesCount"] <- metadata$checkEntriesCount
@@ -2004,7 +2003,7 @@ gigwa_get_samples <- function() {
                            encode = "raw", httr::accept_json(), httr::content_type_json(), 
                            httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
     
-    results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+    results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
     
     gigwa_samples <- results$result$data$germplasmName
     
@@ -2094,7 +2093,7 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
   response <- httr::POST(url = utils::URLencode(call_url), body = call_body, encode = "json", 
                          httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
   
-  results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+  results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
   
   total_variants <- results$count
 
@@ -2118,8 +2117,8 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
                     pageToken = "0")
 
   g_matrix <- data.frame(matrix(ncol = length(samples) + 4, nrow = 0))
-  
-  repeat{
+
+  repeat {
     repeat {
       # avoid MongoDB error because of a background operation is still running!
       # get the progress status of a process from its token. If no current process is associated with this token, returns null.
@@ -2135,7 +2134,7 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
     response <- httr::POST(url = utils::URLencode(call_url), body = call_body, encode = "json", 
                            httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
 
-    results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+    results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
     
     n <- nrow(results$variants)
 
@@ -2158,7 +2157,7 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
     call_body$pageToken <- results$nextPageToken
     call_body$searchMode <- 2
   }
-  
+
   utils::setTxtProgressBar(pb, total_variants)
   close(pb)
   
@@ -2217,7 +2216,7 @@ gigwa_get_metadata <- function() {
                          encode = "raw", httr::accept_json(), httr::content_type_json(), 
                          httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
   
-  results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+  results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
   
   call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/attributevalues")
   
@@ -2228,7 +2227,7 @@ gigwa_get_metadata <- function() {
                          encode = "raw", httr::accept_json(), httr::content_type_json(), 
                          httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
   
-  results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+  results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
   
   metadata <- stats::reshape(results$result$data[,-1], idvar = "germplasmName", timevar = "attributeValueDbId", direction = "wide")
   colnames(metadata) <- gsub("value\\.", "", colnames(metadata))
