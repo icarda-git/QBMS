@@ -1892,7 +1892,7 @@ gigwa_list_runs <- function() {
                            encode = "raw", httr::accept_json(), httr::content_type_json(), 
                            httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
     
-    results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+    results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
     
     gigwa_runs <- as.data.frame(results$result$data$variantSetName)
     
@@ -1948,7 +1948,7 @@ gigwa_set_run <- function(run_name) {
                          encode = "raw", httr::accept_json(), httr::content_type_json(), 
                          httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
   
-  results <- jsonlite::fromJSON(httr::content(response, as = "text"), flatten = TRUE)
+  results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
   
   gigwa_runs <- as.data.frame(results$result$data)
   
