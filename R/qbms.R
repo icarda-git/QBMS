@@ -136,7 +136,7 @@ brapi_get_call <- function(call_url, nested = TRUE) {
   separator <- if (grepl("\\?", call_url)) "&" else "?"
   full_url  <- paste0(call_url, separator, "page=", page, "&pageSize=", qbms_globals$config$page_size)
   
-  if (FALSE && requireNamespace("async", quietly = TRUE)) {
+  if (requireNamespace("async", quietly = TRUE)) {
     if (page == 0) {
       result_object <- async::synchronise(get_async_page(full_url, nested))
       total_pages   <- result_object$metadata$pagination$totalPages
