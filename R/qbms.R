@@ -131,11 +131,12 @@ get_async_pages <- async::async(function(pages, nested) {
 #' @return result object returned by JSON API response
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 
-brapi_get_call <- function(call_url, page = 0, nested = TRUE) {
+brapi_get_call <- function(call_url, nested = TRUE) {
+  page      <- 0
   separator <- if (grepl("\\?", call_url)) "&" else "?"
   full_url  <- paste0(call_url, separator, "page=", page, "&pageSize=", qbms_globals$config$page_size)
   
-  if (requireNamespace("async", quietly = TRUE)) {
+  if (FALSE && requireNamespace("async", quietly = TRUE)) {
     if (page == 0) {
       result_object <- async::synchronise(get_async_page(full_url, nested))
       total_pages   <- result_object$metadata$pagination$totalPages
@@ -154,17 +155,32 @@ brapi_get_call <- function(call_url, page = 0, nested = TRUE) {
                           httr::timeout(qbms_globals$config$time_out))
     
     result_object <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
+    result_data   <- as.data.frame(result_object$result$data)
+    
+    if (result_object$metadata$pagination$totalPages > 1 && is.null(result_object$errors)) {
+      last_page <- result_object$metadata$pagination$totalPages - 1
+      for (n in 1:last_page) {
+        full_url <- paste0(call_url, separator, "page=", n, "&pageSize=", qbms_globals$config$page_size)
+        response <- httr::GET(url = utils::URLencode(full_url),
+                              httr::add_headers(headers),
+                              httr::timeout(qbms_globals$config$time_out))
+        
+        result_object <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
+        result_data   <- rbindx(result_data, as.data.frame(result_object$result$data))
+      }
+    }
+    result_object$result$data <- result_data
   }
-
-  result_info   <- result_object$result
-
+  
+  result_data <- result_object$result
+  
   qbms_globals$state$current_page <- result_object$metadata$pagination$currentPage
   qbms_globals$state$page_size    <- result_object$metadata$pagination$pageSize
   qbms_globals$state$total_count  <- result_object$metadata$pagination$totalCount
   qbms_globals$state$total_pages  <- result_object$metadata$pagination$totalPages
   qbms_globals$state$errors       <- result_object$errors
 
-  return(result_info)
+  return(result_data)
 }
 
 
@@ -297,13 +313,12 @@ list_crops <- function() {
     bms_crops <- qbms_globals$state$crops
   } else {
     call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v1/crops")
-    bms_crops <- brapi_get_call(call_url)
-    bms_crops <- bms_crops$data
-    
+    bms_crops <- brapi_get_call(call_url)$data
+
     qbms_globals$state$crops <- bms_crops
   }
 
-  return(bms_crops)
+  return(bms_crops[,1])
 }
 
 
@@ -388,12 +403,12 @@ list_programs <- function() {
   } else {
     call_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/programs")
     
-    bms_programs <- brapi_get_call(call_url)
+    bms_programs <- brapi_get_call(call_url)$data
     
     if (qbms_globals$config$engine == "breedbase") {
-      bms_programs <- bms_programs$data[c("programName")]
+      bms_programs <- bms_programs[c("programName")]
     } else {
-      bms_programs <- bms_programs$data[c("name")]
+      bms_programs <- bms_programs[c("name")]
     }
 
     qbms_globals$state$programs <- bms_programs
@@ -439,15 +454,15 @@ set_program <- function(program_name) {
 
   call_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/programs")
 
-  bms_programs <- brapi_get_call(call_url)
+  bms_programs <- brapi_get_call(call_url)$data
 
   if (qbms_globals$config$engine == "breedbase") {
-    program_row <- which(bms_programs$data$programName == program_name)
+    program_row <- which(bms_programs$programName == program_name)
   } else {
-    program_row <- which(bms_programs$data$name == program_name)
+    program_row <- which(bms_programs$name == program_name)
   }
 
-  qbms_globals$state$program_db_id <- bms_programs$data[program_row, "programDbId"]
+  qbms_globals$state$program_db_id <- bms_programs[program_row, "programDbId"]
   qbms_globals$state$trials <- NULL
 }
 
@@ -471,18 +486,8 @@ get_program_trials <- function() {
     call_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop,
                        "/brapi/v1/trials?programDbId=", qbms_globals$state$program_db_id)
   
-    bms_crop_trials <- brapi_get_call(call_url, 0, FALSE)
-  
-    bms_program_trials <- bms_crop_trials$data
-  
-    if (qbms_globals$state$total_pages > 1 && is.null(qbms_globals$state$errors)) {
-      last_page <- qbms_globals$state$total_pages - 1
-      for (n in 1:last_page) {
-        bms_crop_trials    <- brapi_get_call(call_url, n, FALSE)
-        bms_program_trials <- rbindx(bms_program_trials, bms_crop_trials$data)
-      }
-    }
-  
+    bms_program_trials <- brapi_get_call(call_url, FALSE)$data
+    
     qbms_globals$state$trials <- bms_program_trials
   }
   
@@ -808,19 +813,19 @@ get_study_data <- function() {
   call_url <- paste0(crop_url, "/studies/", qbms_globals$state$study_db_id, "/table")
 
   study_result <- brapi_get_call(call_url)
-
+  
   if (qbms_globals$config$engine == "breedbase") {
     study_data <- as.data.frame(study_result$data[-1, ])
     colnames(study_data) <- study_result$data[1, ]
   } else {
     study_data <- as.data.frame(study_result$data)
   }
-
+  
   study_header <- c(study_result$headerRow, study_result$observationVariableNames)
   if (nrow(study_data) > 0) {
     colnames(study_data) <- study_header
   }
-
+  
   return(study_data)
 }
 
@@ -868,16 +873,7 @@ get_germplasm_list <- function() {
   crop_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1")
   call_url <- paste0(crop_url, "/studies/", qbms_globals$state$study_db_id, "/germplasm")
 
-  germplasms     <- brapi_get_call(call_url)
-  germplasm_list <- as.data.frame(germplasms$data)
-
-  if (qbms_globals$state$total_pages > 1 && is.null(qbms_globals$state$errors)) {
-    last_page <- qbms_globals$state$total_pages - 1
-    for (n in 1:last_page) {
-      germplasms     <- brapi_get_call(call_url, n)
-      germplasm_list <- rbindx(germplasm_list, as.data.frame(germplasms$data))
-    }
-  }
+  germplasm_list <- brapi_get_call(call_url)$data
 
   if (qbms_globals$config$engine == "breedbase") {
     germplasm_list$check <- NA
@@ -998,7 +994,7 @@ get_trial_obs_ontology <- function() {
 
     colnames(ontology) <- "observationVariableNames"
   } else {
-    study_obs  <- study_data$observationVariableDbIds
+    study_obs <- study_data$observationVariableDbIds
 
     my_url <- paste0(qbms_globals$config$base_url, "/crops/", qbms_globals$config$crop,
                      "/variables/filter?programUUID=", qbms_globals$state$program_db_id,
@@ -1034,17 +1030,8 @@ list_locations <- function() {
     location_list <- qbms_globals$state$locations
   } else {
     call_url  <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/locations")
-    locations <- brapi_get_call(call_url, 0, FALSE)
     
-    location_list <- as.data.frame(locations$data)
-    
-    if (qbms_globals$state$total_pages > 1 && is.null(qbms_globals$state$errors)) {
-      last_page <- qbms_globals$state$total_pages - 1
-      for (n in 1:last_page) {
-        locations     <- brapi_get_call(call_url, n, FALSE)
-        location_list <- rbindx(location_list, as.data.frame(locations$data))
-      }
-    }
+    location_list <- brapi_get_call(call_url, FALSE)$data
 
     qbms_globals$state$locations <- location_list
   }
@@ -1245,28 +1232,20 @@ get_germplasm_data <- function(germplasm_name) {
 
 #' Get all germplasm for a given crop
 #'
-#' @param crop_name the name of the crop
-#'
 #' @return data.frame with all germplasm information
 #' @export
 #'
 #' @examples
 #' # In progress
-get_germplasm <- function(crop_name = "bean") {
+get_germplasm <- function() {
   if (is.null(qbms_globals$config$crop)) {
     stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
   }
-  call_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/germplasm")
-  bms_germplasm <- brapi_get_call(call_url, page = 0, nested = FALSE)
-  bms_germplasm_data <- bms_germplasm$data
   
-  if (qbms_globals$state$total_pages > 1 && is.null(qbms_globals$state$errors)) {
-    last_page <- qbms_globals$state$total_pages - 1
-    for (n in 1:last_page) {
-      bms_germplasm    <- brapi_get_call(call_url, n, FALSE)
-      bms_germplasm_data <- rbindx(bms_germplasm_data, bms_germplasm$data)
-    }
-  }
+  call_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/germplasm")
+  
+  bms_germplasm_data <- brapi_get_call(call_url, FALSE)$data
+
   return(bms_germplasm_data)
 }
 
@@ -1281,8 +1260,7 @@ get_germplasm <- function(crop_name = "bean") {
 #'
 #' @examples
 #' # In progress
-get_germplasm_attributes <- function(crop_name = "bean",
-                                     germplasmDbId = "49f77560-7874-11eb-91c9-0242ac140003") {
+get_germplasm_attributes <- function(germplasmDbId = "49f77560-7874-11eb-91c9-0242ac140003") {
   if (is.null(qbms_globals$config$crop)) {
     stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
   }
@@ -1295,9 +1273,8 @@ get_germplasm_attributes <- function(crop_name = "bean",
     "/",
     "attributes"
   )
-  bms_germplasm_attributes <- brapi_get_call(call_url)
-  results <- data.frame(bms_germplasm_attributes$data)
-  
+  results <- brapi_get_call(call_url)$data
+
   if (length(germplasmDbId) > 1) {
     for (k in germplasmDbId) {
       call_url <- paste0(
@@ -1309,8 +1286,8 @@ get_germplasm_attributes <- function(crop_name = "bean",
         "/",
         "attributes"
       )
-      bms_germplasm_attributes <- brapi_get_call(call_url)
-      results <- rbind.data.frame(results, bms_germplasm_attributes$data)
+      bms_germplasm_attributes <- brapi_get_call(call_url)$data
+      results <- rbindx(results, bms_germplasm_attributes)
     }
   }
   return(results)
@@ -1718,9 +1695,9 @@ gigwa_list_dbs <- function() {
   
   call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/programs")
   
-  gigwa_dbs <- brapi_get_call(call_url)
+  gigwa_dbs <- brapi_get_call(call_url)$data
   
-  return(gigwa_dbs$data)
+  return(gigwa_dbs)
 }
 
 #' Set the current active GIGWA database by name
@@ -1794,9 +1771,9 @@ gigwa_list_projects <- function() {
   } else {
     call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/studies?programDbId=", qbms_globals$config$db)
     
-    gigwa_projects <- brapi_get_call(call_url)
+    gigwa_projects <- brapi_get_call(call_url)$data
     
-    gigwa_projects <- gigwa_projects$data[c("studyName")]
+    gigwa_projects <- gigwa_projects[c("studyName")]
     
     qbms_globals$state$gigwa_projects <- gigwa_projects
   }
@@ -1838,11 +1815,11 @@ gigwa_set_project <- function(project_name) {
   
   call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/studies?programDbId=", qbms_globals$config$db)
   
-  gigwa_projects <- brapi_get_call(call_url)
+  gigwa_projects <- brapi_get_call(call_url)$data
 
-  project_row <- which(gigwa_projects$data$studyName == project_name)
+  project_row <- which(gigwa_projects$studyName == project_name)
   
-  qbms_globals$state$study_db_id <- gigwa_projects$data[project_row, "studyDbId"]
+  qbms_globals$state$study_db_id <- gigwa_projects[project_row, "studyDbId"]
   
   qbms_globals$state$gigwa_runs <- NULL
 }
