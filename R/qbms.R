@@ -169,7 +169,12 @@ brapi_get_call <- function(call_url, nested = TRUE) {
         result_data   <- rbindx(result_data, as.data.frame(result_object$result$data))
       }
     }
-    result_object$result$data <- result_data
+    
+    if (ncol(result_data) == 1) {
+      result_object$result$data <- result_data[,1]
+    } else {
+      result_object$result$data <- result_data
+    }
   }
   
   result_data <- result_object$result
@@ -318,7 +323,7 @@ list_crops <- function() {
     qbms_globals$state$crops <- bms_crops
   }
 
-  return(bms_crops[,1])
+  return(bms_crops)
 }
 
 
