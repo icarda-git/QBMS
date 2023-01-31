@@ -1167,9 +1167,13 @@ get_program_studies <- function() {
 #' }
 #' @export
 
-get_germplasm_data <- function(germplasm_name) {
+get_germplasm_data <- function(germplasm_name = "") {
   if (qbms_globals$config$engine == "breedbase") {
     stop("This function is not supported yet in BreedBase!")
+  }
+  
+  if (germplasm_name == "") {
+    stop("The germplasm name parameter value is missing!")
   }
 
   crop_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1")
