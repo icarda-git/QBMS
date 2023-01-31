@@ -67,6 +67,7 @@ debug_qbms <- function() {
 #' @param time_out  Number of seconds to wait for a response until giving up (default is 10)
 #' @param no_auth   TRUE if the server doesn't require authentication/login (default is FALSE)
 #' @param engine    Backend database (qbms default, breedbase, gigwa)
+#' @param verbose   Logical indicating if progress bar will display on the console when retrieve data from API (TRUE by default).
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @return no return value
 #' @examples
@@ -75,7 +76,7 @@ debug_qbms <- function() {
 
 set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth/login",
                             path = NULL, page_size = 1000, time_out = 120,
-                            no_auth = FALSE, engine = "bms") {
+                            no_auth = FALSE, engine = "bms", verbose = TRUE) {
 
   if (is.null(path)) {
     if (engine == "bms") { path = "bmsapi" }
@@ -89,6 +90,7 @@ set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth
   qbms_globals$config$time_out  <- time_out
   qbms_globals$config$base_url  <- paste0(qbms_globals$config$server, "/", qbms_globals$config$path)
   qbms_globals$config$engine    <- engine
+  qbms_globals$config$verbose   <- verbose
 
   if (no_auth == TRUE) {
     qbms_globals$state$token <- NA
@@ -159,6 +161,13 @@ brapi_get_call <- function(call_url, nested = TRUE) {
     
     if (result_object$metadata$pagination$totalPages > 1 && is.null(result_object$errors)) {
       last_page <- result_object$metadata$pagination$totalPages - 1
+      
+      if (qbms_globals$config$verbose) {
+        pb      <- utils::txtProgressBar(min = 0, max = last_page + 1, initial = 0, style = 3)
+        pb_step <- 1
+        utils::setTxtProgressBar(pb, 1)
+      }
+      
       for (n in 1:last_page) {
         full_url <- paste0(call_url, separator, "page=", n, "&pageSize=", qbms_globals$config$page_size)
         response <- httr::GET(url = utils::URLencode(full_url),
@@ -167,6 +176,14 @@ brapi_get_call <- function(call_url, nested = TRUE) {
         
         result_object <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
         result_data   <- rbindx(result_data, as.data.frame(result_object$result$data))
+        
+        # update the progress bar
+        if (qbms_globals$config$verbose) { utils::setTxtProgressBar(pb, n + 1) }
+      }
+      
+      if (qbms_globals$config$verbose) {
+        utils::setTxtProgressBar(pb, last_page + 1)
+        close(pb)
       }
     }
     
