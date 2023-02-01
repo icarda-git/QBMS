@@ -1255,37 +1255,39 @@ get_germplasm_data <- function(germplasm_name = "") {
   return(results_df)
 }
 
-
-#' Get all germplasm for a given crop
-#'
-#' @return data.frame with all germplasm information
-#' @export
-#'
-#' @examples
-#' # In progress
-get_germplasm <- function() {
-  if (is.null(qbms_globals$config$crop)) {
-    stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
-  }
-  
-  call_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/germplasm")
-  
-  bms_germplasm_data <- brapi_get_call(call_url, FALSE)$data
-
-  return(bms_germplasm_data)
-}
-
-
 #' Get germplasm attributes for a given germplasmDbId in a crop
 #'
-#' @param crop_name the name of the crop
-#' @param germplasmDbId id in the database
+#' @param germplasmDbId id in the database. It can be more than one.
 #'
 #' @return data.frame with attributes
 #' @export
 #'
 #' @examples
-#' # In progress
+#' # library(QBMS)
+#' # 
+#' # # config your BMS connection (by providing your BMS login page URL)
+#' # set_qbms_config("https://bms.ciat.cgiar.org/ibpworkbench/controller/auth/login")
+#' # 
+#' # # login using your BMS account (interactive mode)
+#' # # or pass your BMS username and password as parameters (batch mode)
+#' # login_bms()
+#' # 
+#' # # list supported crops in the current bms server
+#' # list_crops()
+#' # 
+#' # # select a crop by name
+#' # set_crop("bean")
+#' # 
+#' # # list all breeding programs in the selected crop
+#' # list_programs()
+#' # 
+#' # # select a breeding program by name
+#' # set_program("CIAT-Mesoamerican beans")
+#' # 
+#' # results <- search_program_germplasm(string = "SER21", type_of_search = "STARTSWITH")
+#' # ids <- results$germplasmUUID[1:2]
+#' # 
+#' # get_germplasm_attributes(germplasmDbId = ids)
 get_germplasm_attributes <- function(germplasmDbId = "49f77560-7874-11eb-91c9-0242ac140003") {
   if (is.null(qbms_globals$config$crop)) {
     stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
@@ -1300,6 +1302,7 @@ get_germplasm_attributes <- function(germplasmDbId = "49f77560-7874-11eb-91c9-02
     "attributes"
   )
   results <- brapi_get_call(call_url)$data
+  results$germplasmDbId <- germplasmDbId[1]
 
   if (length(germplasmDbId) > 1) {
     for (k in germplasmDbId) {
@@ -1313,6 +1316,7 @@ get_germplasm_attributes <- function(germplasmDbId = "49f77560-7874-11eb-91c9-02
         "attributes"
       )
       bms_germplasm_attributes <- brapi_get_call(call_url)$data
+      bms_germplasm_attributes$germplasmDbId <- k
       results <- rbindx(results, bms_germplasm_attributes)
     }
   }

@@ -4,7 +4,7 @@
 \alias{get_germplasm_data}
 \title{Get the observations data of a given germplasm name}
 \usage{
-get_germplasm_data(germplasm_name)
+get_germplasm_data(germplasm_name = "")
 }
 \arguments{
 \item{germplasm_name}{the name of the germplasm}

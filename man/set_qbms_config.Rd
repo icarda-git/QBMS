@@ -10,7 +10,8 @@ set_qbms_config(
   page_size = 1000,
   time_out = 120,
   no_auth = FALSE,
-  engine = "bms"
+  engine = "bms",
+  verbose = TRUE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ set_qbms_config(
 \item{no_auth}{TRUE if the server doesn't require authentication/login (default is FALSE)}
 
 \item{engine}{Backend database (qbms default, breedbase, gigwa)}
+
+\item{verbose}{Logical indicating if progress bar will display on the console when retrieve data from API (TRUE by default).}
 }
 \value{
 no return value

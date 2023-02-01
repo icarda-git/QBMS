@@ -2,7 +2,6 @@
 
 export(calc_biovars)
 export(debug_qbms)
-export(get_germplasm)
 export(get_germplasm_attributes)
 export(get_germplasm_data)
 export(get_germplasm_list)
