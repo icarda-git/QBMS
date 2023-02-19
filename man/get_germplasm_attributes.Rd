@@ -5,14 +5,11 @@
 \title{Get germplasm attributes for a given germplasmDbId in a crop}
 \usage{
 get_germplasm_attributes(
-  crop_name = "bean",
   germplasmDbId = "49f77560-7874-11eb-91c9-0242ac140003"
 )
 }
 \arguments{
-\item{crop_name}{the name of the crop}
-
-\item{germplasmDbId}{id in the database}
+\item{germplasmDbId}{id in the database. It can be more than one.}
 }
 \value{
 data.frame with attributes
@@ -21,5 +18,29 @@ data.frame with attributes
 Get germplasm attributes for a given germplasmDbId in a crop
 }
 \examples{
-# In progress
+# library(QBMS)
+# 
+# # config your BMS connection (by providing your BMS login page URL)
+# set_qbms_config("https://bms.ciat.cgiar.org/ibpworkbench/controller/auth/login")
+# 
+# # login using your BMS account (interactive mode)
+# # or pass your BMS username and password as parameters (batch mode)
+# login_bms()
+# 
+# # list supported crops in the current bms server
+# list_crops()
+# 
+# # select a crop by name
+# set_crop("bean")
+# 
+# # list all breeding programs in the selected crop
+# list_programs()
+# 
+# # select a breeding program by name
+# set_program("CIAT-Mesoamerican beans")
+# 
+# results <- search_program_germplasm(string = "SER21", type_of_search = "STARTSWITH")
+# ids <- results$germplasmUUID[1:2]
+# 
+# get_germplasm_attributes(germplasmDbId = ids)
 }

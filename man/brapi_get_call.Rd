@@ -4,14 +4,14 @@
 \alias{brapi_get_call}
 \title{Internal function used for core BrAPI GET calls}
 \usage{
-brapi_get_call(call_url, page = 0, nested = TRUE)
+brapi_get_call(call_url, nested = TRUE)
 }
 \arguments{
 \item{call_url}{BrAPI URL to call in GET method}
 
-\item{page}{Page number to retrieve in case of multi-paged results (default is 0)}
-
 \item{nested}{If FALSE, then retrieved JSON data will be flatten (default is TRUE)}
+
+\item{page}{Page number to retrieve in case of multi-paged results (default is 0)}
 }
 \value{
 result object returned by JSON API response

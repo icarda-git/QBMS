@@ -18,6 +18,8 @@ Linking data management systems to analytics is an important step in breeding di
 >
 >___Contributor:__ Zakaria Kehel <z.kehel (at) cgiar (dot) org>_
 >
+>___Contributor:__ [Johan Aparicio](https://github.com/apariciojohan) <j.aparicio (at) cgiar (dot) org>_
+>
 >___Copyright Holder:__ [International Center for Agricultural Research in the Dry Areas (ICARDA)](https://www.icarda.org/)_
 
 ## Breeding Management System (BMS)
