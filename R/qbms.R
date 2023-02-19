@@ -328,7 +328,7 @@ login_bms <- function(username = NULL, password = NULL) {
 
 list_crops <- function() {
   if (is.null(qbms_globals$state$token)) {
-    stop("No server has been connected yet! You have to connect a server first using the `bms_login()` function")
+    stop("No server has been connected yet! You have to connect a server first using the `login_bms()` function")
   }
 
   if (!is.null(qbms_globals$state$crops)) {
@@ -413,7 +413,7 @@ set_crop <- function(crop_name) {
 
 list_programs <- function() {
   if (is.null(qbms_globals$state$token)) {
-    stop("No server has been connected yet! You have to connect a server first using the `bms_login()` function")
+    stop("No server has been connected yet! You have to connect a server first using the `login_bms()` function")
   }
 
   if (is.null(qbms_globals$config$crop)) {
@@ -1332,7 +1332,7 @@ get_germplasm_attributes <- function(germplasmDbId = "49f77560-7874-11eb-91c9-02
 #' # In progress
 search_program_germplasm <- function(string = "INB841", type_of_search = "STARTSWITH") {
   if (is.null(qbms_globals$state$token)) {
-    stop("No server has been connected yet! You have to connect a server first using the `bms_login()` function")
+    stop("No server has been connected yet! You have to connect a server first using the `login_bms()` function")
   }
   if (is.null(qbms_globals$config$crop)) {
     stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
