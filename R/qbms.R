@@ -99,12 +99,26 @@ set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth
   qbms_globals$state$crops <- NULL
 }
 
+#' Common HTTP headers to send
+#'
+#' @description
+#' Build the list of common HTTP headers to send with each API call
+#'
+#' @return A list of common HTTP headers to send.
+
 brapi_headers <- function() {
   auth_code <- paste0("Bearer ", qbms_globals$state$token)
   headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
 
   headers
 }
+
+#' Async version of HTTP GET request
+#'
+#' @description
+#' A small helper function to create `async` version of the original HTTP GET request.
+#'
+#' @return Async version of HTTP GET request.
 
 get_async_page <- async::async(function(full_url, nested) {
   async::http_get(full_url, headers = brapi_headers())$
@@ -113,6 +127,14 @@ get_async_page <- async::async(function(full_url, nested) {
       jsonlite::fromJSON(rawToChar(resp$content), flatten = !nested)
     })
 })
+
+#' Run all supplied pages
+#'
+#' @description
+#' A small helper function to create a deferred value that is resolved when all 
+#' listed pages are resolved.
+#'
+#' @return Async deferred object.
 
 get_async_pages <- async::async(function(pages, nested) {
   reqs <- lapply(pages, get_async_page, nested)
@@ -2404,10 +2426,20 @@ get_terraclimate <- function(lat, lon, from = '1958-01-01', to = '2020-12-31', c
   return(list(climate = clim_data, biovars = biovars))
 }
 
-#' Create 19 BIOCLIM variables from monthly T-min, T-max, and Precipitation data
+#' Calculate the Bioclimatic Variables
 #' 
 #' @description
-#' \enumerate{
+#' Bioclimatic variables are derived from the monthly temperature and rainfall 
+#' values in order to generate more biologically meaningful variables. These are 
+#' often used in species distribution modeling and related ecological modeling 
+#' techniques. The bioclimatic variables represent annual trends (e.g., mean 
+#' annual temperature, annual precipitation) seasonality (e.g., annual range in 
+#' temperature and precipitation) and extreme or limiting environmental factors 
+#' (e.g., temperature of the coldest and warmest month, and precipitation of the 
+#' wet and dry quarters). A quarter is a period of three months (1/4 of the year).
+#' 
+#' They are coded as follows:
+#' \itemize{
 #' \item BIO1 = Annual Mean Temperature
 #' \item BIO2 = Mean Diurnal Range (Mean of monthly (max temp - min temp))
 #' \item BIO3 = Isothermality (BIO2/BIO7) (* 100)
