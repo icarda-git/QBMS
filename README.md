@@ -132,5 +132,13 @@ remotes::install_github("icarda-git/QBMS", upgrade = "always")
 Sys.setlocale("LC_ALL", "English_United States.utf8")
 ```
 
-## Referencies
-Peter Selby et al., BrAPI-an application programming interface for plant breeding applications, _Bioinformatics_, Volume 35, Issue 20, 15 October 2019, Pages 4147–4155, [https://doi.org/10.1093/bioinformatics/btz190](https://doi.org/10.1093/bioinformatics/btz190)
+## References
+* Peter Selby et al., BrAPI-an application programming interface for plant breeding applications, _Bioinformatics_, Volume 35, Issue 20, 15 October 2019, Pages 4147–4155, [https://doi.org/10.1093/bioinformatics/btz190](https://doi.org/10.1093/bioinformatics/btz190)
+
+* The Breeding API (2022, December 15). BrAPI Compatible Software list. Retrieved from [https://brapi.org/compatibleSoftware](https://brapi.org/compatibleSoftware)
+
+* Excellence in Breeding Toolbox (2023, February 1). Query Breeding Management Systems (QBMS) R package. Retrieved from [https://excellenceinbreeding.org/toolbox/tools/query-breeding-management-systems-qbms-r-package](https://excellenceinbreeding.org/toolbox/tools/query-breeding-management-systems-qbms-r-package)
+
+* CGSpace (2023, February 23). Query Breeding Management Systems (QBMS) R package. Retrieved from [https://cgspace.cgiar.org/handle/10568/128828](https://cgspace.cgiar.org/handle/10568/128828)
+
+* MELSpace (2023, February 23). Query Breeding Management Systems (QBMS) R package. Retrieved from [https://repo.mel.cgiar.org/handle/20.500.11766/68139](https://repo.mel.cgiar.org/handle/20.500.11766/68139)
