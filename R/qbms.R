@@ -443,19 +443,19 @@ list_programs <- function() {
   }
 
   if (!is.null(qbms_globals$state$programs)) {
-    bms_programs <- qbms_globals$state$programs
+    bms_programs <- as.data.frame(qbms_globals$state$programs[, 1])
   } else {
     call_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/programs")
     
-    bms_programs <- brapi_get_call(call_url)$data
+    results <- brapi_get_call(call_url)$data
     
     if (qbms_globals$config$engine == "breedbase") {
-      bms_programs <- bms_programs[c("programName")]
+      bms_programs <- results[c("programName")]
     } else {
-      bms_programs <- bms_programs[c("name")]
+      bms_programs <- results[c("name")]
     }
 
-    qbms_globals$state$programs <- bms_programs
+    qbms_globals$state$programs <- cbind(bms_programs, results[c("programDbId")])
   }
   
   return(bms_programs)
@@ -496,17 +496,10 @@ set_program <- function(program_name) {
     stop("Your breeding program name is not exists in this crop database! You may use the `list_programs()` function to check the available breeding programs")
   }
 
-  call_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/programs")
+  program_row <- which(qbms_globals$state$programs[,1] == program_name)
 
-  bms_programs <- brapi_get_call(call_url)$data
-
-  if (qbms_globals$config$engine == "breedbase") {
-    program_row <- which(bms_programs$programName == program_name)
-  } else {
-    program_row <- which(bms_programs$name == program_name)
-  }
-
-  qbms_globals$state$program_db_id <- bms_programs[program_row, "programDbId"]
+  qbms_globals$state$program_db_id <- qbms_globals$state$programs[program_row, "programDbId"]
+  
   qbms_globals$state$trials <- NULL
 }
 
@@ -1300,6 +1293,7 @@ get_germplasm_data <- function(germplasm_name = "") {
 
   return(results_df)
 }
+
 
 #' Get germplasm attributes for a given germplasm name in a crop
 #'
