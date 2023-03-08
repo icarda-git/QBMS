@@ -1176,7 +1176,13 @@ get_program_studies <- function() {
   return(studies)
 }
 
-#' This is an internal function and should not @export to the end users!
+
+#' Get the germplasm id for the given germplasm name in the current crop
+#'
+#' @return a string of the germplasm id
+#' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' @seealso \code{\link{set_crop}}, \code{\link{get_germplasm_data}}, \code{\link{get_germplasm_attributes}}
+
 get_germplasm_id <- function(germplasm_name = "") {
   if (germplasm_name == "") {
     stop("The germplasm name parameter value is missing!")
@@ -1205,16 +1211,17 @@ get_germplasm_id <- function(germplasm_name = "") {
   return(germplasm_db_id)
 }
 
-#' Get the observations data of a given germplasm name
+
+#' Get the observations data of a given germplasm name in a crop
 #'
 #' @description
-#' This function will retrieve the observations data of the current active study
-#' as configured in the internal state object using `set_study()` function.
+#' This function will retrieve all the observations data available for a given germplasm
+#' in the current crop database regardless of the programs/trials nested structure.
 #'
 #' @param germplasm_name the name of the germplasm
 #' @return a data frame of the germplasm observations data aggregate from all trials
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
-#' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}
+#' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{get_germplasm_attributes}}
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
@@ -1294,71 +1301,39 @@ get_germplasm_data <- function(germplasm_name = "") {
   return(results_df)
 }
 
-#' Get germplasm attributes for a given germplasmDbId in a crop
+#' Get germplasm attributes for a given germplasm name in a crop
 #'
-#' @param germplasmDbId id in the database. It can be more than one.
-#'
-#' @return data.frame with attributes
-#' @export
-#'
+#' @param germplasm_name the name of the germplasm
+#' @return a data frame of the germplasm attributes
+#' @author Johan Steven Aparicio, \email{j.aparicio@cgiar.org}
+#' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{get_germplasm_data}}
 #' @examples
-#' # library(QBMS)
-#' # 
-#' # # config your BMS connection (by providing your BMS login page URL)
-#' # set_qbms_config("https://bms.ciat.cgiar.org/ibpworkbench/controller/auth/login")
-#' # 
-#' # # login using your BMS account (interactive mode)
-#' # # or pass your BMS username and password as parameters (batch mode)
-#' # login_bms()
-#' # 
-#' # # list supported crops in the current bms server
-#' # list_crops()
-#' # 
-#' # # select a crop by name
-#' # set_crop("bean")
-#' # 
-#' # # list all breeding programs in the selected crop
-#' # list_programs()
-#' # 
-#' # # select a breeding program by name
-#' # set_program("CIAT-Mesoamerican beans")
-#' # 
-#' # results <- search_program_germplasm(string = "SER21", type_of_search = "STARTSWITH")
-#' # ids <- results$germplasmUUID[1:2]
-#' # 
-#' # get_germplasm_attributes(germplasmDbId = ids)
-get_germplasm_attributes <- function(germplasmDbId = "49f77560-7874-11eb-91c9-0242ac140003") {
-  if (is.null(qbms_globals$config$crop)) {
-    stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
-  }
-  call_url <- paste0(
-    qbms_globals$config$base_url,
-    "/",
-    qbms_globals$config$crop,
-    "/brapi/v1/germplasm/",
-    germplasmDbId[1],
-    "/",
-    "attributes"
-  )
-  results <- brapi_get_call(call_url)$data
-  results$germplasmDbId <- germplasmDbId[1]
+#' if(interactive()) {
+#' # config your BMS connection
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#'
+#' # login using your BMS account (interactive mode)
+#' # you can pass BMS username and password as parameters (batch mode)
+#' login_bms()
+#'
+#' set_crop("maize")
+#'
+#' # select a breeding program by name
+#' set_program("MC Maize")
+#'
+#' # retrive observations data of a given germplasm aggregated from all trials
+#' germplasm_observations <- get_germplasm_attributes("BASFCORN-2-1")
+#' }
+#' @export
 
-  if (length(germplasmDbId) > 1) {
-    for (k in germplasmDbId) {
-      call_url <- paste0(
-        qbms_globals$config$base_url,
-        "/",
-        qbms_globals$config$crop,
-        "/brapi/v1/germplasm/",
-        k,
-        "/",
-        "attributes"
-      )
-      bms_germplasm_attributes <- brapi_get_call(call_url)$data
-      bms_germplasm_attributes$germplasmDbId <- k
-      results <- rbindx(results, bms_germplasm_attributes)
-    }
-  }
+get_germplasm_attributes <- function(germplasm_name = "") {
+  germplasm_db_id <- get_germplasm_id(germplasm_name)
+  
+  crop_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop)
+  call_url <- paste0(crop_url, "/brapi/v1/germplasm/", germplasm_db_id, "/attributes")
+  
+  results <- brapi_get_call(call_url)$data
+
   return(results)
 }
 
