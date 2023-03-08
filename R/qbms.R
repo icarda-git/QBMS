@@ -1176,6 +1176,34 @@ get_program_studies <- function() {
   return(studies)
 }
 
+#' This is an internal function and should not @export to the end users!
+get_germplasm_id <- function(germplasm_name = "") {
+  if (germplasm_name == "") {
+    stop("The germplasm name parameter value is missing!")
+  }
+  
+  if (is.null(qbms_globals$config$crop)) {
+    stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
+  }
+  
+  crop_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1")
+  call_url <- paste0(crop_url, "/germplasm?germplasmName=", germplasm_name)
+  
+  # this BrAPI call return all germplasm records start with the given name NOT exactly match!
+  results <- brapi_get_call(call_url)$data
+  
+  if (length(results) == 0) {
+    stop("No germplasm in this crop database start with your filtering name!")
+  }
+  
+  germplasm_db_id <- results[results$germplasmName == germplasm_name, "germplasmDbId"]
+  
+  if (length(germplasm_db_id) == 0) {
+    stop("No germplasm in this crop database match your filtering name!")
+  }
+  
+  return(germplasm_db_id)
+}
 
 #' Get the observations data of a given germplasm name
 #'
@@ -1207,30 +1235,8 @@ get_program_studies <- function() {
 #' @export
 
 get_germplasm_data <- function(germplasm_name = "") {
-  if (germplasm_name == "") {
-    stop("The germplasm name parameter value is missing!")
-  }
-  
-  if (is.null(qbms_globals$config$crop)) {
-    stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
-  }
-  
-  crop_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1")
-  call_url <- paste0(crop_url, "/germplasm?germplasmName=", germplasm_name)
+  germplasm_db_id <- get_germplasm_id(germplasm_name)
 
-  # this BrAPI call return all germplasm records start with the given name NOT exactly match!
-  results <- brapi_get_call(call_url)$data
-  
-  if (length(results) == 0) {
-    stop("No germplasm in this crop database start with your filtering name!")
-  }
-  
-  germplasm_db_id <- results[results$germplasmName == germplasm_name, "germplasmDbId"]
-
-  if (length(germplasm_db_id) == 0) {
-    stop("No germplasm in this crop database match your filtering name!")
-  }
-  
   # https://github.com/plantbreeding/API/blob/V1.2/Specification/Phenotypes/PhenotypesSearch_POST.md
   # Note 1: It does not work with germplasm name (BrAPI specifications): e.g. {"germplasmDbIds": ["ILC 3279"]}
   # Note 2: Return "Invalid request body" if we search for one germplasm_db_id!
