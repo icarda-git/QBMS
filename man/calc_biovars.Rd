@@ -2,7 +2,7 @@
 % Please edit documentation in R/qbms.R
 \name{calc_biovars}
 \alias{calc_biovars}
-\title{Create 19 BIOCLIM variables from monthly T-min, T-max, and Precipitation data}
+\title{Calculate the Bioclimatic Variables}
 \usage{
 calc_biovars(data)
 }
@@ -15,7 +15,17 @@ Data.frame has 19 columns for "bioclim" variables (bio1-bio19) and
         last column for year (you will get one row per year).
 }
 \description{
-\enumerate{
+Bioclimatic variables are derived from the monthly temperature and rainfall 
+values in order to generate more biologically meaningful variables. These are 
+often used in species distribution modeling and related ecological modeling 
+techniques. The bioclimatic variables represent annual trends (e.g., mean 
+annual temperature, annual precipitation) seasonality (e.g., annual range in 
+temperature and precipitation) and extreme or limiting environmental factors 
+(e.g., temperature of the coldest and warmest month, and precipitation of the 
+wet and dry quarters). A quarter is a period of three months (1/4 of the year).
+
+They are coded as follows:
+\itemize{
 \item BIO1 = Annual Mean Temperature
 \item BIO2 = Mean Diurnal Range (Mean of monthly (max temp - min temp))
 \item BIO3 = Isothermality (BIO2/BIO7) (* 100)
@@ -36,13 +46,14 @@ Data.frame has 19 columns for "bioclim" variables (bio1-bio19) and
 \item BIO18 = Precipitation of Warmest Quarter
 \item BIO19 = Precipitation of Coldest Quarter
 }
-
-These summary Bioclimatic variables are after:
-  Nix, 1986. A biogeographic analysis of Australian elapid snakes. In: R. Longmore (ed.).
-     Atlas of elapid snakes of Australia. Australian Flora and Fauna Series 7.
-     Australian Government Publishing Service, Canberra.
      
 This work is derivative from the \href{https://github.com/rspatial/dismo/blob/master/R/biovars.R}{dismo R package}
+}
+\references{
+Nix, 1986. A biogeographic analysis of Australian elapid snakes. 
+            In: R. Longmore (ed.). Atlas of elapid snakes of Australia. 
+            Australian Flora and Fauna Series 7. Australian Government Publishing 
+            Service, Canberra.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

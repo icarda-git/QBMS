@@ -2,7 +2,7 @@
 % Please edit documentation in R/qbms.R
 \name{get_terraclimate}
 \alias{get_terraclimate}
-\title{Get TerraClimate data for a given location}
+\title{Get TerraClimate data for a given coordinate(s)}
 \usage{
 get_terraclimate(
   lat,
@@ -30,23 +30,23 @@ Default is NULL for all.}
 }
 \value{
 A list of two data.frame(s) for each pair of coordinates:
-\enumerate{
-\item \emph{climate:} includes the climate variables (\href{https://www.climatologylab.org/terraclimate-variables.html}{reference}).
-\item \emph{biovars:} includes the calculated bioclimatic variables (\href{https://www.worldclim.org/data/bioclim.html}{reference}).
+\itemize{
+\item \strong{climate:} includes the climate variables (\href{https://www.climatologylab.org/terraclimate-variables.html}{reference}).
+\item \strong{biovars:} includes the calculated bioclimatic variables (\href{https://www.worldclim.org/data/bioclim.html}{reference}).
 }
 }
 \description{
-\enumerate{
-\item \href{https://www.nature.com/articles/sdata2017191}{Scientific Paper}
-\item \href{https://www.climatologylab.org/terraclimate.html}{About the Dataset}
-\item \href{http://thredds.northwestknowledge.net:8080/thredds/terraclimate_aggregated.html}{Hosting Catalog}
-\item \href{https://hpc.uidaho.edu/}{Service Provider}
-\item \href{https://www.climatologylab.org/terraclimate-variables.html}{Climate Variables}
-\item \href{https://www.worldclim.org/data/bioclim.html}{Bioclimatic Vars}
-\item \href{https://github.com/rspatial/dismo/blob/master/R/biovars.R}{Calculating biovars}
-}
+\href{https://www.climatologylab.org/terraclimate.html}{TerraClimate} is a monthly climate dataset 
+for global terrestrial surfaces from 1958-2021. This function enables you to extract 
+\href{https://www.climatologylab.org/terraclimate-variables.html}{climate variables} from the 
+\href{http://thredds.northwestknowledge.net:8080/thredds/terraclimate_aggregated.html}{hosting server} 
+provided by the \href{https://hpc.uidaho.edu/}{Idaho University} for a given coordinate(s) without 
+a need to download the whole raster files in the netCDF format (~100MB per variable for each year) 
+and provide them in a standard data frame format ready to use in your code. It also calculates the 
+\href{https://www.worldclim.org/data/bioclim.html}{bioclimatic variables} using the \code{\link{calc_biovars}} 
+function derivative from the \href{https://github.com/rspatial/dismo/blob/master/R/biovars.R}{dismo R package}.
 
-\strong{TerraClimate vs. \href{https://www.worldclim.org/data/worldclim21.html}{WorldClim}}
+TerraClimate vs. \href{https://www.worldclim.org/data/worldclim21.html}{WorldClim}
 \itemize{
 \item 1958-2020 vs. 1970-2000
 \item 14 vs. 7 climate variables
@@ -65,6 +65,12 @@ View(data$climate[[1]])
 
 View(data$biovars[[1]])
 }
+}
+\references{
+Abatzoglou, J., Dobrowski, S., Parks, S. \emph{et al.} TerraClimate, a high-resolution 
+            global dataset of monthly climate and climatic water balance from 1958-2015. 
+            \emph{Sci Data} \strong{5}, 170191 (2018). 
+            \href{https://doi.org/10.1038/sdata.2017.191}{https://doi.org/10.1038/sdata.2017.191}
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

@@ -2,45 +2,40 @@
 % Please edit documentation in R/qbms.R
 \name{get_germplasm_attributes}
 \alias{get_germplasm_attributes}
-\title{Get germplasm attributes for a given germplasmDbId in a crop}
+\title{Get germplasm attributes for a given germplasm name in a crop}
 \usage{
-get_germplasm_attributes(
-  germplasmDbId = "49f77560-7874-11eb-91c9-0242ac140003"
-)
+get_germplasm_attributes(germplasm_name = "")
 }
 \arguments{
-\item{germplasmDbId}{id in the database. It can be more than one.}
+\item{germplasm_name}{the name of the germplasm}
 }
 \value{
-data.frame with attributes
+a data frame of the germplasm attributes
 }
 \description{
-Get germplasm attributes for a given germplasmDbId in a crop
+Get germplasm attributes for a given germplasm name in a crop
 }
 \examples{
-# library(QBMS)
-# 
-# # config your BMS connection (by providing your BMS login page URL)
-# set_qbms_config("https://bms.ciat.cgiar.org/ibpworkbench/controller/auth/login")
-# 
-# # login using your BMS account (interactive mode)
-# # or pass your BMS username and password as parameters (batch mode)
-# login_bms()
-# 
-# # list supported crops in the current bms server
-# list_crops()
-# 
-# # select a crop by name
-# set_crop("bean")
-# 
-# # list all breeding programs in the selected crop
-# list_programs()
-# 
-# # select a breeding program by name
-# set_program("CIAT-Mesoamerican beans")
-# 
-# results <- search_program_germplasm(string = "SER21", type_of_search = "STARTSWITH")
-# ids <- results$germplasmUUID[1:2]
-# 
-# get_germplasm_attributes(germplasmDbId = ids)
+if(interactive()) {
+# config your BMS connection
+set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+
+# login using your BMS account (interactive mode)
+# you can pass BMS username and password as parameters (batch mode)
+login_bms()
+
+set_crop("maize")
+
+# select a breeding program by name
+set_program("MC Maize")
+
+# retrive observations data of a given germplasm aggregated from all trials
+germplasm_observations <- get_germplasm_attributes("BASFCORN-2-1")
+}
+}
+\seealso{
+\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{get_germplasm_data}}
+}
+\author{
+Johan Steven Aparicio, \email{j.aparicio@cgiar.org}
 }

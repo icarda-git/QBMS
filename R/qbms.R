@@ -1644,6 +1644,7 @@ login_gigwa <- function(username = NULL, password = NULL) {
   qbms_globals$state$token <- httr::content(response)$token
 }
 
+
 #' Get the list of existing databases in the current GIGWA server
 #'
 #' @return a list of existing databases
@@ -1671,6 +1672,7 @@ gigwa_list_dbs <- function() {
   
   return(gigwa_dbs)
 }
+
 
 #' Set the current active GIGWA database by name
 #'
@@ -1704,6 +1706,7 @@ gigwa_set_db <- function(db_name) {
   
   qbms_globals$state$gigwa_projects <- NULL
 }
+
 
 #' Get the list of all projects in the selected GIGWA database
 #'
@@ -1753,6 +1756,7 @@ gigwa_list_projects <- function() {
   return(gigwa_projects)
 }
 
+
 #' Set the current active GIGWA project
 #'
 #' @description
@@ -1795,6 +1799,7 @@ gigwa_set_project <- function(project_name) {
   
   qbms_globals$state$gigwa_runs <- NULL
 }
+
 
 #' Get the list of run names in the selected GIGWA project
 #'
@@ -1852,6 +1857,7 @@ gigwa_list_runs <- function() {
   return(gigwa_runs)
 }
 
+
 #' Set the current active GIGWA run
 #'
 #' @description
@@ -1904,6 +1910,7 @@ gigwa_set_run <- function(run_name) {
   
   qbms_globals$state$gigwa_samples <- NULL
 }
+
 
 #' Get the samples list of the current active GIGWA run
 #'
@@ -1961,6 +1968,7 @@ gigwa_get_samples <- function() {
 
   return(gigwa_samples)
 }
+
 
 #' Get variants in the selected GIGWA run
 #'
@@ -2187,26 +2195,31 @@ gigwa_get_metadata <- function() {
 
 ## TerraClimate ###########################################################################
 
-#' Get TerraClimate data for a given location
+#' Get TerraClimate data for a given coordinate(s)
 #'
 #' @description
-#' \enumerate{
-#' \item \href{https://www.nature.com/articles/sdata2017191}{Scientific Paper}
-#' \item \href{https://www.climatologylab.org/terraclimate.html}{About the Dataset}
-#' \item \href{http://thredds.northwestknowledge.net:8080/thredds/terraclimate_aggregated.html}{Hosting Catalog}
-#' \item \href{https://hpc.uidaho.edu/}{Service Provider}
-#' \item \href{https://www.climatologylab.org/terraclimate-variables.html}{Climate Variables}
-#' \item \href{https://www.worldclim.org/data/bioclim.html}{Bioclimatic Vars}
-#' \item \href{https://github.com/rspatial/dismo/blob/master/R/biovars.R}{Calculating biovars}
-#' }
+#' \href{https://www.climatologylab.org/terraclimate.html}{TerraClimate} is a monthly climate dataset 
+#' for global terrestrial surfaces from 1958-2021. This function enables you to extract 
+#' \href{https://www.climatologylab.org/terraclimate-variables.html}{climate variables} from the 
+#' \href{http://thredds.northwestknowledge.net:8080/thredds/terraclimate_aggregated.html}{hosting server} 
+#' provided by the \href{https://hpc.uidaho.edu/}{Idaho University} for a given coordinate(s) without 
+#' a need to download the whole raster files in the netCDF format (~100MB per variable for each year) 
+#' and provide them in a standard data frame format ready to use in your code. It also calculates the 
+#' \href{https://www.worldclim.org/data/bioclim.html}{bioclimatic variables} using the \code{\link{calc_biovars}} 
+#' function derivative from the \href{https://github.com/rspatial/dismo/blob/master/R/biovars.R}{dismo R package}.
 #'
-#' \strong{TerraClimate vs. \href{https://www.worldclim.org/data/worldclim21.html}{WorldClim}}
+#' TerraClimate vs. \href{https://www.worldclim.org/data/worldclim21.html}{WorldClim}
 #' \itemize{
 #' \item 1958-2020 vs. 1970-2000
 #' \item 14 vs. 7 climate variables
 #' \item ~4 km vs. ~1 km spatial resolution
 #' \item need to calculate vs. pre-calculated 19 bioclimatic variables
 #' }
+#'
+#' @references Abatzoglou, J., Dobrowski, S., Parks, S. \emph{et al.} TerraClimate, a high-resolution 
+#'             global dataset of monthly climate and climatic water balance from 1958-2015. 
+#'             \emph{Sci Data} \strong{5}, 170191 (2018). 
+#'             \href{https://doi.org/10.1038/sdata.2017.191}{https://doi.org/10.1038/sdata.2017.191}
 #' 
 #' @param lat  Vector of Latitude(s) in decimal degree format.
 #' @param lon  Vector of Longitude(s) in decimal degree format.
@@ -2217,9 +2230,9 @@ gigwa_get_metadata <- function() {
 #' @param month_mask A list of all months of interest (e.g., planting season: \code{c(10:12,1:5)}). 
 #'                   Default is NULL for all.
 #' @return A list of two data.frame(s) for each pair of coordinates:
-#' \enumerate{
-#' \item \emph{climate:} includes the climate variables (\href{https://www.climatologylab.org/terraclimate-variables.html}{reference}).
-#' \item \emph{biovars:} includes the calculated bioclimatic variables (\href{https://www.worldclim.org/data/bioclim.html}{reference}).
+#' \itemize{
+#' \item \strong{climate:} includes the climate variables (\href{https://www.climatologylab.org/terraclimate-variables.html}{reference}).
+#' \item \strong{biovars:} includes the calculated bioclimatic variables (\href{https://www.worldclim.org/data/bioclim.html}{reference}).
 #' }
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @examples
@@ -2346,6 +2359,7 @@ get_terraclimate <- function(lat, lon, from = '1958-01-01', to = '2020-12-31', c
   return(list(climate = clim_data, biovars = biovars))
 }
 
+
 #' Calculate the Bioclimatic Variables
 #' 
 #' @description
@@ -2380,13 +2394,13 @@ get_terraclimate <- function(lat, lon, from = '1958-01-01', to = '2020-12-31', c
 #' \item BIO18 = Precipitation of Warmest Quarter
 #' \item BIO19 = Precipitation of Coldest Quarter
 #' }
-#' 
-#' These summary Bioclimatic variables are after:
-#'   Nix, 1986. A biogeographic analysis of Australian elapid snakes. In: R. Longmore (ed.).
-#'      Atlas of elapid snakes of Australia. Australian Flora and Fauna Series 7.
-#'      Australian Government Publishing Service, Canberra.
 #'      
 #' This work is derivative from the \href{https://github.com/rspatial/dismo/blob/master/R/biovars.R}{dismo R package}
+#' 
+#' @references Nix, 1986. A biogeographic analysis of Australian elapid snakes. 
+#'             In: R. Longmore (ed.). Atlas of elapid snakes of Australia. 
+#'             Australian Flora and Fauna Series 7. Australian Government Publishing 
+#'             Service, Canberra.
 #'
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @author Robert Hijmans, Museum of Vertebrate Zoology, UC Berkeley

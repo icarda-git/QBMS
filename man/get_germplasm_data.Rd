@@ -2,7 +2,7 @@
 % Please edit documentation in R/qbms.R
 \name{get_germplasm_data}
 \alias{get_germplasm_data}
-\title{Get the observations data of a given germplasm name}
+\title{Get the observations data of a given germplasm name in a crop}
 \usage{
 get_germplasm_data(germplasm_name = "")
 }
@@ -13,8 +13,8 @@ get_germplasm_data(germplasm_name = "")
 a data frame of the germplasm observations data aggregate from all trials
 }
 \description{
-This function will retrieve the observations data of the current active study
-as configured in the internal state object using `set_study()` function.
+This function will retrieve all the observations data available for a given germplasm
+in the current crop database regardless of the programs/trials nested structure.
 }
 \examples{
 if(interactive()) {
@@ -35,7 +35,7 @@ germplasm_observations <- get_germplasm_data("BASFCORN-2-1")
 }
 }
 \seealso{
-\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}
+\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{get_germplasm_attributes}}
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
