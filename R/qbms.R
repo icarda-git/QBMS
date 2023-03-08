@@ -1214,7 +1214,11 @@ get_germplasm_data <- function(germplasm_name = "") {
   if (germplasm_name == "") {
     stop("The germplasm name parameter value is missing!")
   }
-
+  
+  if (is.null(qbms_globals$config$crop)) {
+    stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
+  }
+  
   crop_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1")
   call_url <- paste0(crop_url, "/germplasm?germplasmName=", germplasm_name)
 
