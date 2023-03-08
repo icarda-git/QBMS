@@ -1207,10 +1207,6 @@ get_program_studies <- function() {
 #' @export
 
 get_germplasm_data <- function(germplasm_name = "") {
-  # if (qbms_globals$config$engine == "breedbase") {
-  #   stop("This function is not supported yet in BreedBase!")
-  # }
-  
   if (germplasm_name == "") {
     stop("The germplasm name parameter value is missing!")
   }
@@ -1222,9 +1218,19 @@ get_germplasm_data <- function(germplasm_name = "") {
   crop_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1")
   call_url <- paste0(crop_url, "/germplasm?germplasmName=", germplasm_name)
 
+  # this BrAPI call return all germplasm records start with the given name NOT exactly match!
   results <- brapi_get_call(call_url)$data
+  
+  if (length(results) == 0) {
+    stop("No germplasm in this crop database start with your filtering name!")
+  }
+  
   germplasm_db_id <- results[results$germplasmName == germplasm_name, "germplasmDbId"]
 
+  if (length(germplasm_db_id) == 0) {
+    stop("No germplasm in this crop database match your filtering name!")
+  }
+  
   # https://github.com/plantbreeding/API/blob/V1.2/Specification/Phenotypes/PhenotypesSearch_POST.md
   # Note 1: It does not work with germplasm name (BrAPI specifications): e.g. {"germplasmDbIds": ["ILC 3279"]}
   # Note 2: Return "Invalid request body" if we search for one germplasm_db_id!
@@ -1240,9 +1246,10 @@ get_germplasm_data <- function(germplasm_name = "") {
   results <- httr::content(response)$result$data
 
   flatten_results <- jsonlite::fromJSON(jsonlite::toJSON(results), flatten = TRUE)
-
-  # unlist nested list with id
-  #unlisted_observations <- data.table::rbindlist(flatten_results$observations, fill = TRUE, idcol = "id")
+  
+  if (length(flatten_results) == 0) {
+    stop("No observation data available in this crop database for the given germplasm!")
+  }
 
   unlisted_observations    <- rbindx(flatten_results$observations[[1]])
   unlisted_observations$id <- 1
