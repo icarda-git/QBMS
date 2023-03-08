@@ -37,7 +37,7 @@ library(QBMS)
 set_qbms_config("https://cassavabase.org/brapi/v1/calls/", 
                 time_out = 300, no_auth = TRUE, engine = "breedbase")
 
-# list supported crops in the current bms server
+# list supported crops in the current BreedBase server
 list_crops()
 
 # select a crop by name
@@ -76,6 +76,10 @@ germplasm <- get_germplasm_list()
 
 # retrieve multi-environment trial data of the selected study/trial
 MET <- get_trial_data()
+
+# retrieve observations data of given germplasm aggregated from all trials 
+# in the selected program
+germplasm_observations <- get_germplasm_data("IITA-TMS-IBA070593")
 
 ```
 ## _Troubleshooting the installation_

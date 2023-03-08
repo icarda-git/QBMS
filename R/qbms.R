@@ -1207,9 +1207,9 @@ get_program_studies <- function() {
 #' @export
 
 get_germplasm_data <- function(germplasm_name = "") {
-  if (qbms_globals$config$engine == "breedbase") {
-    stop("This function is not supported yet in BreedBase!")
-  }
+  # if (qbms_globals$config$engine == "breedbase") {
+  #   stop("This function is not supported yet in BreedBase!")
+  # }
   
   if (germplasm_name == "") {
     stop("The germplasm name parameter value is missing!")
