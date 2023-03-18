@@ -18,9 +18,6 @@ Linking data management systems to analytics is an important step in breeding di
 ###Reference:
 Abatzoglou, J., Dobrowski, S., Parks, S. et al. TerraClimate, a high-resolution global dataset of monthly climate and climatic water balance from 1958–2015. Sci Data 5, 170191 (2018). [https://doi.org/10.1038/sdata.2017.191](https://doi.org/10.1038/sdata.2017.191)
 
-## BrAPI
-The Breeding API ([BrAPI](https://brapi.org/)) project is an effort to enable interoperability among plant breeding databases. BrAPI is a standardized RESTful web service API specification for communicating plant breeding data. This community driven standard is free to be used by anyone interested in plant breeding data management.
-
 ## _Install_
 ```r
 install.packages("remotes")
@@ -63,15 +60,4 @@ worldclim_norm  <- apply(worldclim_range$biovars[[2]][,1:19], 2, function(x) rou
 # terraclimate  661.0  182.1  0.0    113.5  419.2  0.3    0.9    398.5
 # worldclim     592.0  140.0  0.0    99.0   368.0  1.0    2.0    368.0
 
-```
-## _Troubleshooting the installation_
-
-1. If the installation of QBMS generates errors saying that some of the existing packages cannot be removed, you can try to quit any R session, and try to start R in administrator (Windows) or SUDO mode (Linux/Ubuntu) then try installing again.
-
-2. If you get an error related to packages built under a current version of R, and updating your packages doesn’t help, you can consider overriding the error with the following code. _Note: This might help you install QBMS but may result in other problems. If possible, it’s best to resolve the errors rather than ignoring them._
-
-```r
-Sys.setenv("R_REMOTES_NO_ERRORS_FROM_WARNINGS" = TRUE)
-
-remotes::install_github("icarda-git/QBMS", upgrade = "always")
 ```
