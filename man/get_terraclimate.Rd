@@ -48,7 +48,7 @@ function derivative from the \href{https://github.com/rspatial/dismo/blob/master
 
 TerraClimate vs. \href{https://www.worldclim.org/data/worldclim21.html}{WorldClim}
 \itemize{
-\item 1958-2020 vs. 1970-2000
+\item 1958-2021 vs. 1970-2000
 \item 14 vs. 7 climate variables
 \item ~4 km vs. ~1 km spatial resolution
 \item need to calculate vs. pre-calculated 19 bioclimatic variables
@@ -70,7 +70,7 @@ View(data$biovars[[1]])
 Abatzoglou, J., Dobrowski, S., Parks, S. \emph{et al.} TerraClimate, a high-resolution 
             global dataset of monthly climate and climatic water balance from 1958-2015. 
             \emph{Sci Data} \strong{5}, 170191 (2018). 
-            \href{https://doi.org/10.1038/sdata.2017.191}{https://doi.org/10.1038/sdata.2017.191}
+            \doi{10.1038/sdata.2017.191}
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
