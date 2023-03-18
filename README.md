@@ -110,7 +110,8 @@ set_qbms_connection(con1)
 
 > A detailed example is available in the documentation of the `get_qbms_connection()` and `set_qbms_connection()` functions.
 
-Also, you can find a more elegant solution developed by [Francisco Agosto-Perez](https://ilci.cornell.edu/our-team/francisco-agosto-perez/) from the Breeding Informatics team within the Innovation Lab For Crop Improvement at Cornell University available here: [https://github.com/agostof/BrAPI-Provider/](https://github.com/agostof/BrAPI-Provider/).
+Also, you can find a more elegant solution developed by [Francisco Agosto-Perez](https://ilci.cornell.edu/our-team/francisco-agosto-perez/) from the Breeding Informatics team within the Innovation Lab For Crop Improvement at Cornell University available here: 
+[https://github.com/agostof/BrAPI-Provider/](https://github.com/agostof/BrAPI-Provider/)
 
 ## Error and Debugging
 If you get unexpected results or weird behavior and want to dig deep and investigate what went wrong, you can get a copy of the internal QBMS variables by calling the `debug_qbms()` function.
