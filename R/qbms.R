@@ -236,6 +236,8 @@ brapi_headers <- function() {
 #' @description
 #' A small helper function to create `async` version of the original HTTP GET request.
 #'
+#' @param full_url URL to retrieve
+#' @param nested   Don't flatten nested data.frames
 #' @return Async version of HTTP GET request.
 
 get_async_page <- async::async(function(full_url, nested) {
@@ -253,6 +255,8 @@ get_async_page <- async::async(function(full_url, nested) {
 #' A small helper function to create a deferred value that is resolved when all 
 #' listed pages are resolved.
 #'
+#' @param pages  List of URLs to retrieve
+#' @param nested Don't flatten nested data.frames
 #' @return Async deferred object.
 
 get_async_pages <- async::async(function(pages, nested) {
@@ -270,7 +274,6 @@ get_async_pages <- async::async(function(pages, nested) {
 #' care of pagination, authentication, encoding, compress, decode JSON response, etc.
 #'
 #' @param call_url BrAPI URL to call in GET method
-#' @param page     Page number to retrieve in case of multi-paged results (default is 0)
 #' @param nested   If FALSE, then retrieved JSON data will be flatten (default is TRUE)
 #' @return result object returned by JSON API response
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -916,10 +919,10 @@ get_study_info <- function() {
   if (is.null(study_info)) {
     study_info_df <- NULL
   } else {
-    study_info <- as.data.frame(t(as.matrix(do.call(c, unlist(study_info, recursive = FALSE)))))
+    study_info_df <- as.data.frame(t(as.matrix(do.call(c, unlist(study_info, recursive = FALSE)))))
     
-    study_info_df <- data.frame(study_info[, 1])
-    for(i in 2:ncol(study_info)) study_info_df[, i] <- study_info[, i]
+    # study_info_df <- data.frame(study_info[, 1])
+    # for(i in 2:ncol(study_info)) study_info_df[, i] <- study_info[, i]
   }
 
   return(study_info_df)
@@ -1291,8 +1294,12 @@ get_program_studies <- function() {
 }
 
 
+#' Get Germplasm ID
+#'
+#' @description 
 #' Get the germplasm id for the given germplasm name in the current crop
 #'
+#' @param germplasm_name the name of the germplasm
 #' @return a string of the germplasm id
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @seealso \code{\link{set_crop}}, \code{\link{get_germplasm_data}}, \code{\link{get_germplasm_attributes}}
@@ -1356,6 +1363,10 @@ get_germplasm_id <- function(germplasm_name = "") {
 #' @export
 
 get_germplasm_data <- function(germplasm_name = "") {
+  if (qbms_globals$config$engine == "breedbase") {
+    stop("This function is not supported yet in BreedBase!")
+  }
+  
   germplasm_db_id <- get_germplasm_id(germplasm_name)
 
   # https://github.com/plantbreeding/API/blob/V1.2/Specification/Phenotypes/PhenotypesSearch_POST.md
@@ -1443,6 +1454,10 @@ get_germplasm_data <- function(germplasm_name = "") {
 #' @export
 
 get_germplasm_attributes <- function(germplasm_name = "") {
+  if (qbms_globals$config$engine == "breedbase") {
+    stop("This function is not supported yet in BreedBase!")
+  }
+  
   germplasm_db_id <- get_germplasm_id(germplasm_name)
   
   crop_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop)

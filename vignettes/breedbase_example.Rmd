@@ -77,8 +77,4 @@ germplasm <- get_germplasm_list()
 # retrieve multi-environment trial data of the selected study/trial
 MET <- get_trial_data()
 
-# retrieve observations data of given germplasm aggregated from all trials 
-# in the selected program
-germplasm_observations <- get_germplasm_data("IITA-TMS-IBA070593")
-
 ```

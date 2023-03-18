@@ -6,6 +6,11 @@
 \usage{
 get_async_page(full_url, nested)
 }
+\arguments{
+\item{full_url}{URL to retrieve}
+
+\item{nested}{Don't flatten nested data.frames}
+}
 \value{
 Async version of HTTP GET request.
 }

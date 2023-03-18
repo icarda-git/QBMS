@@ -6,6 +6,11 @@
 \usage{
 get_async_pages(pages, nested)
 }
+\arguments{
+\item{pages}{List of URLs to retrieve}
+
+\item{nested}{Don't flatten nested data.frames}
+}
 \value{
 Async deferred object.
 }

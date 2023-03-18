@@ -2,9 +2,12 @@
 % Please edit documentation in R/qbms.R
 \name{get_germplasm_id}
 \alias{get_germplasm_id}
-\title{Get the germplasm id for the given germplasm name in the current crop}
+\title{Get Germplasm ID}
 \usage{
 get_germplasm_id(germplasm_name = "")
+}
+\arguments{
+\item{germplasm_name}{the name of the germplasm}
 }
 \value{
 a string of the germplasm id
