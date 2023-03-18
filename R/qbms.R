@@ -1076,6 +1076,7 @@ list_locations <- function() {
   return(location_list)
 }
 
+
 #' Get the list of trials studies locations information of the current selected program
 #'
 #' @description
@@ -1241,6 +1242,7 @@ get_germplasm_data <- function(germplasm_name = "") {
   # Note 1: It does not work with germplasm name (BrAPI specifications): e.g. {"germplasmDbIds": ["ILC 3279"]}
   # Note 2: Return "Invalid request body" if we search for one germplasm_db_id!
 
+  crop_url  <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1")
   call_url  <- paste0(crop_url, "/phenotypes-search")
   call_body <- list(germplasmDbIds = c(germplasm_db_id, ""), observationLevel = "PLOT")
   auth_code <- paste0("Bearer ", qbms_globals$state$token)
@@ -1295,7 +1297,7 @@ get_germplasm_data <- function(germplasm_name = "") {
 }
 
 
-#' Get germplasm attributes for a given germplasm name in a crop
+#' Get germplasm attributes for a given germplasm in a crop
 #'
 #' @param germplasm_name the name of the germplasm
 #' @return a data frame of the germplasm attributes
@@ -1315,8 +1317,8 @@ get_germplasm_data <- function(germplasm_name = "") {
 #' # select a breeding program by name
 #' set_program("MC Maize")
 #'
-#' # retrive observations data of a given germplasm aggregated from all trials
-#' germplasm_observations <- get_germplasm_attributes("BASFCORN-2-1")
+#' # retrive attributes data of a given germplasm in a crop
+#' germplasm_attributes <- get_germplasm_attributes("BASFCORN-2-1")
 #' }
 #' @export
 
@@ -2145,10 +2147,10 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
 #'                 time_out = 300, engine = "gigwa", no_auth = TRUE)
 #'
 #' # select a database by name
-#' gigwa_set_db("3kG_8-5M")
+#' gigwa_set_db("3kG_10M")
 #'
 #' # select a project by name
-#' gigwa_set_project("SNP")
+#' gigwa_set_project("3003_ind")
 #' 
 #' # select a specific run by name
 #' gigwa_set_run("1")
