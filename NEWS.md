@@ -4,6 +4,7 @@
   * Add TerraClimate support to query and retrieve climate data (including the [19 BIOCLIM variables](https://www.worldclim.org/data/bioclim.html)).
   * Add a new get_germplasm_attributes() function to retrieve germplasm attributes. Thanks to [Johan Steven Aparicio](https://github.com/AparicioJohan) for his contribution.
   * Add a new gigwa_get_metadata() function to retrieve metadata from GIGWA database.
+  * Add new get_qbms_connection() and set_qbms_connection() functions to support connecting to multiple providers. Thanks to [Francisco Agosto-Perez](https://github.com/agostof) for the suggestions.
   * The get_pedigree_table() function can properly detect and handle backcross cases.
   * Fix the error message when calling the get_pedigree_table() function if there is no case of similar genotype names. Thanks to [Johan Steven Aparicio](https://github.com/AparicioJohan) for reporting this.
 

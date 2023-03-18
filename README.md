@@ -82,7 +82,37 @@ All that you need to do to activate this option is to install the async package 
 remotes::install_github("r-lib/async")
 ```
 
-### _Error and Debugging_
+## Supporting Multiple Provider Connectors
+You can switch between an ongoing QBMS connection and another server/database connection by using `get_qbms_connection()` and `set_qbms_connection()` functions, as shown in the following example (i.e., if there is a need to switch forth and back during the same session):
+
+```r
+# configure QBMS to connect the phenotypics server
+set_qbms_config("https://www.bms-uat-test.net/ibpworkbench/controller/auth/login")
+
+# login and retrieve data from the phenotypic server
+
+# save current connection (phenotypic server)
+con1 <- get_qbms_connection()
+
+# configure QBMS to connect the genotypic server
+set_qbms_config("https://gigwa.southgreen.fr/gigwa/", engine = "gigwa", no_auth = TRUE)
+
+# retrieve data from the genotypic server
+
+# save current connection (before switch)
+con2 <- get_qbms_connection()
+
+# load the saved phenotypic server connection
+set_qbms_connection(con1)
+
+# continue retrieving data from the phenotypic server
+```
+
+> A detailed example is available in the documentation of the `get_qbms_connection()` and `set_qbms_connection()` functions.
+
+Also, you can find a more elegant solution developed by [Francisco Agosto-Perez](https://ilci.cornell.edu/our-team/francisco-agosto-perez/) from the Breeding Informatics team within the Innovation Lab For Crop Improvement at Cornell University available here: [https://github.com/agostof/BrAPI-Provider/](https://github.com/agostof/BrAPI-Provider/).
+
+## Error and Debugging
 If you get unexpected results or weird behavior and want to dig deep and investigate what went wrong, you can get a copy of the internal QBMS variables by calling the `debug_qbms()` function.
 
 ```r
@@ -118,7 +148,7 @@ dump$state$token
 # [1] "username:1666907125029:a312bb036cc8d9cc302bee1f0981e5ab"
 ```
 
-### _Troubleshooting the installation_
+## Troubleshooting the Installation
 1. If the installation of QBMS generates errors saying that some of the existing packages cannot be removed, you can try to quit any R session, and try to start R in administrator (Windows) or SUDO mode (Linux/Ubuntu) then try installing again.
 
 2. If you get an error related to packages built under a current version of R, and updating your packages doesn’t help, you can consider overriding the error with the following code. _Note: This might help you install QBMS but may result in other problems. If possible, it’s best to resolve the errors rather than ignoring them._

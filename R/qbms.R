@@ -3,6 +3,7 @@ qbms_globals <- new.env()
 qbms_globals$config <- list(crop = NULL)
 qbms_globals$state  <- list(token = NULL)
 
+
 #' Combine data.frames by row, filling in missing columns
 #'
 #' @description
@@ -22,6 +23,7 @@ rbindx <- function(..., dfs = list(...)) {
   }))
 }
 
+
 #' Makes one data.table from a list of many
 #'
 #' @description
@@ -39,6 +41,7 @@ rbindlistx <- function(x) {
   d <- as.data.frame(l)
 }
 
+
 #' Debug internal QBMS status object
 #'
 #' @description
@@ -54,6 +57,117 @@ rbindlistx <- function(x) {
 
 debug_qbms <- function() {
   return(qbms_globals)
+}
+
+
+#' Get the QBMS connection
+#'
+#' @description
+#' Get the QBMS connection object from the current environment
+#'
+#' @return a list of the current connection config and status
+#' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' @seealso \code{\link{set_qbms_connection}}
+#' @examples
+#' if(interactive()) {
+#' # configure QBMS to connect the phenotypics server
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench/controller/auth/login")
+#' 
+#' # login, set the crop, and program
+#' login_bms()
+#' set_crop("maize")
+#' set_program("MC Maize")
+#' 
+#' # get germplasm data
+#' df1 <- get_germplasm_data("BASFCORN-2-1")
+#' 
+#' # save current connection (phenotypic server)
+#' con1 <- get_qbms_connection()
+#' 
+#' # configure QBMS to connect the genotypic server
+#' set_qbms_config("https://gigwa.southgreen.fr/gigwa/", engine = "gigwa", no_auth = TRUE)
+#' 
+#' # set the db, project, and run
+#' gigwa_set_db("3kG_10M")
+#' gigwa_set_project("3003_ind")
+#' gigwa_set_run("1")
+#' 
+#' # get associated metadata
+#' df2 <- gigwa_get_metadata()
+#' 
+#' # save current connection (before switch)
+#' con2 <- get_qbms_connection()
+#' 
+#' # load the saved phenotypic server connection
+#' set_qbms_connection(con1)
+#' 
+#' # continue retrieving germplasm attributes from the phenotypic server
+#' df3 <- get_germplasm_attributes("BASFCORN-2-1")
+#' }
+#' @export
+
+get_qbms_connection <- function() {
+  return(as.list(qbms_globals))
+}
+
+
+#' Set the QBMS connection
+#'
+#' @description
+#' Set the QBMS connection object to the current environment
+#'
+#' @param env a list of the connection config and status to load
+#' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' @seealso \code{\link{get_qbms_connection}}
+#' @examples
+#' if(interactive()) {
+#' # configure QBMS to connect the phenotypics server
+#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench/controller/auth/login")
+#' 
+#' # login, set the crop, and program
+#' login_bms()
+#' set_crop("maize")
+#' set_program("MC Maize")
+#' 
+#' # get germplasm data
+#' df1 <- get_germplasm_data("BASFCORN-2-1")
+#' 
+#' # save current connection (phenotypic server)
+#' con1 <- get_qbms_connection()
+#' 
+#' # configure QBMS to connect the genotypic server
+#' set_qbms_config("https://gigwa.southgreen.fr/gigwa/", engine = "gigwa", no_auth = TRUE)
+#' 
+#' # set the db, project, and run
+#' gigwa_set_db("3kG_10M")
+#' gigwa_set_project("3003_ind")
+#' gigwa_set_run("1")
+#' 
+#' # get associated metadata
+#' df2 <- gigwa_get_metadata()
+#' 
+#' # save current connection (before switch)
+#' con2 <- get_qbms_connection()
+#' 
+#' # load the saved phenotypic server connection
+#' set_qbms_connection(con1)
+#' 
+#' # continue retrieving germplasm attributes from the phenotypic server
+#' df3 <- get_germplasm_attributes("BASFCORN-2-1")
+#' }
+#' @export
+
+set_qbms_connection <- function(env) {
+  qbms_globals$config <- list(crop = NULL)
+  qbms_globals$state  <- list(token = NULL)
+  
+  if (!is.null(env$config)) {
+    qbms_globals$config <- env$config
+  }
+  
+  if (!is.null(env$state)) {
+    qbms_globals$state <- env$state
+  }
 }
 
 #' Configure BMS server settings
@@ -77,12 +191,15 @@ debug_qbms <- function() {
 set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth/login",
                             path = NULL, page_size = 1000, time_out = 120,
                             no_auth = FALSE, engine = "bms", verbose = TRUE) {
-
+  
   if (is.null(path)) {
     if (engine == "bms") { path = "bmsapi" }
     if (engine == "breedbase") { path = "" }
     if (engine == "gigwa") { path = "gigwa/rest"}
   }
+  
+  qbms_globals$config <- list(crop = NULL)
+  qbms_globals$state  <- list(token = NULL)
   
   qbms_globals$config$server    <- regmatches(url, regexpr("^(?://|[^/]+)*", url))
   qbms_globals$config$path      <- path
@@ -113,6 +230,7 @@ brapi_headers <- function() {
   headers
 }
 
+
 #' Async version of HTTP GET request
 #'
 #' @description
@@ -128,6 +246,7 @@ get_async_page <- async::async(function(full_url, nested) {
     })
 })
 
+
 #' Run all supplied pages
 #'
 #' @description
@@ -141,6 +260,7 @@ get_async_pages <- async::async(function(pages, nested) {
   async::when_all(.list = reqs)$
     then(function(x) x)
 })
+
 
 #' Internal function used for core BrAPI GET calls
 #'
