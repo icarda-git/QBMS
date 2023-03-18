@@ -20,10 +20,10 @@ set_qbms_config("https://gigwa.southgreen.fr/gigwa/",
                 time_out = 300, engine = "gigwa", no_auth = TRUE)
 
 # select a database by name
-gigwa_set_db("3kG_8-5M")
+gigwa_set_db("3kG_10M")
 
 # select a project by name
-gigwa_set_project("SNP")
+gigwa_set_project("3003_ind")
 
 # select a specific run by name
 gigwa_set_run("1")

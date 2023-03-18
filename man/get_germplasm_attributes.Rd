@@ -2,7 +2,7 @@
 % Please edit documentation in R/qbms.R
 \name{get_germplasm_attributes}
 \alias{get_germplasm_attributes}
-\title{Get germplasm attributes for a given germplasm name in a crop}
+\title{Get germplasm attributes for a given germplasm in a crop}
 \usage{
 get_germplasm_attributes(germplasm_name = "")
 }
@@ -13,7 +13,7 @@ get_germplasm_attributes(germplasm_name = "")
 a data frame of the germplasm attributes
 }
 \description{
-Get germplasm attributes for a given germplasm name in a crop
+Get germplasm attributes for a given germplasm in a crop
 }
 \examples{
 if(interactive()) {
@@ -29,8 +29,8 @@ set_crop("maize")
 # select a breeding program by name
 set_program("MC Maize")
 
-# retrive observations data of a given germplasm aggregated from all trials
-germplasm_observations <- get_germplasm_attributes("BASFCORN-2-1")
+# retrive attributes data of a given germplasm in a crop
+germplasm_attributes <- get_germplasm_attributes("BASFCORN-2-1")
 }
 }
 \seealso{
