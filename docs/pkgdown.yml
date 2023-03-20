@@ -1,12 +1,10 @@
-pandoc: 2.11.4
-pkgdown: 2.0.2
+pandoc: '2.18'
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   bms_example: bms_example.html
   breedbase_example: breedbase_example.html
   gigwa_example: gigwa_example.html
-last_built: 2022-05-18T23:29Z
-urls:
-  reference: https://github.com/icarda-git/QBMS/reference
-  article: https://github.com/icarda-git/QBMS/articles
+  terraclimate_example: terraclimate_example.html
+last_built: 2023-03-20T08:38Z
 
