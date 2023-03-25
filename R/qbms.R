@@ -170,6 +170,7 @@ set_qbms_connection <- function(env) {
   }
 }
 
+
 #' Configure BMS server settings
 #'
 #' @description
@@ -216,6 +217,7 @@ set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth
   qbms_globals$state$crops <- NULL
 }
 
+
 #' Common HTTP headers to send
 #'
 #' @description
@@ -240,13 +242,18 @@ brapi_headers <- function() {
 #' @param nested   Don't flatten nested data.frames
 #' @return Async version of HTTP GET request.
 
-get_async_page <- async::async(function(full_url, nested) {
-  async::http_get(full_url, headers = brapi_headers())$
-    then(async::http_stop_for_status)$
-    then(function(resp) {
-      jsonlite::fromJSON(rawToChar(resp$content), flatten = !nested)
-    })
-})
+get_async_page <- function(full_url, nested) {
+}
+
+if (requireNamespace("async", quietly = TRUE)) {
+  get_async_page <- async::async(function(full_url, nested) {
+    async::http_get(full_url, headers = brapi_headers())$
+      then(async::http_stop_for_status)$
+      then(function(resp) {
+        jsonlite::fromJSON(rawToChar(resp$content), flatten = !nested)
+      })
+  })
+}
 
 
 #' Run all supplied pages
@@ -259,11 +266,16 @@ get_async_page <- async::async(function(full_url, nested) {
 #' @param nested Don't flatten nested data.frames
 #' @return Async deferred object.
 
-get_async_pages <- async::async(function(pages, nested) {
-  reqs <- lapply(pages, get_async_page, nested)
-  async::when_all(.list = reqs)$
-    then(function(x) x)
-})
+get_async_pages <- function(pages, nested) {
+}
+
+if (requireNamespace("async", quietly = TRUE)) {
+  get_async_pages <- async::async(function(pages, nested) {
+    reqs <- lapply(pages, get_async_page, nested)
+    async::when_all(.list = reqs)$
+      then(function(x) x)
+  })
+}
 
 
 #' Internal function used for core BrAPI GET calls
@@ -279,21 +291,23 @@ get_async_pages <- async::async(function(pages, nested) {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 
 brapi_get_call <- function(call_url, nested = TRUE) {
-  page      <- 0
   separator <- if (grepl("\\?", call_url)) "&" else "?"
-  full_url  <- paste0(call_url, separator, "page=", page, "&pageSize=", qbms_globals$config$page_size)
+  full_url  <- paste0(call_url, separator, "page=0&pageSize=", qbms_globals$config$page_size)
   
   if (requireNamespace("async", quietly = TRUE)) {
-    if (page == 0) {
-      result_object <- async::synchronise(get_async_page(full_url, nested))
-      total_pages   <- result_object$metadata$pagination$totalPages
-      if (total_pages > 1) {
-        pages <- c(seq(1, total_pages - 1))
-        full_urls <- paste0(call_url, separator, "page=", pages, "&pageSize=", qbms_globals$config$page_size)
-        qbms_globals$state$pages <- async::synchronise(get_async_pages(full_urls, nested))
+    result_object <- async::synchronise(get_async_page(full_url, nested))
+    result_data   <- as.data.frame(result_object$result$data)
+    total_pages   <- result_object$metadata$pagination$totalPages
+    if (total_pages > 1) {
+      pages <- c(seq(1, total_pages - 1))
+      full_urls <- paste0(call_url, separator, "page=", pages, "&pageSize=", qbms_globals$config$page_size)
+      all_pages <- async::synchronise(get_async_pages(full_urls, nested))
+      
+      last_page <- total_pages - 1
+      
+      for (n in 1:last_page) {
+        result_data <- rbindx(result_data, as.data.frame(all_pages[[n]]$result$data))
       }
-    } else {
-      result_object <- qbms_globals$state$pages[[page]]
     }
   } else {
     headers  <- brapi_headers()
@@ -331,12 +345,12 @@ brapi_get_call <- function(call_url, nested = TRUE) {
         close(pb)
       }
     }
-    
-    if (ncol(result_data) == 1) {
-      result_object$result$data <- result_data[,1]
-    } else {
-      result_object$result$data <- result_data
-    }
+  }
+  
+  if (ncol(result_data) == 1) {
+    result_object$result$data <- result_data[,1]
+  } else {
+    result_object$result$data <- result_data
   }
   
   result_data <- result_object$result
