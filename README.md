@@ -166,6 +166,12 @@ remotes::install_github("icarda-git/QBMS", upgrade = "always")
 Sys.setlocale("LC_ALL", "English_United States.utf8")
 ```
 
+4. If you get the following error message, then make sure to [install the suggested `async` package](#boosting-big-queries-performance) to fix it.
+
+```r
+Error: 'synchronise' is not an exported object from 'namespace:async'
+```
+
 ## References
 * Peter Selby et al., BrAPI-an application programming interface for plant breeding applications, _Bioinformatics_, Volume 35, Issue 20, 15 October 2019, Pages 4147–4155, [https://doi.org/10.1093/bioinformatics/btz190](https://doi.org/10.1093/bioinformatics/btz190)
 
