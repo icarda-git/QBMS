@@ -294,59 +294,42 @@ brapi_get_call <- function(call_url, nested = TRUE) {
   separator <- if (grepl("\\?", call_url)) "&" else "?"
   full_url  <- paste0(call_url, separator, "page=0&pageSize=", qbms_globals$config$page_size)
   
-  if (requireNamespace("async", quietly = TRUE)) {
-    result_object <- async::synchronise(get_async_page(full_url, nested))
-    result_data   <- as.data.frame(result_object$result$data)
-    total_pages   <- result_object$metadata$pagination$totalPages
-    if (total_pages > 1) {
-      pages <- c(seq(1, total_pages - 1))
-      full_urls <- paste0(call_url, separator, "page=", pages, "&pageSize=", qbms_globals$config$page_size)
-      all_pages <- async::synchronise(get_async_pages(full_urls, nested))
-      
-      last_page <- total_pages - 1
-      
-      for (n in 1:last_page) {
-        result_data <- rbindx(result_data, as.data.frame(all_pages[[n]]$result$data))
-      }
+  headers  <- brapi_headers()
+  response <- httr::GET(url = utils::URLencode(full_url),
+                        httr::add_headers(headers),
+                        httr::timeout(qbms_globals$config$time_out))
+  
+  result_object <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
+  result_data   <- as.data.frame(result_object$result$data)
+  
+  if (result_object$metadata$pagination$totalPages > 1 && is.null(result_object$errors)) {
+    last_page <- result_object$metadata$pagination$totalPages - 1
+    
+    if (qbms_globals$config$verbose) {
+      pb      <- utils::txtProgressBar(min = 0, max = last_page + 1, initial = 0, style = 3)
+      pb_step <- 1
+      utils::setTxtProgressBar(pb, 1)
     }
-  } else {
-    headers  <- brapi_headers()
-    response <- httr::GET(url = utils::URLencode(full_url),
-                          httr::add_headers(headers),
-                          httr::timeout(qbms_globals$config$time_out))
     
-    result_object <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
-    result_data   <- as.data.frame(result_object$result$data)
+    for (n in 1:last_page) {
+      full_url <- paste0(call_url, separator, "page=", n, "&pageSize=", qbms_globals$config$page_size)
+      response <- httr::GET(url = utils::URLencode(full_url),
+                            httr::add_headers(headers),
+                            httr::timeout(qbms_globals$config$time_out))
+      
+      result_object <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
+      result_data   <- rbindx(result_data, as.data.frame(result_object$result$data))
+      
+      # update the progress bar
+      if (qbms_globals$config$verbose) { utils::setTxtProgressBar(pb, n + 1) }
+    }
     
-    if (result_object$metadata$pagination$totalPages > 1 && is.null(result_object$errors)) {
-      last_page <- result_object$metadata$pagination$totalPages - 1
-      
-      if (qbms_globals$config$verbose) {
-        pb      <- utils::txtProgressBar(min = 0, max = last_page + 1, initial = 0, style = 3)
-        pb_step <- 1
-        utils::setTxtProgressBar(pb, 1)
-      }
-      
-      for (n in 1:last_page) {
-        full_url <- paste0(call_url, separator, "page=", n, "&pageSize=", qbms_globals$config$page_size)
-        response <- httr::GET(url = utils::URLencode(full_url),
-                              httr::add_headers(headers),
-                              httr::timeout(qbms_globals$config$time_out))
-        
-        result_object <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
-        result_data   <- rbindx(result_data, as.data.frame(result_object$result$data))
-        
-        # update the progress bar
-        if (qbms_globals$config$verbose) { utils::setTxtProgressBar(pb, n + 1) }
-      }
-      
-      if (qbms_globals$config$verbose) {
-        utils::setTxtProgressBar(pb, last_page + 1)
-        close(pb)
-      }
+    if (qbms_globals$config$verbose) {
+      utils::setTxtProgressBar(pb, last_page + 1)
+      close(pb)
     }
   }
-  
+
   if (ncol(result_data) == 1) {
     result_object$result$data <- result_data[,1]
   } else {
@@ -362,6 +345,42 @@ brapi_get_call <- function(call_url, nested = TRUE) {
   qbms_globals$state$errors       <- result_object$errors
 
   return(result_data)
+}
+
+if (requireNamespace("async", quietly = TRUE)) {
+  brapi_get_call <- function(call_url, nested = TRUE) {
+    separator <- if (grepl("\\?", call_url)) "&" else "?"
+    full_url  <- paste0(call_url, separator, "page=0&pageSize=", qbms_globals$config$page_size)
+    
+    result_object <- async::synchronise(get_async_page(full_url, nested))
+    result_data   <- as.data.frame(result_object$result$data)
+    total_pages   <- result_object$metadata$pagination$totalPages
+    if (total_pages > 1) {
+      pages <- c(seq(1, total_pages - 1))
+      full_urls <- paste0(call_url, separator, "page=", pages, "&pageSize=", qbms_globals$config$page_size)
+      all_pages <- async::synchronise(get_async_pages(full_urls, nested))
+
+      for (n in 1:(total_pages - 1)) {
+        result_data <- rbindx(result_data, as.data.frame(all_pages[[n]]$result$data))
+      }
+    }
+  
+    if (ncol(result_data) == 1) {
+      result_object$result$data <- result_data[,1]
+    } else {
+      result_object$result$data <- result_data
+    }
+    
+    result_data <- result_object$result
+    
+    qbms_globals$state$current_page <- result_object$metadata$pagination$currentPage
+    qbms_globals$state$page_size    <- result_object$metadata$pagination$pageSize
+    qbms_globals$state$total_count  <- result_object$metadata$pagination$totalCount
+    qbms_globals$state$total_pages  <- result_object$metadata$pagination$totalPages
+    qbms_globals$state$errors       <- result_object$errors
+    
+    return(result_data)
+  }
 }
 
 
