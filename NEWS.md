@@ -1,3 +1,6 @@
+# QBMS 0.9.1 _2023-03-28_
+  * Hot fix the reported validation issue in the gigwa_set_db() function.
+
 # QBMS 0.9.0 _2023-03-20_
   * Implement caching techniques wherever applicable for faster response times to improve user experience. Thanks to [Johan Steven Aparicio](https://github.com/AparicioJohan) for initiating this.
   * Improve the performance of multi-page API calls by [optionally enabling asynchronous calls](https://github.com/gaborcsardi/async) to prevent blocking behavior by fetching all requested pages simultaneously.

@@ -1,8 +1,8 @@
 Type: Package
 Package: QBMS
 Title: Query the Breeding Management System(s)
-Version: 0.9.0
-Date: 2023-03-20
+Version: 0.9.1
+Date: 2023-03-28
 Authors@R: c(
     person("Khaled", "Al-Shamaa", , "k.el-shamaa@cgiar.org", role = c("aut", "cre")),
     person("Mariano Omar", "Crimi", , "m.crimi@cgiar.org", role = "ctb"),
