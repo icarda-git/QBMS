@@ -1833,7 +1833,7 @@ login_gigwa <- function(username = NULL, password = NULL) {
 
 gigwa_list_dbs <- function() {
   if (is.null(qbms_globals$state$token)) {
-    stop("No server has been connected yet! You have to connect a server first using the `gigwa_login()` function")
+    stop("No server has been connected yet! You have to connect a server first using the `login_gigwa()` function")
   }
   
   call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/programs")
@@ -1868,7 +1868,7 @@ gigwa_list_dbs <- function() {
 gigwa_set_db <- function(db_name) {
   valid_dbs <- gigwa_list_dbs()
   
-  if (!db_name %in% valid_dbs[,1]) {
+  if (!db_name %in% valid_dbs) {
     stop("Your database name is not exists in this connected GIGWA server! You may use the `gigwa_list_dbs()` function to check the available databases")
   }
   
@@ -1904,7 +1904,7 @@ gigwa_set_db <- function(db_name) {
 
 gigwa_list_projects <- function() {
   if (is.null(qbms_globals$state$token)) {
-    stop("No server has been connected yet! You have to connect a GIGWA server first using the `gigwa_login()` function")
+    stop("No server has been connected yet! You have to connect a GIGWA server first using the `login_gigwa()` function")
   }
   
   if (is.null(qbms_globals$config$db)) {
