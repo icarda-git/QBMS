@@ -2495,8 +2495,8 @@ get_terraclimate <- function(lat, lon, from = '1958-01-01', to = '2022-12-31', c
         obs_available <- length(RNetCDF::var.get.nc(nc_metadata, 'time'))
         
         for (i in 1:loc_num) {
-          lat_index <- which.min(abs(lat_available - lat))
-          lon_index <- which.min(abs(lon_available - lon))
+          lat_index <- which.min(abs(lat_available - lat[i]))
+          lon_index <- which.min(abs(lon_available - lon[i]))
           
           start <- c(lon_index, lat_index, 1)
           count <- c(1, 1, NA)
@@ -2782,8 +2782,8 @@ calc_biovars <- function(data) {
 #' @seealso \code{\link{get_terraclimate}}
 #' @examples
 #' if(interactive()) {
-#'   library(QBMS)
 #'   remotes::install_github("icarda-git/QBMS")
+#'   library(QBMS)
 #'   
 #'   ini_terraclimate('2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'))
 #'   
@@ -2792,13 +2792,13 @@ calc_biovars <- function(data) {
 #'   
 #'   a <- get_terraclimate(y, x, '2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'))
 #'   
-#'   View(a$climate[[1]])
-#'   View(a$biovars[[1]])
+#'   a$climate[[1]]
+#'   a$biovars[[1]]
 #'   
 #'   b <- get_terraclimate(y, x, '2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'), offline = TRUE)
 #'   
-#'   View(b$climate[[1]])
-#'   View(b$biovars[[1]])
+#'   b$climate[[1]]
+#'   b$biovars[[1]]
 #' }
 #' @export
 

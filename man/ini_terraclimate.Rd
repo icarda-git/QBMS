@@ -29,8 +29,8 @@ Download TerraClimate netCDF data files to extract their data offline
 }
 \examples{
 if(interactive()) {
-  library(QBMS)
   remotes::install_github("icarda-git/QBMS")
+  library(QBMS)
   
   ini_terraclimate('2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'))
   
@@ -39,13 +39,13 @@ if(interactive()) {
   
   a <- get_terraclimate(y, x, '2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'))
   
-  View(a$climate[[1]])
-  View(a$biovars[[1]])
+  a$climate[[1]]
+  a$biovars[[1]]
   
   b <- get_terraclimate(y, x, '2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'), offline = TRUE)
   
-  View(b$climate[[1]])
-  View(b$biovars[[1]])
+  b$climate[[1]]
+  b$biovars[[1]]
 }
 }
 \seealso{
