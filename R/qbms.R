@@ -2770,11 +2770,38 @@ calc_biovars <- function(data) {
 }
 
 
-#' from <- '2019-09-01'
-#' to   <- '2022-06-30'
-#' 
-#' clim_vars <- c('ppt', 'tmin', 'tmax')
-#' data_path <- './data/'
+#' Download TerraClimate netCDF data files to extract their data offline
+#'
+#' @param from Start date as a string in the 'YYYY-MM-DD' format.
+#' @param to   End date as a string in the 'YYYY-MM-DD' format.
+#' @param clim_vars  List of all climate variables to be imported. Valid list includes: \emph{aet, def, pet,
+#'                   ppt, q, soil, srad, swe, tmax, tmin, vap, ws, vpd, and PDSI}. Default is NULL for all.
+#' @param data_path  String contains the directory path where downloaded netCDF files exists (default is './data/')
+#' @param timeout    Timeout in seconds to download each netCDF raster file (default is 300)
+#' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' @seealso \code{\link{get_terraclimate}}
+#' @examples
+#' if(interactive()) {
+#'   library(QBMS)
+#'   remotes::install_github("icarda-git/QBMS")
+#'   
+#'   ini_terraclimate('2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'))
+#'   
+#'   x <- c(-6.716, 35.917, 76.884)
+#'   y <- c(33.616, 33.833, 23.111)
+#'   
+#'   a <- get_terraclimate(y, x, '2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'))
+#'   
+#'   View(a$climate[[1]])
+#'   View(a$biovars[[1]])
+#'   
+#'   b <- get_terraclimate(y, x, '2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'), offline = TRUE)
+#'   
+#'   View(b$climate[[1]])
+#'   View(b$biovars[[1]])
+#' }
+#' @export
+
 
 ini_terraclimate <- function(from = '2019-09-01', to = '2022-06-30', clim_vars = c('ppt', 'tmin', 'tmax'), data_path = './data/', timeout = 300) {
   options(timeout = timeout)

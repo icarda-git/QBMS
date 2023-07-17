@@ -2,8 +2,7 @@
 % Please edit documentation in R/qbms.R
 \name{ini_terraclimate}
 \alias{ini_terraclimate}
-\title{from <- '2019-09-01'
-to   <- '2022-06-30'}
+\title{Download TerraClimate netCDF data files to extract their data offline}
 \usage{
 ini_terraclimate(
   from = "2019-09-01",
@@ -13,7 +12,45 @@ ini_terraclimate(
   timeout = 300
 )
 }
+\arguments{
+\item{from}{Start date as a string in the 'YYYY-MM-DD' format.}
+
+\item{to}{End date as a string in the 'YYYY-MM-DD' format.}
+
+\item{clim_vars}{List of all climate variables to be imported. Valid list includes: \emph{aet, def, pet,
+ppt, q, soil, srad, swe, tmax, tmin, vap, ws, vpd, and PDSI}. Default is NULL for all.}
+
+\item{data_path}{String contains the directory path where downloaded netCDF files exists (default is './data/')}
+
+\item{timeout}{Timeout in seconds to download each netCDF raster file (default is 300)}
+}
 \description{
-clim_vars <- c('ppt', 'tmin', 'tmax')
-data_path <- './data/'
+Download TerraClimate netCDF data files to extract their data offline
+}
+\examples{
+if(interactive()) {
+  library(QBMS)
+  remotes::install_github("icarda-git/QBMS")
+  
+  ini_terraclimate('2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'))
+  
+  x <- c(-6.716, 35.917, 76.884)
+  y <- c(33.616, 33.833, 23.111)
+  
+  a <- get_terraclimate(y, x, '2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'))
+  
+  View(a$climate[[1]])
+  View(a$biovars[[1]])
+  
+  b <- get_terraclimate(y, x, '2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'), offline = TRUE)
+  
+  View(b$climate[[1]])
+  View(b$biovars[[1]])
+}
+}
+\seealso{
+\code{\link{get_terraclimate}}
+}
+\author{
+Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 }
