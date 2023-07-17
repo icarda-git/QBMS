@@ -2418,7 +2418,7 @@ gigwa_get_metadata <- function() {
 #' }
 #' @export
 
-get_terraclimate <- function(lat, lon, from = '1958-01-01', to = '2020-12-31', clim_vars = NULL, month_mask = NULL){
+get_terraclimate <- function(lat, lon, from = '1958-01-01', to = '2022-12-31', clim_vars = NULL, month_mask = NULL){
   # check if the given lat coordinate values are valid
   lat <- as.numeric(lat)
   if (!all(lat >= -90 & lat <= 90)) {
@@ -2709,4 +2709,33 @@ calc_biovars <- function(data) {
   p[, 20] <- year
   
   return(as.data.frame(p))
+}
+
+
+#' from <- '2019-09-01'
+#' to   <- '2022-06-30'
+#' 
+#' clim_vars <- c('ppt', 'tmin', 'tmax')
+#' data_path <- './data/'
+
+ini_terraclimate <- function(from = '2019-09-01', to = '2022-06-30', clim_vars = c('ppt', 'tmin', 'tmax'), data_path = './data/', timeout = 300) {
+  options(timeout = timeout)
+  
+  download_url <- 'https://climate.northwestknowledge.net/TERRACLIMATE-DATA/'
+
+  start_year <- as.numeric(format(as.Date(from), '%Y'))
+  final_year <- as.numeric(format(as.Date(to), '%Y'))
+  
+  if (!dir.exists(data_path)) dir.create(data_path)
+  
+  for (var in clim_vars) {
+    for (year in start_year:final_year) {
+      file_path <- paste0(data_path, 'TerraClimate_', var, '_', year, '.nc')
+      file_url  <- paste0(download_url, 'TerraClimate_', var, '_', year, '.nc')
+      
+      if (!file.exists(file_path)) {
+        utils::download.file(file_url, file_path, mode = 'wb', method = 'libcurl')
+      }
+    }
+  }
 }

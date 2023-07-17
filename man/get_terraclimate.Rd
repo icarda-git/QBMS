@@ -8,7 +8,7 @@ get_terraclimate(
   lat,
   lon,
   from = "1958-01-01",
-  to = "2020-12-31",
+  to = "2022-12-31",
   clim_vars = NULL,
   month_mask = NULL
 )
