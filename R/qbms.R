@@ -1128,7 +1128,7 @@ get_germplasm_list <- function() {
                       "storageTypes", "taxonIds", "documentationURL", "additionalInfo")
 
     germplasm_list[, nested_lists] <- NULL
-    germplasm_list <- germplasm_list[, colSums(is.na(germplasm_list)) == nrow(germplasm_list)]
+    germplasm_list <- germplasm_list[, colSums(is.na(germplasm_list)) != nrow(germplasm_list)]
   }
   
   if (qbms_globals$config$engine == "breedbase") {

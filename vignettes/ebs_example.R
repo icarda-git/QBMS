@@ -10,7 +10,7 @@ list_programs()
 set_program('Spring Bread Wheat')
 
 (trials <- list_trials())
-set_trial(trials[1, 'trialName'])
+set_trial(trials[71, 'trialName'])
 
 (studies <- list_studies())
 set_study(studies[1, 'studyName'])
