@@ -1024,23 +1024,39 @@ get_study_data <- function() {
     stop("No study has been selected yet! You have to set your study first using the `set_study()` function")
   }
 
-  crop_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1")
-  call_url <- paste0(crop_url, "/studies/", qbms_globals$state$study_db_id, "/table")
+  crop_path <- ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop))
+  
+  if (qbms_globals$config$brapi_ver == "v2") {
+    call_url <- paste0(qbms_globals$config$base_url, crop_path,
+                       "/brapi/v2/observations/table?studyDbId=", qbms_globals$state$study_db_id)
+  } else {
+    crop_url <- paste0(qbms_globals$config$base_url, crop_path, "/brapi/v1")
+    call_url <- paste0(crop_url, "/studies/", qbms_globals$state$study_db_id, "/table")
+  }
 
   study_result <- brapi_get_call(call_url)
+  
+  if (qbms_globals$config$engine == "ebs") {
+    study_data   <- as.data.frame(study_result$data)
+    study_header <- c(study_result$headerRow, 
+                      study_result$observationVariables$observationVariableName)
+    
+    if (nrow(study_data) > 0) colnames(study_data) <- study_header
+    unique(study_data$germplasmDbId)
+  }
   
   if (qbms_globals$config$engine == "breedbase") {
     study_data <- as.data.frame(study_result$data[-1, ])
     colnames(study_data) <- study_result$data[1, ]
-  } else {
-    study_data <- as.data.frame(study_result$data)
-  }
+  } 
   
-  study_header <- c(study_result$headerRow, study_result$observationVariableNames)
-  if (nrow(study_data) > 0) {
-    colnames(study_data) <- study_header
+  if (qbms_globals$config$engine == "bms") {
+    study_data   <- as.data.frame(study_result$data)
+    study_header <- c(study_result$headerRow, study_result$observationVariableNames)
+    
+    if (nrow(study_data) > 0) colnames(study_data) <- study_header
   }
-  
+
   return(study_data)
 }
 

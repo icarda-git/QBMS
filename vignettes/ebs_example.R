@@ -55,3 +55,8 @@ set_study('CORB-5128-1553-001')
 
 # does not restrict by study id /brapi/v2/germplasm?studyDbId=
 germplasm <- get_germplasm_list()
+
+# calculated trait name included in the "observationVariables"
+# but calculated trait values not exists in the "data" (e.g., Plant height_AVG)
+data <- get_study_data()
+
