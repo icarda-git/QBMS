@@ -60,3 +60,6 @@ germplasm <- get_germplasm_list()
 # but calculated trait values not exists in the "data" (e.g., Plant height_AVG)
 data <- get_study_data()
 
+# temp fix to get the study germplasm list
+germplasm <- germplasm[germplasm$germplasmDbId %in% unique(data$germplasmDbId),]
+
