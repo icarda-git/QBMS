@@ -855,16 +855,27 @@ list_studies <- function() {
   if (!is.null(qbms_globals$state$studies)) {
     studies <- qbms_globals$state$studies
   } else {
-    bms_trials <- get_program_trials()
-    
-    trial_row <- which(bms_trials$trialDbId == qbms_globals$state$trial_db_id)
-    
-    studies <- bms_trials[trial_row, c("studies")][[1]][, c("studyName", "locationName")]
+    if (qbms_globals$config$brapi_ver == "v2") {
+      crop_path <- ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop))
+      
+      call_url <- paste0(qbms_globals$config$base_url, crop_path,
+                         "/brapi/v2/studies?trialDbId=", qbms_globals$state$trial_db_id)
+      
+      bms_trial_studies <- brapi_get_call(call_url, FALSE)$data
+      
+      studies <- bms_trial_studies[, c("studyName", "locationName", "studyDbId")]
+    } else {
+      bms_trials <- get_program_trials()
+      
+      trial_row <- which(bms_trials$trialDbId == qbms_globals$state$trial_db_id)
+      
+      studies <- bms_trials[trial_row, c("studies")][[1]][, c("studyName", "locationName", "studyDbId")]
+    }
     
     qbms_globals$state$studies <- studies
   }
   
-  return(studies)
+  return(studies[, c("studyName", "locationName")])
 }
 
 
@@ -909,15 +920,9 @@ set_study <- function(study_name) {
     stop("Your location name is not exists in this trial! You may use the `list_studies()` function to check the available study location names")
   }
 
-  bms_trials <- get_program_trials()
+  study_db_id <- qbms_globals$state$studies[qbms_globals$state$studies$studyName == study_name, "studyDbId"]
 
-  trial_row <- which(bms_trials$trialDbId == qbms_globals$state$trial_db_id)
-
-  bms_studies <- bms_trials[trial_row, c("studies")][[1]]
-
-  study_row <- which(bms_studies$studyName == study_name)
-
-  qbms_globals$state$study_db_id <- as.character(bms_studies[study_row, "studyDbId"])
+  qbms_globals$state$study_db_id <- as.character(study_db_id)
 }
 
 

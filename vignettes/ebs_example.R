@@ -48,3 +48,5 @@ list_trials()
 
 set_trial('CORB-5128-1553')
 
+list_studies()
+set_study('CORB-5128-1553-001')
