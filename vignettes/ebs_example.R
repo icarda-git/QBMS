@@ -63,3 +63,4 @@ data <- get_study_data()
 # temp fix to get the study germplasm list
 germplasm <- germplasm[germplasm$germplasmDbId %in% unique(data$germplasmDbId),]
 
+info <- get_study_info()

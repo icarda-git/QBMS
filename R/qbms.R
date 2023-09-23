@@ -965,9 +965,16 @@ get_study_info <- function() {
   if (is.null(qbms_globals$state$study_db_id)) {
     stop("No study has been selected yet! You have to set your study first using the `set_study()` function")
   }
-
-  crop_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1")
-  call_url <- paste0(crop_url, "/studies/", qbms_globals$state$study_db_id)
+  
+  crop_path <- ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop))
+  
+  if (qbms_globals$config$brapi_ver == "v2") {
+    crop_url <- paste0(qbms_globals$config$base_url, crop_path, "/brapi/v2")
+    call_url <- paste0(crop_url, "/studies/", qbms_globals$state$study_db_id)
+  } else {
+    crop_url <- paste0(qbms_globals$config$base_url, crop_path, "/brapi/v1")
+    call_url <- paste0(crop_url, "/studies/", qbms_globals$state$study_db_id)
+  }
 
   study_info <- brapi_get_call(call_url)
   
@@ -975,9 +982,6 @@ get_study_info <- function() {
     study_info_df <- NULL
   } else {
     study_info_df <- as.data.frame(t(as.matrix(do.call(c, unlist(study_info, recursive = FALSE)))))
-    
-    # study_info_df <- data.frame(study_info[, 1])
-    # for(i in 2:ncol(study_info)) study_info_df[, i] <- study_info[, i]
   }
 
   return(study_info_df)
