@@ -1084,16 +1084,39 @@ get_germplasm_list <- function() {
   if (is.null(qbms_globals$state$trial_db_id)) {
     stop("No trial has been selected yet! You have to set your trial first using the `set_trial()` function")
   }
+  
+  if (qbms_globals$config$brapi_ver == "v2" & is.null(qbms_globals$state$study_db_id)) {
+    stop("No study has been selected yet! You have to set your study first using the `set_study()` function")
+  }
 
-  crop_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1")
-  call_url <- paste0(crop_url, "/studies/", qbms_globals$state$study_db_id, "/germplasm")
-
+  crop_path <- ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop))
+  
+  if (qbms_globals$config$brapi_ver == "v2") {
+    call_url <- paste0(qbms_globals$config$base_url, crop_path,
+                       "/brapi/v2/germplasm?studyDbId=", qbms_globals$state$study_db_id)
+  } else {
+    crop_url <- paste0(qbms_globals$config$base_url, crop_path, "/brapi/v1")
+    call_url <- paste0(crop_url, "/studies/", qbms_globals$state$study_db_id, "/germplasm")
+  }
+  
   germplasm_list <- brapi_get_call(call_url)$data
 
+  if (qbms_globals$config$engine == "ebs") {
+    germplasm_list$check <- 0
+    
+    nested_lists <- c("synonyms", "donors", "externalReferences", "germplasmOrigin",
+                      "storageTypes", "taxonIds", "documentationURL", "additionalInfo")
+
+    germplasm_list[, nested_lists] <- NULL
+    germplasm_list <- germplasm_list[, colSums(is.na(germplasm_list)) == nrow(germplasm_list)]
+  }
+  
   if (qbms_globals$config$engine == "breedbase") {
     germplasm_list$check <- NA
     germplasm_list[, c("synonyms")] <- list(NULL)
-  } else {
+  }
+  
+  if (qbms_globals$config$engine == "bms") {
     # BMS POST /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries to extract entry type (test or check)
     call_url <- paste0(qbms_globals$config$base_url, "/crops/", qbms_globals$config$crop,
                        "/programs/", qbms_globals$state$program_db_id,
