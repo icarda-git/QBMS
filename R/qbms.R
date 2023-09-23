@@ -181,7 +181,8 @@ set_qbms_connection <- function(env) {
 #' @param page_size Page size (default is 1000)
 #' @param time_out  Number of seconds to wait for a response until giving up (default is 10)
 #' @param no_auth   TRUE if the server doesn't require authentication/login (default is FALSE)
-#' @param engine    Backend database (qbms default, breedbase, gigwa)
+#' @param engine    Backend database (bms default, breedbase, gigwa, ebs)
+#' @param brapi_ver BrAPI version (v1 or v2)
 #' @param verbose   Logical indicating if progress bar will display on the console when retrieve data from API (TRUE by default).
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @return no return value
@@ -190,13 +191,14 @@ set_qbms_connection <- function(env) {
 #' @export
 
 set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth/login",
-                            path = NULL, page_size = 1000, time_out = 120,
-                            no_auth = FALSE, engine = "bms", verbose = TRUE) {
+                            path = NULL, page_size = 1000, time_out = 120, no_auth = FALSE, 
+                            engine = "bms", brapi_ver = "v1", verbose = TRUE) {
   
   if (is.null(path)) {
     if (engine == "bms") { path = "bmsapi" }
     if (engine == "breedbase") { path = "" }
     if (engine == "gigwa") { path = "gigwa/rest"}
+    if (engine == "ebs") { path = "" }
   }
   
   qbms_globals$config <- list(crop = NULL)
@@ -208,6 +210,7 @@ set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth
   qbms_globals$config$time_out  <- time_out
   qbms_globals$config$base_url  <- paste0(qbms_globals$config$server, "/", qbms_globals$config$path)
   qbms_globals$config$engine    <- engine
+  qbms_globals$config$brapi_ver <- brapi_ver
   qbms_globals$config$verbose   <- verbose
 
   if (no_auth == TRUE) {
@@ -227,8 +230,9 @@ set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth
 
 brapi_headers <- function() {
   auth_code <- paste0("Bearer ", qbms_globals$state$token)
-  headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
-
+  headers   <- c("Authorization" = auth_code, 
+                 "Accept-Encoding" = "gzip, deflate",
+                 "accept" = "application/json")
   headers
 }
 
@@ -293,7 +297,7 @@ if (requireNamespace("async", quietly = TRUE)) {
 brapi_get_call <- function(call_url, nested = TRUE) {
   separator <- if (grepl("\\?", call_url)) "&" else "?"
   full_url  <- paste0(call_url, separator, "page=0&pageSize=", qbms_globals$config$page_size)
-  
+
   headers  <- brapi_headers()
   response <- httr::GET(url = utils::URLencode(full_url),
                         httr::add_headers(headers),
@@ -601,14 +605,20 @@ list_programs <- function() {
   if (!is.null(qbms_globals$state$programs)) {
     bms_programs <- as.data.frame(qbms_globals$state$programs[, 1])
   } else {
-    call_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/programs")
+    crop_path <- ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop))
+    
+    if (qbms_globals$config$brapi_ver == "v2") {
+      call_url <- paste0(qbms_globals$config$base_url, crop_path, "/brapi/v2/programs")
+    } else {
+      call_url <- paste0(qbms_globals$config$base_url, crop_path, "/brapi/v1/programs")
+    }
     
     results <- brapi_get_call(call_url)$data
     
-    if (qbms_globals$config$engine == "breedbase") {
-      bms_programs <- results[c("programName")]
-    } else {
+    if (qbms_globals$config$engine == "bms") {
       bms_programs <- results[c("name")]
+    } else {
+      bms_programs <- results[c("programName")]
     }
 
     qbms_globals$state$programs <- cbind(bms_programs, results[c("programDbId")])
@@ -676,9 +686,16 @@ get_program_trials <- function() {
   if (!is.null(qbms_globals$state$trials)) {
     bms_program_trials <- qbms_globals$state$trials
   } else {
-    call_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop,
-                       "/brapi/v1/trials?programDbId=", qbms_globals$state$program_db_id)
-  
+    crop_path <- ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop))
+    
+    if (qbms_globals$config$brapi_ver == "v2") {
+      call_url <- paste0(qbms_globals$config$base_url, crop_path,
+                         "/brapi/v2/trials?programDbId=", qbms_globals$state$program_db_id)
+    } else {
+      call_url <- paste0(qbms_globals$config$base_url, crop_path,
+                         "/brapi/v1/trials?programDbId=", qbms_globals$state$program_db_id)
+    }
+
     bms_program_trials <- brapi_get_call(call_url, FALSE)$data
     
     qbms_globals$state$trials <- bms_program_trials
