@@ -83,9 +83,9 @@ marker_matrix <- gigwa_get_variants(max_missing = 0.2,
 head(marker_matrix)
 
 # get the metadata associated with the samples in the current active run
-gigwa_set_db("3kG_10M")
-gigwa_set_project("3003_ind")
-gigwa_set_run("1")
+gigwa_set_db("DIVRICE_NB")
+gigwa_set_project("refNB")
+gigwa_set_run("03052022")
 
 # get a list of all samples in the selected run
 metadata <- gigwa_get_metadata()
