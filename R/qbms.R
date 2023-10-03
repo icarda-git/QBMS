@@ -1039,26 +1039,25 @@ get_study_data <- function() {
   }
 
   study_result <- brapi_get_call(call_url)
-  
-  if (qbms_globals$config$engine == "ebs") {
-    study_data   <- as.data.frame(study_result$data)
-    study_header <- c(study_result$headerRow, 
-                      study_result$observationVariables$observationVariableName)
-    
-    if (nrow(study_data) > 0) colnames(study_data) <- study_header
-    unique(study_data$germplasmDbId)
-  }
+  study_data   <- as.data.frame(study_result$data)
   
   if (qbms_globals$config$engine == "breedbase") {
-    study_data <- as.data.frame(study_result$data[-1, ])
-    colnames(study_data) <- study_result$data[1, ]
-  } 
-  
-  if (qbms_globals$config$engine == "bms") {
-    study_data   <- as.data.frame(study_result$data)
-    study_header <- c(study_result$headerRow, study_result$observationVariableNames)
+    study_header <- study_data[1, ]
+    study_data   <- study_data[-1, ]
     
-    if (nrow(study_data) > 0) colnames(study_data) <- study_header
+  } else if (qbms_globals$config$brapi_ver == "v1") {
+    study_header <- c(study_result$headerRow, 
+                      study_result$observationVariableNames)
+    
+  } else if (qbms_globals$config$brapi_ver == "v2") {
+    study_header <- c(study_result$headerRow, 
+                      study_result$observationVariables$observationVariableName)
+  }
+  
+  if (nrow(study_data) > 0) {
+    colnames(study_data) <- study_header
+  } else {
+    study_data <- NULL
   }
 
   return(study_data)
