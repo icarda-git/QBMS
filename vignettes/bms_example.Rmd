@@ -33,7 +33,7 @@ ___If you are not already an active BMS user, you can contact [IBP support](http
 library(QBMS)
 
 # config your BMS connection (by providing your BMS login page URL)
-set_qbms_config("https://www.bms-uat-test.net/ibpworkbench/controller/auth/login")
+set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench/controller/auth/login")
 
 # login using your BMS account (interactive mode)
 # or pass your BMS username and password as parameters (batch mode)

@@ -71,7 +71,7 @@ debug_qbms <- function() {
 #' @examples
 #' if(interactive()) {
 #' # configure QBMS to connect the phenotypics server
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench/controller/auth/login")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench/controller/auth/login")
 #' 
 #' # login, set the crop, and program
 #' login_bms()
@@ -122,7 +122,7 @@ get_qbms_connection <- function() {
 #' @examples
 #' if(interactive()) {
 #' # configure QBMS to connect the phenotypics server
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench/controller/auth/login")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench/controller/auth/login")
 #' 
 #' # login, set the crop, and program
 #' login_bms()
@@ -187,7 +187,7 @@ set_qbms_connection <- function(env) {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @return no return value
 #' @examples
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 #' @export
 
 set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth/login",
@@ -457,7 +457,7 @@ get_login_details <- function() {
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 #'
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -497,7 +497,7 @@ login_bms <- function(username = NULL, password = NULL) {
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 #'
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -539,7 +539,7 @@ list_crops <- function() {
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 #'
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -580,7 +580,7 @@ set_crop <- function(crop_name) {
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 #'
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -641,7 +641,7 @@ list_programs <- function() {
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 #'
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -718,7 +718,7 @@ get_program_trials <- function() {
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 #'
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -782,7 +782,7 @@ list_trials <- function(year = NULL) {
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 #'
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -827,7 +827,7 @@ set_trial <- function(trial_name) {
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 #'
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -893,7 +893,7 @@ list_studies <- function() {
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 #'
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -938,7 +938,7 @@ set_study <- function(study_name) {
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 #'
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -1000,7 +1000,7 @@ get_study_info <- function() {
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 #'
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -1076,7 +1076,7 @@ get_study_data <- function() {
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 #'
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -1170,7 +1170,7 @@ get_germplasm_list <- function() {
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 #'
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -1218,7 +1218,7 @@ get_trial_data <- function() {
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 #'
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -1308,7 +1308,7 @@ list_locations <- function() {
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 #'
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -1442,7 +1442,7 @@ get_germplasm_id <- function(germplasm_name = "") {
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 #'
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -1533,7 +1533,7 @@ get_germplasm_data <- function(germplasm_name = "") {
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 #'
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -1724,7 +1724,7 @@ build_pedigree_table <- function(geno_list = NULL, pedigree_list = NULL, pedigre
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
-#' set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 #'
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
