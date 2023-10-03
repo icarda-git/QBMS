@@ -94,10 +94,11 @@ MET <- get_trial_data()
 ################################################################################
 # EBS OAuth 2.0
 # https://cbbrapi-qa.ebsproject.org/brapi/v2/auth/login
+# https://ebsproject.atlassian.net/servicedesk/customer/portal/2/ESD-4615
 
 app <- httr::oauth_app(appname = 'qbms_app', key = 'QBMS', secret = NULL)
 
-endpoint <- httr::oauth_endpoint(authorize = 'https://cbbrapi-qa.ebsproject.org/brapi/v2/auth/login',
-                                 access = 'https://cbbrapi-qa.ebsproject.org/brapi/v2/auth/callback')
+endpoint <- httr::oauth_endpoint(authorize = 'https://cbbrapi-qa.ebsproject.org/brapi/v2/auth/authorize',
+                                 access = 'https://cbbrapi-qa.ebsproject.org/brapi/v2/auth/access_token')
 
 token <- httr::oauth2.0_token(endpoint, app)

@@ -602,9 +602,7 @@ list_programs <- function() {
     stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
   }
 
-  if (!is.null(qbms_globals$state$programs)) {
-    bms_programs <- as.data.frame(qbms_globals$state$programs[, 1])
-  } else {
+  if (is.null(qbms_globals$state$programs)) {
     crop_path <- ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop))
     
     if (qbms_globals$config$brapi_ver == "v2") {
@@ -617,6 +615,7 @@ list_programs <- function() {
     
     if (qbms_globals$config$engine == "bms") {
       bms_programs <- results[c("name")]
+      colnames(bms_programs) <- c("programName")
     } else {
       bms_programs <- results[c("programName")]
     }
@@ -624,7 +623,7 @@ list_programs <- function() {
     qbms_globals$state$programs <- cbind(bms_programs, results[c("programDbId")])
   }
   
-  return(bms_programs)
+  return(subset(qbms_globals$state$programs, select = programName))
 }
 
 
