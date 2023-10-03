@@ -1,23 +1,7 @@
-# ICARDA BMS server
-set_qbms_config('https://bms.icarda.org/ibpworkbench/controller/auth/login')
+install.packages("remotes")
+remotes::install_github("icarda-git/QBMS")
 
-login_bms()
-
-list_crops()
-set_crop('wheat')
-
-list_programs()
-set_program('Spring Bread Wheat')
-
-(trials <- list_trials())
-set_trial(trials[71, 'trialName'])
-
-(studies <- list_studies())
-set_study(studies[1, 'studyName'])
-
-bms_germplasm <- get_germplasm_list()
-bms_data <- get_study_data()
-bms_info <- get_study_info()
+library(QBMS)
 
 # https://cb-qa.ebsproject.org/
 # https://cbbrapi-qa.ebsproject.org/
@@ -58,9 +42,11 @@ info <- get_study_info()
 
 # calculated trait name included in the "observationVariables"
 # but calculated trait values not exists in the "data" (e.g., Plant height_AVG)
+# https://ebsproject.atlassian.net/servicedesk/customer/portal/2/ESD-4612
 data <- get_study_data()
 
 # does not restrict by study id /brapi/v2/germplasm?studyDbId=
+# https://ebsproject.atlassian.net/servicedesk/customer/portal/2/ESD-4613
 germplasm <- get_germplasm_list()
 
 # temp fix to get the study germplasm list
@@ -103,3 +89,15 @@ MET <- get_trial_data()
 
 #' call the /brapi/v2/observations/table?germplasmDbId= endpoint generate error 500
 # get_germplasm_data()
+
+
+################################################################################
+# EBS OAuth 2.0
+# https://cbbrapi-qa.ebsproject.org/brapi/v2/auth/login
+
+app <- httr::oauth_app(appname = 'qbms_app', key = 'QBMS', secret = NULL)
+
+endpoint <- httr::oauth_endpoint(authorize = 'https://cbbrapi-qa.ebsproject.org/brapi/v2/auth/login',
+                                 access = 'https://cbbrapi-qa.ebsproject.org/brapi/v2/auth/callback')
+
+token <- httr::oauth2.0_token(endpoint, app)
