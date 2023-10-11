@@ -60,4 +60,12 @@ worldclim_norm  <- apply(worldclim_range$biovars[[2]][,1:19], 2, function(x) rou
 # terraclimate  661.0  182.1  0.0    113.5  419.2  0.3    0.9    398.5
 # worldclim     592.0  140.0  0.0    99.0   368.0  1.0    2.0    368.0
 
+################################################################################
+# Download TerraClimate netCDF data files to extract their data offline
+# ?ini_terraclimate
+ini_terraclimate('2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'))
+
+# Get TerraClimate data for a given coordinate(s)
+data <- get_terraclimate(y, x, '2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'), offline = TRUE)
+
 ```
