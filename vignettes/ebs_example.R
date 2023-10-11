@@ -43,10 +43,14 @@ info <- get_study_info()
 # calculated trait name included in the "observationVariables"
 # but calculated trait values not exists in the "data" (e.g., Plant height_AVG)
 # https://ebsproject.atlassian.net/servicedesk/customer/portal/2/ESD-4612
+# https://ebsproject.atlassian.net/browse/ESD-4612
+# The requested feature will be available at the end of October or November at the latest.
 data <- get_study_data()
 
 # does not restrict by study id /brapi/v2/germplasm?studyDbId=
 # https://ebsproject.atlassian.net/servicedesk/customer/portal/2/ESD-4613
+# https://ebsproject.atlassian.net/browse/ESD-4613
+# The requested feature will be available at the end of October or November at the latest.
 germplasm <- get_germplasm_list()
 
 # temp fix to get the study germplasm list
@@ -95,10 +99,27 @@ MET <- get_trial_data()
 # EBS OAuth 2.0
 # https://cbbrapi-qa.ebsproject.org/brapi/v2/auth/login
 # https://ebsproject.atlassian.net/servicedesk/customer/portal/2/ESD-4615
+# https://ebsproject.atlassian.net/browse/ESD-4615
 
-app <- httr::oauth_app(appname = 'qbms_app', key = 'QBMS', secret = NULL)
+#' Package maintainers might want to build this app in as a fallback, possibly 
+#' taking some measures to obfuscate the client ID and secret and limit its use 
+#' to your package.
+#' 
+#' Note that three-legged OAuth always requires the involvement of a user, so 
+#' the word “secret” here can be somewhat confusing. It is not a secret in the 
+#' same sense as a password or token. But you probably still want to store it 
+#' in an opaque way, so that someone else cannot easily “borrow” it and present 
+#' an OAuth consent screen that impersonates your package.
+#' 
+#' Client ID is not a secret anyway and any end user can see what it is when 
+#' the app redirects them to sign in (e.g., if they use browser tools to view 
+#' the HTTP request).
 
-endpoint <- httr::oauth_endpoint(authorize = 'https://cbbrapi-qa.ebsproject.org/brapi/v2/auth/authorize',
-                                 access = 'https://cbbrapi-qa.ebsproject.org/brapi/v2/auth/access_token')
+ebs$state$client_id <- readline('Client ID:')
+
+app <- httr::oauth_app(appname = 'EBS', key = ebs$state$client_id, secret = NULL)
+
+endpoint <- httr::oauth_endpoint(authorize = 'https://auth.ebsproject.org/oauth2/authorize',
+                                 access = 'https://auth.ebsproject.org/oauth2/token')
 
 token <- httr::oauth2.0_token(endpoint, app)
