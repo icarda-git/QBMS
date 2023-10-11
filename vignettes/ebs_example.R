@@ -111,9 +111,9 @@ MET <- get_trial_data()
 #' in an opaque way, so that someone else cannot easily “borrow” it and present 
 #' an OAuth consent screen that impersonates your package.
 #' 
-#' Client ID is not a secret anyway and any end user can see what it is when 
-#' the app redirects them to sign in (e.g., if they use browser tools to view 
-#' the HTTP request).
+#' The Client ID is a public identifier of your application, it is not a secret 
+#' anyway and any end user can see what it is when the app redirects them to 
+#' sign in (e.g., if they use browser tools to view the HTTP request).
 
 ebs$state$client_id <- readline('Client ID:')
 
