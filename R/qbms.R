@@ -1134,7 +1134,7 @@ get_germplasm_list <- function() {
     germplasm_list[, c("synonyms")] <- list(NULL)
   }
   
-  if (qbms_globals$config$engine == "bms") {
+  if (nrow(germplasm_list) > 0 & qbms_globals$config$engine == "bms") {
     # BMS POST /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries to extract entry type (test or check)
     call_url <- paste0(qbms_globals$config$base_url, "/crops/", qbms_globals$config$crop,
                        "/programs/", qbms_globals$state$program_db_id,
@@ -1146,7 +1146,7 @@ get_germplasm_list <- function() {
 
     results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
 
-    germplasm_list <- merge(germplasm_list, results[, c("entryNumber", "properties.8255.value")], by = "entryNumber")
+    germplasm_list <- merge(germplasm_list, results[, c("entryNumber", "properties.8255.value", "gid")], by = "entryNumber")
 
     germplasm_list$check <- ifelse(germplasm_list$properties.8255.value == 10180, 1, 0)
 
