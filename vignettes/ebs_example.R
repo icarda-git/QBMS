@@ -25,6 +25,12 @@ ebs$state  <- list(token = '',
 
 # https://cbbrapi-qa.ebsproject.org/brapi/v2/auth/login
 ebs$state$token <- readline('token:')
+ebs$state$token <- token$credentials$id_token
+
+# JSON Web Tokens are an open, industry standard RFC 7519 method for representing 
+# claims securely between two parties.
+#
+# https://jwt.io/ allows you to decode, verify and generate JWT.
 
 set_qbms_connection(ebs)
 
@@ -115,11 +121,17 @@ MET <- get_trial_data()
 #' anyway and any end user can see what it is when the app redirects them to 
 #' sign in (e.g., if they use browser tools to view the HTTP request).
 
-ebs$state$client_id <- readline('Client ID:')
+ebs$state$client_id     <- readline('Client ID: ')
+ebs$state$client_secret <- readline('Client Secret: ')
 
-app <- httr::oauth_app(appname = 'EBS', key = ebs$state$client_id, secret = NULL)
+app <- httr::oauth_app(appname = 'EBS', 
+                       key = ebs$state$client_id, 
+                       secret = ebs$state$client_secret,
+                       redirect_uri = 'http://localhost:1410')
 
-endpoint <- httr::oauth_endpoint(authorize = 'https://auth.ebsproject.org/oauth2/authorize',
-                                 access = 'https://auth.ebsproject.org/oauth2/token')
+endpoint <- httr::oauth_endpoint(authorize = 'https://auth-dev.ebsproject.org/oauth2/authorize',
+                                 access = 'https://auth-dev.ebsproject.org/oauth2/token')
 
 token <- httr::oauth2.0_token(endpoint, app)
+
+token$credentials$id_token
