@@ -11,6 +11,7 @@ set_qbms_config(
   time_out = 120,
   no_auth = FALSE,
   engine = "bms",
+  brapi_ver = "v1",
   verbose = TRUE
 )
 }
@@ -25,7 +26,9 @@ set_qbms_config(
 
 \item{no_auth}{TRUE if the server doesn't require authentication/login (default is FALSE)}
 
-\item{engine}{Backend database (qbms default, breedbase, gigwa)}
+\item{engine}{Backend database (bms default, breedbase, gigwa, ebs)}
+
+\item{brapi_ver}{BrAPI version (v1 or v2)}
 
 \item{verbose}{Logical indicating if progress bar will display on the console when retrieve data from API (TRUE by default).}
 }
@@ -36,7 +39,7 @@ no return value
 Set the connection configuration of the BMS server
 }
 \examples{
-set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

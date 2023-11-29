@@ -208,11 +208,15 @@ set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth
   qbms_globals$config$path      <- path
   qbms_globals$config$page_size <- page_size
   qbms_globals$config$time_out  <- time_out
-  qbms_globals$config$base_url  <- paste0(qbms_globals$config$server, "/", qbms_globals$config$path)
+  qbms_globals$config$base_url  <- paste0(qbms_globals$config$server, ifelse(path == "", "", paste0("/", path)))
   qbms_globals$config$engine    <- engine
   qbms_globals$config$brapi_ver <- brapi_ver
   qbms_globals$config$verbose   <- verbose
-
+  
+  if (engine == "ebs") {
+    qbms_globals$config$crop <- ""
+  }
+  
   if (no_auth == TRUE) {
     qbms_globals$state$token <- NA
   }
@@ -437,6 +441,56 @@ get_login_details <- function() {
 }
 
 
+#' Set Access Token Response
+#'
+#' If the request for an access token is valid, the authorization server needs 
+#' to generate an access token and return these to the client, typically along 
+#' with some additional properties about the authorization.
+#'
+#' @param token The access token string as issued by the authorization server.
+#' @param user The username (optional).
+#' @param expires_in The lifetime in seconds of the access token (optional).
+#' @return no return value
+#' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' @export
+
+set_token <- function(token, user = '', expires_in = NULL) {
+  if (is.null(expires_in)) {
+    expires_in <- as.numeric(Sys.time()) + 3600
+  }
+  
+  qbms_globals$state$token <- token
+  qbms_globals$state$user  <- user
+  qbms_globals$state$expires_in <- expires_in
+}
+
+
+#' Login using OAuth 2.0 Authentication 
+#'
+#' If the request for an access token is valid, the authorization server needs 
+#' to generate an access token and return these to the client, typically along 
+#' with some additional properties about the authorization.
+#'
+#' @param authorize_url URL to send client to for authorization.
+#' @param access_url URL used to exchange unauthenticated for authenticated token.
+#' @param client_id Consumer key, also sometimes called the client ID.
+#' @param client_secret Consumer secret, also sometimes called the client secret.
+#' @param redirect_uri The URL that user will be redirected to after authorization is complete (default is http://localhost:1410).
+#' @return no return value
+#' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' @export
+
+oauth2_login <- function(authorize_url, access_url, client_id, client_secret = NULL, redirect_uri = "http://localhost:1410") {
+  app <- httr::oauth_app(appname = "QBMS", key = client_id, secret = client_secret, redirect_uri = redirect_uri)
+  
+  endpoint <- httr::oauth_endpoint(authorize = authorize_url, access = access_url)
+  
+  token <- httr::oauth2.0_token(endpoint, app)
+  
+  set_token(token$credentials$id_token, '', token$credentials$expires_in)
+}
+
+
 #' Login to the server
 #'
 #' @description
@@ -482,10 +536,9 @@ login_bms <- function(username = NULL, password = NULL) {
     stop(httr::content(response)$errors[[1]]$message)
   }
 
-  qbms_globals$state$token <- httr::content(response)$access_token
-  qbms_globals$state$user  <- httr::content(response)$userDisplayName
-  # as.POSIXct(qbms_globals$state$expires_in/1000, origin="1970-01-01")
-  qbms_globals$state$expires_in <- httr::content(response)$expires_in
+  set_token(httr::content(response)$access_token,
+            httr::content(response)$userDisplayName,
+            httr::content(response)$expires_in)
 }
 
 
@@ -1874,7 +1927,7 @@ login_gigwa <- function(username = NULL, password = NULL) {
     stop("403 Forbidden")
   }
   
-  qbms_globals$state$token <- httr::content(response)$token
+  set_token(httr::content(response)$token)
 }
 
 

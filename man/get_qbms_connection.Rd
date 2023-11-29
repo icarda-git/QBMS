@@ -15,7 +15,7 @@ Get the QBMS connection object from the current environment
 \examples{
 if(interactive()) {
 # configure QBMS to connect the phenotypics server
-set_qbms_config("https://www.bms-uat-test.net/ibpworkbench/controller/auth/login")
+set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench/controller/auth/login")
 
 # login, set the crop, and program
 login_bms()

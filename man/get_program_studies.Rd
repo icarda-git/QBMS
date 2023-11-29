@@ -16,7 +16,7 @@ current active program as configured in the internal state object using `set_pro
 \examples{
 if(interactive()) {
 # config your BMS connection
-set_qbms_config("https://www.bms-uat-test.net/ibpworkbench")
+set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
 
 # login using your BMS account (interactive mode)
 # you can pass BMS username and password as parameters (batch mode)

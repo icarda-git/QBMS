@@ -7,25 +7,12 @@ library(QBMS)
 # https://cbbrapi-qa.ebsproject.org/
 # https://cbbrapi-qa.ebsproject.org/v2/docs#/
 
-ebs <- list()
+set_qbms_config(url = 'https://cbbrapi-qa.ebsproject.org', engine = 'ebs', brapi_ver = 'v2')
 
-ebs$config <- list(crop      = '', 
-                   server    = 'https://cbbrapi-qa.ebsproject.org', 
-                   path      = '', 
-                   page_size = 1000, 
-                   time_out  = 120, 
-                   base_url  = 'https://cbbrapi-qa.ebsproject.org',
-                   engine    = 'ebs',
-                   brapi_ver = 'v2',
-                   varbose   = TRUE)
-
-ebs$state  <- list(token = '', 
-                   user = '', 
-                   expires_in = 3600)
+# set_token(readline('token:'))
 
 ################################################################################
 #' EBS OAuth 2.0
-#' https://cbbrapi-qa.ebsproject.org/brapi/v2/auth/login
 #'
 #' Package maintainers might want to build this app in as a fallback, possibly 
 #' taking some measures to obfuscate the client ID and secret and limit its use 
@@ -40,32 +27,16 @@ ebs$state  <- list(token = '',
 #' The Client ID is a public identifier of your application, it is not a secret 
 #' anyway and any end user can see what it is when the app redirects them to 
 #' sign in (e.g., if they use browser tools to view the HTTP request).
+#' 
+#' JSON Web Tokens are an open, industry standard RFC 7519 method for representing 
+#' claims securely between two parties.
+#'
+#' https://jwt.io/ allows you to decode, verify and generate JWT.
 
-ebs$state$client_id     <- readline('Client ID: ')
-ebs$state$client_secret <- readline('Client Secret: ')
-
-app <- httr::oauth_app(appname = 'EBS', 
-                       key = ebs$state$client_id, 
-                       secret = ebs$state$client_secret,
-                       redirect_uri = 'http://localhost:1410')
-
-endpoint <- httr::oauth_endpoint(authorize = 'https://auth-dev.ebsproject.org/oauth2/authorize',
-                                 access = 'https://auth-dev.ebsproject.org/oauth2/token')
-
-token <- httr::oauth2.0_token(endpoint, app)
-
-token$credentials$id_token
-
-# ebs$state$token <- readline('token:')
-ebs$state$token <- token$credentials$id_token
-ebs$state$expires_in <- token$credentials$expires_in
-
-# JSON Web Tokens are an open, industry standard RFC 7519 method for representing 
-# claims securely between two parties.
-#
-# https://jwt.io/ allows you to decode, verify and generate JWT.
-
-set_qbms_connection(ebs)
+oauth2_login(authorize_url = 'https://auth-dev.ebsproject.org/oauth2/authorize', 
+             access_url    = 'https://auth-dev.ebsproject.org/oauth2/token', 
+             client_id     = '5crahiqorgj0lppt3n9dkulkst', 
+             client_secret = '1sf4tipbp4arj3d5cncjmrvk9c2cu30gor5618hnh8rgkp6v5fs')
 
 list_programs()
 set_program('Irrigated South-East Asia')
@@ -88,7 +59,7 @@ data <- get_study_data()
 
 germplasm <- get_germplasm_list()
 
-MET <- get_trial_data()
+# MET <- get_trial_data()
 
 #' e.g., /brapi/v2/observations/table?studyDbId=3793
 #' {...,
