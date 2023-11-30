@@ -1425,7 +1425,11 @@ list_locations <- function() {
   if (!is.null(qbms_globals$state$locations)) {
     location_list <- qbms_globals$state$locations
   } else {
-    call_url  <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/locations")
+    if (qbms_globals$config$brapi_ver == "v2") {
+      call_url  <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/locations")
+    } else {
+      call_url  <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v2/locations")
+    }
     
     location_list <- brapi_get_call(call_url, FALSE)$data
 
