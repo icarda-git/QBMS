@@ -743,14 +743,11 @@ list_programs <- function() {
   }
 
   if (is.null(qbms_globals$state$programs)) {
-    crop_path <- ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop))
-    
-    if (qbms_globals$config$brapi_ver == "v2") {
-      call_url <- paste0(qbms_globals$config$base_url, crop_path, "/brapi/v2/programs")
-    } else {
-      call_url <- paste0(qbms_globals$config$base_url, crop_path, "/brapi/v1/programs")
-    }
-    
+    call_url <- paste0(qbms_globals$config$base_url, 
+                       ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop)), 
+                       "/brapi/", qbms_globals$config$brapi_ver, "/", 
+                       brapi_map[brapi_map$func_name == "list_programs" & brapi_map$brapi_ver == qbms_globals$config$brapi_ver, "brapi_call"])
+
     results <- brapi_get_call(call_url)$data
     
     if (qbms_globals$config$engine == "bms") {
@@ -825,16 +822,13 @@ get_program_trials <- function() {
   if (!is.null(qbms_globals$state$trials)) {
     bms_program_trials <- qbms_globals$state$trials
   } else {
-    crop_path <- ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop))
+    call_url <- paste0(qbms_globals$config$base_url, 
+                       ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop)), 
+                       "/brapi/", qbms_globals$config$brapi_ver, "/", 
+                       brapi_map[brapi_map$func_name == "get_program_trials" & brapi_map$brapi_ver == qbms_globals$config$brapi_ver, "brapi_call"])
     
-    if (qbms_globals$config$brapi_ver == "v2") {
-      call_url <- paste0(qbms_globals$config$base_url, crop_path,
-                         "/brapi/v2/trials?programDbId=", qbms_globals$state$program_db_id)
-    } else {
-      call_url <- paste0(qbms_globals$config$base_url, crop_path,
-                         "/brapi/v1/trials?programDbId=", qbms_globals$state$program_db_id)
-    }
-
+    call_url <- sub("\\{programDbId\\}", qbms_globals$state$program_db_id, call_url)
+    
     bms_program_trials <- brapi_get_call(call_url, FALSE)$data
     
     qbms_globals$state$trials <- bms_program_trials
