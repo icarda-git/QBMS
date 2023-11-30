@@ -1,4 +1,91 @@
-# Internal state variables/lists
+#' List of API calls in each QBMS function
+#'
+#' list_crops()
+#' /brapi/v1/crops
+#'
+#' list_programs()
+#' /brapi/v1/programs
+#' /brapi/v2/programs
+#'
+#' get_program_trials()
+#' /brapi/v1/trials?programDbId=
+#' /brapi/v2/trials?programDbId=
+#'
+#' list_studies()
+#' get_program_trials which trialDbId=
+#' /brapi/v2/studies?trialDbId=
+#'  
+#' get_study_info()
+#' /brapi/v1/studies/{studyDbId}
+#' /brapi/v2/studies/{studyDbId}
+#'
+#' get_study_data()
+#' /brapi/v1/studies/{studyDbId}/table
+#' /brapi/v2/observations/table?studyDbId=
+#'
+#' get_germplasm_list()
+#' /brapi/v1/studies/{studyDbId}/germplasm
+#' /brapi/v2/germplasm?studyDbId=
+#'   
+#' /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries (BMS: get entry type) (POST: body = "")
+#'
+#' get_trial_obs_ontology()
+#' /brapi/v1/studies/{studyDbId}/table (for observationVariableNames list)
+#' 
+#' /crops/{cropName}/variables/filter?programUUID={programUUID}&variableIds={id1,id2,..} (BMS: gets all variables using filter)
+#'
+#' list_locations()
+#' /brapi/v1/locations
+#' /brapi/v2/locations (not implemented yet)
+#'
+#' get_program_studies()
+#' /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries/metadata (BMS: get study entries metadata)
+#'
+#' get_germplasm_id()
+#' /brapi/v1/germplasm?germplasmName=
+#'
+#' get_germplasm_data()
+#' /brapi/v1/phenotypes-search (BMS: phenotype search) (POST: germplasmDbIds, observationLevel = "PLOT")
+#'
+#' get_germplasm_attributes()
+#' /brapi/v1/germplasm/{germplasmDbId}/attributes
+#'
+#' gigwa_list_dbs()
+#' /brapi/v2/programs
+#'
+#' gigwa_list_projects()
+#' /brapi/v2/studies?programDbId=
+#'
+#' gigwa_set_project()
+#' /brapi/v2/studies?programDbId= (to get studyDbId)
+#'
+#' gigwa_list_runs()
+#' /brapi/v2/search/variantsets (POST: studyDbIds)
+#'
+#' gigwa_set_run()
+#' /brapi/v2/search/variantsets (to get variantSetDbId)(POST: studyDbIds)
+#'
+#' gigwa_get_samples()
+#' /brapi/v2/search/germplasm (POST: studyDbIds)
+#'
+#' gigwa_get_variants()
+#' /ga4gh/variants/search 
+#' 
+#' dancing steps: 
+#' - searchMode = 0 to get total
+#' - then searchMode = 3 to request actual results
+#' - keep checking progress status /gigwa/progress
+#' - then call the same /ga4gh/variants/search to get the ready results
+#' 
+#' GA4GH: https://rest.ensembl.org/documentation/info/gavariants
+#' BrAPI: https://app.swaggerhub.com/apis/PlantBreedingAPI/BrAPI-Genotyping/2.1#/Allele%20Matrix
+#'
+#' * gigwa_get_metadata()
+#' /brapi/v2/search/germplasm (POST: studyDbIds)
+#' /brapi/v2/search/attributevalues (POST: germplasmDbIds)
+
+
+#' Internal state variables/lists
 qbms_globals <- new.env()
 qbms_globals$config <- list(crop = NULL)
 qbms_globals$state  <- list(token = NULL)
@@ -2316,9 +2403,9 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
   }
 
   # https://gigwa-dev.southgreen.fr/gigwaV2/rest/swagger-ui/index.html?urls.primaryName=GA4GH%20API%20v0.6.0a5#/ga-4gh-rest-controller/searchVariantsUsingPOST
-  # https://ga4gh-schemas.readthedocs.io/en/latest/schemas/variants.proto.html
-  # https://app.swaggerhub.com/apis-docs/PlantBreedingAPI/BrAPI-New-Concept-Preview/0.0.0-proposal#/Genotype-Matrix-Redesign/post_search_variantmatrix
-  # https://github.com/plantbreeding/BrAPI/issues/546
+  # https://rest.ensembl.org/documentation/info/gavariants
+  # https://app.swaggerhub.com/apis/PlantBreedingAPI/BrAPI-Genotyping/2.1#/Allele%20Matrix/post_search_allelematrix
+  # https://brapigenotyping21.docs.apiary.io/#/reference/allele-matrix
   
   call_url <- paste0(qbms_globals$config$base_url, "/ga4gh/variants/search")
   
