@@ -1,72 +1,76 @@
-#' List of API calls in each QBMS function
-#'
-#' list_crops()
-#' /brapi/v1/crops
-#'
-#' list_programs()
-#' /brapi/v1/programs
-#' /brapi/v2/programs
-#'
-#' get_program_trials()
-#' /brapi/v1/trials?programDbId=
-#' /brapi/v2/trials?programDbId=
-#'
-#' list_studies()
-#' get_program_trials which trialDbId=
-#' /brapi/v2/studies?trialDbId=
-#'  
-#' get_study_info()
-#' /brapi/v1/studies/{studyDbId}
-#' /brapi/v2/studies/{studyDbId}
-#'
-#' get_study_data()
-#' /brapi/v1/studies/{studyDbId}/table
-#' /brapi/v2/observations/table?studyDbId=
-#'
-#' get_germplasm_list()
-#' /brapi/v1/studies/{studyDbId}/germplasm
-#' /brapi/v2/germplasm?studyDbId=
-#'   
-#' /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries (BMS: get entry type) (POST: body = "")
-#'
-#' get_trial_obs_ontology()
-#' /brapi/v1/studies/{studyDbId}/table (for observationVariableNames list)
-#' 
-#' /crops/{cropName}/variables/filter?programUUID={programUUID}&variableIds={id1,id2,..} (BMS: gets all variables using filter)
-#'
-#' list_locations()
-#' /brapi/v1/locations
-#' /brapi/v2/locations (not implemented yet)
+#' /brapi/{brapi_ver}/{brapi_call}
+brapi_map <- data.frame(func_name  = character(), 
+                        brapi_ver  = character(),
+                        brapi_call = character())
+
+brapi_map <- rbind(brapi_map, c("list_crops", "v1", "crops"))
+
+brapi_map <- rbind(brapi_map, c("list_programs", "v1", "programs"))
+brapi_map <- rbind(brapi_map, c("list_programs", "v2", "programs"))
+
+brapi_map <- rbind(brapi_map, c("get_program_trials", "v1", "trials?programDbId={programDbId}"))
+brapi_map <- rbind(brapi_map, c("get_program_trials", "v2", "trials?programDbId={programDbId}"))
+
+#' brapi v1 use get_program_trials which trialDbId={trialDbId}
+brapi_map <- rbind(brapi_map, c("list_studies", "v2", "studies?trialDbId={trialDbId}"))
+
+brapi_map <- rbind(brapi_map, c("get_study_info", "v1", "studies/{studyDbId}"))
+brapi_map <- rbind(brapi_map, c("get_study_info", "v2", "studies/{studyDbId}"))
+
+brapi_map <- rbind(brapi_map, c("get_study_data", "v1", "studies/{studyDbId}/table"))
+brapi_map <- rbind(brapi_map, c("get_study_data", "v2", "observations/table?studyDbId={studyDbId}"))
+
+brapi_map <- rbind(brapi_map, c("get_germplasm_list", "v1", "studies/{studyDbId}/germplasm"))
+brapi_map <- rbind(brapi_map, c("get_germplasm_list", "v2", "germplasm?studyDbId={studyDbId}"))
+
+brapi_map <- rbind(brapi_map, c("get_trial_obs_ontology", "v1", "studies/{studyDbId}/table"))
+
+brapi_map <- rbind(brapi_map, c("list_locations", "v1", "locations"))
+brapi_map <- rbind(brapi_map, c("list_locations", "v2", "locations"))
+
+brapi_map <- rbind(brapi_map, c("get_germplasm_id", "v1", "germplasm?germplasmName={germplasmName}"))
+
+#' POST: germplasmDbIds, observationLevel = "PLOT"
+brapi_map <- rbind(brapi_map, c("get_germplasm_data", "v1", "phenotypes-search"))
+
+brapi_map <- rbind(brapi_map, c("get_germplasm_attributes", "v1", "germplasm/{germplasmDbId}/attributes"))
+
+############################### GIGWA calls ####################################
+
+brapi_map <- rbind(brapi_map, c("gigwa_list_dbs", "v2", "programs"))
+brapi_map <- rbind(brapi_map, c("gigwa_list_projects", "v2", "studies?programDbId={programDbId}"))
+
+#' to get studyDbId
+brapi_map <- rbind(brapi_map, c("gigwa_set_project", "v2", "studies?programDbId={programDbId}"))
+
+#' POST: studyDbIds
+brapi_map <- rbind(brapi_map, c("gigwa_list_runs", "v2", "search/variantsets"))
+
+#' POST: studyDbIds (to get variantSetDbId)
+brapi_map <- rbind(brapi_map, c("gigwa_set_run", "v2", "search/variantsets"))
+
+#' POST: studyDbIds
+brapi_map <- rbind(brapi_map, c("gigwa_get_samples", "v2", "search/germplasm"))
+
+#' POST: germplasmDbIds (use gigwa_get_samples call to get germplasmDbIds)
+brapi_map <- rbind(brapi_map, c("gigwa_get_metadata", "v2", "search/attributevalues"))
+
+################################################################################
+
+colnames(brapi_map) <- c("func_name", "brapi_ver", "brapi_call")
+
+
+#' List of non-BrAPI calls in QBMS functions
 #'
 #' get_program_studies()
 #' /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries/metadata (BMS: get study entries metadata)
 #'
-#' get_germplasm_id()
-#' /brapi/v1/germplasm?germplasmName=
+#' get_germplasm_list()
+#' /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries (BMS: get entry type) (POST: body = "")
 #'
-#' get_germplasm_data()
-#' /brapi/v1/phenotypes-search (BMS: phenotype search) (POST: germplasmDbIds, observationLevel = "PLOT")
-#'
-#' get_germplasm_attributes()
-#' /brapi/v1/germplasm/{germplasmDbId}/attributes
-#'
-#' gigwa_list_dbs()
-#' /brapi/v2/programs
-#'
-#' gigwa_list_projects()
-#' /brapi/v2/studies?programDbId=
-#'
-#' gigwa_set_project()
-#' /brapi/v2/studies?programDbId= (to get studyDbId)
-#'
-#' gigwa_list_runs()
-#' /brapi/v2/search/variantsets (POST: studyDbIds)
-#'
-#' gigwa_set_run()
-#' /brapi/v2/search/variantsets (to get variantSetDbId)(POST: studyDbIds)
-#'
-#' gigwa_get_samples()
-#' /brapi/v2/search/germplasm (POST: studyDbIds)
+#' get_trial_obs_ontology()
+#' to get the observationVariableNames list
+#' /crops/{cropName}/variables/filter?programUUID={programUUID}&variableIds={id1,id2,..} (BMS: gets all variables using filter)
 #'
 #' gigwa_get_variants()
 #' /ga4gh/variants/search 
@@ -79,10 +83,6 @@
 #' 
 #' GA4GH: https://rest.ensembl.org/documentation/info/gavariants
 #' BrAPI: https://app.swaggerhub.com/apis/PlantBreedingAPI/BrAPI-Genotyping/2.1#/Allele%20Matrix
-#'
-#' * gigwa_get_metadata()
-#' /brapi/v2/search/germplasm (POST: studyDbIds)
-#' /brapi/v2/search/attributevalues (POST: germplasmDbIds)
 
 
 #' Internal state variables/lists
