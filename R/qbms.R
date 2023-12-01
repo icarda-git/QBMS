@@ -40,14 +40,8 @@ brapi_map <- rbind(brapi_map, c("get_germplasm_attributes", "v1", "germplasm/{ge
 brapi_map <- rbind(brapi_map, c("gigwa_list_dbs", "v2", "programs"))
 brapi_map <- rbind(brapi_map, c("gigwa_list_projects", "v2", "studies?programDbId={programDbId}"))
 
-#' to get studyDbId
-brapi_map <- rbind(brapi_map, c("gigwa_set_project", "v2", "studies?programDbId={programDbId}"))
-
 #' POST: studyDbIds
 brapi_map <- rbind(brapi_map, c("gigwa_list_runs", "v2", "search/variantsets"))
-
-#' POST: studyDbIds (to get variantSetDbId)
-brapi_map <- rbind(brapi_map, c("gigwa_set_run", "v2", "search/variantsets"))
 
 #' POST: studyDbIds
 brapi_map <- rbind(brapi_map, c("gigwa_get_samples", "v2", "search/germplasm"))
@@ -2216,14 +2210,14 @@ gigwa_list_runs <- function() {
     
     results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
     
-    gigwa_runs <- as.data.frame(results$result$data$variantSetName)
+    gigwa_runs <- as.data.frame(results$result$data[, c("variantSetName", "variantSetDbId")])
     
-    colnames(gigwa_runs) <- c("variantSetName")
+    #colnames(gigwa_runs) <- c("variantSetName")
     
     qbms_globals$state$gigwa_runs <- gigwa_runs
   }
   
-  return(gigwa_runs)
+  return(gigwa_runs[c("variantSetName")])
 }
 
 
@@ -2260,20 +2254,8 @@ gigwa_set_run <- function(run_name) {
   if (!run_name %in% unlist(valid_runs)) {
     stop("Your run name is not exists in this project! You may use the `gigwa_list_runs()` function to check the available runs")
   }
-  
-  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/variantsets")
-  
-  auth_code <- paste0("Bearer ", qbms_globals$state$token)
-  headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
-  call_body <- paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}')
-  
-  response <- httr::POST(url = utils::URLencode(call_url), body = call_body, 
-                         encode = "raw", httr::accept_json(), httr::content_type_json(), 
-                         httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
-  
-  results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
-  
-  gigwa_runs <- as.data.frame(results$result$data)
+
+  gigwa_runs <- qbms_globals$state$gigwa_runs
   
   qbms_globals$state$variant_set_db_id <- gigwa_runs[gigwa_runs$variantSetName == run_name, "variantSetDbId"]
   
