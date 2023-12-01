@@ -2119,12 +2119,12 @@ gigwa_list_projects <- function() {
     
     gigwa_projects <- brapi_get_call(call_url)$data
     
-    gigwa_projects <- gigwa_projects[c("studyName")]
+    gigwa_projects <- gigwa_projects[, c("studyName", "studyDbId")]
     
     qbms_globals$state$gigwa_projects <- gigwa_projects
   }
 
-  return(gigwa_projects)
+  return(gigwa_projects[c("studyName")])
 }
 
 
@@ -2160,9 +2160,7 @@ gigwa_set_project <- function(project_name) {
     stop("Your project name is not exists in this database! You may use the `gigwa_list_projects()` function to check the available projects")
   }
   
-  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/studies?programDbId=", qbms_globals$config$db)
-  
-  gigwa_projects <- brapi_get_call(call_url)$data
+  gigwa_projects <- qbms_globals$state$gigwa_projects
 
   project_row <- which(gigwa_projects$studyName == project_name)
   
