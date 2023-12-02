@@ -5,27 +5,19 @@
 \alias{brapi_map}
 \title{/brapi/{brapi_ver}/{brapi_call}}
 \format{
-An object of class \code{data.frame} with 25 rows and 3 columns.
+An object of class \code{data.frame} with 24 rows and 3 columns.
 
-An object of class \code{data.frame} with 25 rows and 3 columns.
+An object of class \code{data.frame} with 24 rows and 3 columns.
 
-An object of class \code{data.frame} with 25 rows and 3 columns.
+An object of class \code{data.frame} with 24 rows and 3 columns.
 
-An object of class \code{data.frame} with 25 rows and 3 columns.
+An object of class \code{data.frame} with 24 rows and 3 columns.
 
-An object of class \code{data.frame} with 25 rows and 3 columns.
+An object of class \code{data.frame} with 24 rows and 3 columns.
 
-An object of class \code{data.frame} with 25 rows and 3 columns.
-
-An object of class \code{data.frame} with 25 rows and 3 columns.
-
-An object of class \code{data.frame} with 25 rows and 3 columns.
+An object of class \code{data.frame} with 24 rows and 3 columns.
 }
 \usage{
-brapi_map
-
-brapi_map
-
 brapi_map
 
 brapi_map
@@ -45,11 +37,7 @@ brapi v1 use get_program_trials which trialDbId={trialDbId}
 
 POST: germplasmDbIds, observationLevel = "PLOT"
 
-to get studyDbId
-
 POST: studyDbIds
-
-POST: studyDbIds (to get variantSetDbId)
 
 POST: studyDbIds
 

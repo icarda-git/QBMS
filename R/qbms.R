@@ -11,7 +11,7 @@ brapi_map <- rbind(brapi_map, c("list_programs", "v2", "programs"))
 brapi_map <- rbind(brapi_map, c("get_program_trials", "v1", "trials?programDbId={programDbId}"))
 brapi_map <- rbind(brapi_map, c("get_program_trials", "v2", "trials?programDbId={programDbId}"))
 
-#' brapi v1 use get_program_trials which trialDbId={trialDbId}
+brapi_map <- rbind(brapi_map, c("list_studies", "v1", "studies?trialDbId={trialDbId}"))
 brapi_map <- rbind(brapi_map, c("list_studies", "v2", "studies?trialDbId={trialDbId}"))
 
 brapi_map <- rbind(brapi_map, c("get_study_info", "v1", "studies/{studyDbId}"))
@@ -982,23 +982,17 @@ list_studies <- function() {
   if (!is.null(qbms_globals$state$studies)) {
     studies <- qbms_globals$state$studies
   } else {
-    if (qbms_globals$config$brapi_ver == "v2") {
-      crop_path <- ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop))
-      
-      call_url <- paste0(qbms_globals$config$base_url, crop_path,
-                         "/brapi/v2/studies?trialDbId=", qbms_globals$state$trial_db_id)
-      
-      bms_trial_studies <- brapi_get_call(call_url, FALSE)$data
-      
-      studies <- bms_trial_studies[, c("studyName", "locationName", "studyDbId")]
-    } else {
-      bms_trials <- get_program_trials()
-      
-      trial_row <- which(bms_trials$trialDbId == qbms_globals$state$trial_db_id)
-      
-      studies <- bms_trials[trial_row, c("studies")][[1]][, c("studyName", "locationName", "studyDbId")]
-    }
+    call_url <- paste0(qbms_globals$config$base_url, 
+                       ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop)), 
+                       "/brapi/", qbms_globals$config$brapi_ver, "/", 
+                       brapi_map[brapi_map$func_name == "list_studies" & brapi_map$brapi_ver == qbms_globals$config$brapi_ver, "brapi_call"])
     
+    call_url <- sub("\\{trialDbId\\}", qbms_globals$state$trial_db_id, call_url)
+    
+    bms_trial_studies <- brapi_get_call(call_url, FALSE)$data
+    
+    studies <- bms_trial_studies[, c("studyName", "locationName", "studyDbId")]
+
     qbms_globals$state$studies <- studies
   }
   
