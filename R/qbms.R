@@ -23,10 +23,10 @@ brapi_map <- rbind(brapi_map, c("get_study_data", "v2", "observations/table?stud
 brapi_map <- rbind(brapi_map, c("get_germplasm_list", "v1", "studies/{studyDbId}/germplasm"))
 brapi_map <- rbind(brapi_map, c("get_germplasm_list", "v2", "germplasm?studyDbId={studyDbId}"))
 
-brapi_map <- rbind(brapi_map, c("get_trial_obs_ontology", "v1", "studies/{studyDbId}/table"))
-
 brapi_map <- rbind(brapi_map, c("list_locations", "v1", "locations"))
 brapi_map <- rbind(brapi_map, c("list_locations", "v2", "locations"))
+
+brapi_map <- rbind(brapi_map, c("get_trial_obs_ontology", "v1", "studies/{studyDbId}/table"))
 
 brapi_map <- rbind(brapi_map, c("get_germplasm_id", "v1", "germplasm?germplasmName={germplasmName}"))
 
@@ -1398,12 +1398,11 @@ list_locations <- function() {
   if (!is.null(qbms_globals$state$locations)) {
     location_list <- qbms_globals$state$locations
   } else {
-    if (qbms_globals$config$brapi_ver == "v2") {
-      call_url  <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1/locations")
-    } else {
-      call_url  <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v2/locations")
-    }
-    
+    call_url <- paste0(qbms_globals$config$base_url, 
+                       ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop)), 
+                       "/brapi/", qbms_globals$config$brapi_ver, "/", 
+                       brapi_map[brapi_map$func_name == "list_locations" & brapi_map$brapi_ver == qbms_globals$config$brapi_ver, "brapi_call"])
+
     location_list <- brapi_get_call(call_url, FALSE)$data
 
     qbms_globals$state$locations <- location_list
