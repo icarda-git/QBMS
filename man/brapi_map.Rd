@@ -14,12 +14,8 @@ An object of class \code{data.frame} with 24 rows and 3 columns.
 An object of class \code{data.frame} with 24 rows and 3 columns.
 
 An object of class \code{data.frame} with 24 rows and 3 columns.
-
-An object of class \code{data.frame} with 24 rows and 3 columns.
 }
 \usage{
-brapi_map
-
 brapi_map
 
 brapi_map
@@ -32,8 +28,6 @@ brapi_map
 }
 \description{
 /brapi/{brapi_ver}/{brapi_call}
-
-brapi v1 use get_program_trials which trialDbId={trialDbId}
 
 POST: germplasmDbIds, observationLevel = "PLOT"
 
