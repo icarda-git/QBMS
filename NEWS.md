@@ -4,6 +4,7 @@
   * Support the OAuth 2.0 authentication (Authorization Code Grant flow) using the new oauth2_login() function.
   * Support external authorization option and set access token value manually using the new set_token() function.
   * Support downloading TerraClimate netCDF data files to extract their data offline using the new ini_terraclimate() function.
+  * Add the new scan_brapi_endpoints() utility function to scan available BrAPI endpoints in the configured data source server.
 
 # QBMS 0.9.1 _2023-03-28_
   * Hot fix the reported validation issue in the gigwa_set_db() function.
