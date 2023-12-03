@@ -55,6 +55,49 @@ brapi_map <- rbind(brapi_map, c("gigwa_get_metadata", "v2", "search/attributeval
 colnames(brapi_map) <- c("func_name", "brapi_ver", "brapi_call")
 
 
+#' Scan BrAPI endpoints 
+#'
+#' @description
+#' Scan available BrAPI endpoints in the configured source server
+#'
+#' @param programDbId programDbId used for BrAPI endpoints scanning (default is 0)
+#' @param trialDbId   trialDbId used for BrAPI endpoints scanning (default is 0)
+#' @param studyDbId   studyDbId used for BrAPI endpoints scanning (default is 0)
+#'
+#' @return a data.frame list the QBMS function, BrAPI endpoint URL, and status
+#' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' @export
+
+scan_brapi_endpoints <- function(programDbId = 0, trialDbId = 0, studyDbId = 0) {
+  if (is.null(qbms_globals$config$base_url)) {
+    stop("No server has been defined yet! You have to set your server configurations first using the `set_qbms_config()` function")
+  }
+  
+  call_url <- paste0(qbms_globals$config$base_url, 
+                     ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop)), 
+                     "/brapi/", brapi_map$brapi_ver, "/", 
+                     brapi_map$brapi_call)
+  
+  call_url <- sub("\\{programDbId\\}", programDbId, call_url)
+  call_url <- sub("\\{trialDbId\\}", trialDbId, call_url)
+  call_url <- sub("\\{studyDbId\\}", studyDbId, call_url)
+  call_url <- sub("\\{.*\\}", "1", call_url)
+  
+  # ensure getting the minimum data while scanning BrAPI endpoints
+  call_url <- ifelse(grepl("\\?", call_url),
+                     paste0(call_url, "&pageSize=1"),
+                     paste0(call_url, "?pageSize=1"))
+  
+  scan_result <- !sapply(call_url, function (url) httr::http_error(httr::GET(url, httr::add_headers(brapi_headers()))))
+  scan_result <- as.data.frame(cbind(brapi_map$func_name, call_url, scan_result))
+  
+  rownames(scan_result) <- NULL
+  colnames(scan_result) <- c("QBMS Function", "BrAPI endpoint", "Available")
+  
+  return(scan_result)
+}
+
+
 #' List of non-BrAPI calls in QBMS functions
 #'
 #' get_program_studies()
