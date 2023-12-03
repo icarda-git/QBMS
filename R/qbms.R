@@ -2296,12 +2296,12 @@ gigwa_get_samples <- function() {
     
     results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
     
-    gigwa_samples <- results$result$data$germplasmName
+    gigwa_samples <- results$result$data[, c("germplasmName", "germplasmDbId")]
     
     qbms_globals$state$gigwa_samples <- gigwa_samples
   }
 
-  return(gigwa_samples)
+  return(gigwa_samples$germplasmName)
 }
 
 
@@ -2498,21 +2498,13 @@ gigwa_get_metadata <- function() {
     stop("No project has been selected yet! You have to set your project first using the `gigwa_set_project()` function")
   }
   
-  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/germplasm")
-  
+  gigwa_get_samples()
+  germplasmDbIds <- paste(qbms_globals$state$gigwa_samples$germplasmDbId, collapse = '","')
+
   auth_code <- paste0("Bearer ", qbms_globals$state$token)
   headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
-  call_body <- paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}')
-  
-  response <- httr::POST(url = utils::URLencode(call_url), body = call_body, 
-                         encode = "raw", httr::accept_json(), httr::content_type_json(), 
-                         httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
-  
-  results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
   
   call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/attributevalues")
-  
-  germplasmDbIds <- paste(results$result$data$germplasmDbId, collapse = '","')
   call_body <- paste0('{"germplasmDbIds": ["', germplasmDbIds, '"]}')
   
   response <- httr::POST(url = utils::URLencode(call_url), body = call_body, 
