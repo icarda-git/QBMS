@@ -61,32 +61,7 @@ germplasm <- get_germplasm_list()
 
 ontology <- get_trial_obs_ontology()
 
-# MET <- get_trial_data()
-
-#' e.g., /brapi/v2/observations/table?studyDbId=3793
-#' {...,
-#'  "result": {
-#'    "data": [...],
-#'    "headerRow": [...],
-#'    "observationVariables": [
-#'      {
-#'        "observationVariableDbId": "397",
-#'        "observationVariableName": "Actual plot yield in grams"
-#'      }, 
-#'      {
-#'        "observationVariableDbId": "212",
-#'        "observationVariableName": "Plant Height"
-#'      },...]
-#'    }
-#'  }
-#'  
-#' /brapi/v2/variables?observationVariableDbId=397 (OK)
-#' /brapi/v2/variables?observationVariableDbId=212 (data[], Oops!)
-#' 
-#' when call get_study_data() function, QBMS should cache:
-#' - the unique(data$germplasmDbId) to restrict/fix the study germplasm list
-#' - the observationVariables table, to get the traits ontology
-# ontology <- get_trial_obs_ontology()
+MET <- get_trial_data()
 
 #' implement the /brapi/v2/locations endpoint
 # list_locations()

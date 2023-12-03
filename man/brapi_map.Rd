@@ -35,6 +35,6 @@ POST: studyDbIds
 
 POST: studyDbIds
 
-POST: germplasmDbIds (use gigwa_get_samples call to get germplasmDbIds)
+POST: germplasmDbIds
 }
 \keyword{datasets}

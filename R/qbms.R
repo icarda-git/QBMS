@@ -1312,13 +1312,17 @@ get_germplasm_list <- function() {
 #' @export
 
 get_trial_data <- function() {
-  trial_data <- data.frame()
   env <- list_studies()
 
   for (i in env$studyName) {
     set_study(i)
     study_data <- get_study_data()
-    trial_data <- rbind(trial_data, study_data)
+    
+    if (!exists('trial_data')) {
+      trial_data <- study_data
+    } else {
+      trial_data <- rbindx(trial_data, study_data)
+    }
   }
 
   return(trial_data)

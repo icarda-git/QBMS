@@ -18,10 +18,6 @@ get_program_studies()
 get_germplasm_list()
 /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries (BMS: get entry type) (POST: body = "")
 
-get_trial_obs_ontology()
-to get the observationVariableNames list
-/crops/{cropName}/variables/filter?programUUID={programUUID}&variableIds={id1,id2,..} (BMS: gets all variables using filter)
-
 gigwa_get_variants()
 /ga4gh/variants/search 
 
