@@ -60,9 +60,6 @@ list_trials(2020)
 # select a specific study/trial by name
 set_trial("2018 PVT")
 
-# get observation variable ontology in the selected study/trial
-ontology <- get_trial_obs_ontology()
-
 # list all environments/locations information in the selected study/trial
 list_studies()
 
@@ -78,6 +75,9 @@ set_study(studies[studies$locationName == "BASF Bremen", "studyName"][1])
 data <- get_study_data()
 info <- get_study_info()
 germplasm <- get_germplasm_list()
+
+# get observation variable ontology in the selected study/trial
+ontology <- get_trial_obs_ontology()
 
 # get the pedigree table
 pedigree_table <- get_pedigree_table(germplasm, "germplasmName", "pedigree")

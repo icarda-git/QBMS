@@ -940,6 +940,7 @@ set_trial <- function(trial_name) {
   qbms_globals$state$trial_db_id <- as.character(bms_trials[trial_row, c("trialDbId")])
   
   qbms_globals$state$studies <- NULL
+  qbms_globals$state$observationVariableDbIds <- NULL
 }
 
 
@@ -1157,14 +1158,17 @@ get_study_data <- function() {
   study_data   <- as.data.frame(study_result$data)
   
   if (qbms_globals$config$engine == "breedbase") {
+    qbms_globals$state$observationVariableDbIds <- study_result$observationVariableDbIds
     study_header <- study_data[1, ]
     study_data   <- study_data[-1, ]
     
   } else if (qbms_globals$config$brapi_ver == "v1") {
+    qbms_globals$state$observationVariableDbIds <- study_result$observationVariableDbIds
     study_header <- c(study_result$headerRow, 
                       study_result$observationVariableNames)
     
   } else if (qbms_globals$config$brapi_ver == "v2") {
+    qbms_globals$state$observationVariableDbIds <- study_result$observationVariables$observationVariableDbId
     study_header <- c(study_result$headerRow, 
                       study_result$observationVariables$observationVariableName)
   }
@@ -1351,19 +1355,16 @@ get_trial_data <- function() {
 #' @export
 
 get_trial_obs_ontology <- function() {
-  set_study(list_studies()[1, "studyName"])
-
-  crop_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1")
-  call_url <- paste0(crop_url, "/studies/", qbms_globals$state$study_db_id, "/table")
-
-  study_data <- brapi_get_call(call_url)
+  if (is.null(qbms_globals$state$observationVariableDbIds)) {
+    stop("No data has been imported yet! You have to set get study data first using the `get_study_data()` function")
+  }
 
   if (qbms_globals$config$engine == "breedbase") {
-    ontology <- as.data.frame(study_data$observationVariableNames)
+    ontology <- as.data.frame(qbms_globals$state$observationVariableDbIds)
 
     colnames(ontology) <- "observationVariableNames"
   } else {
-    study_obs <- study_data$observationVariableDbIds
+    study_obs <- qbms_globals$state$observationVariableDbIds
 
     my_url <- paste0(qbms_globals$config$base_url, "/crops/", qbms_globals$config$crop,
                      "/variables/filter?programUUID=", qbms_globals$state$program_db_id,
