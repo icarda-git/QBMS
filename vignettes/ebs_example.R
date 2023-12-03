@@ -59,6 +59,8 @@ data <- get_study_data()
 
 germplasm <- get_germplasm_list()
 
+ontology <- get_trial_obs_ontology()
+
 # MET <- get_trial_data()
 
 #' e.g., /brapi/v2/observations/table?studyDbId=3793

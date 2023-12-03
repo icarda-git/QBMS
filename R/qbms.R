@@ -26,7 +26,8 @@ brapi_map <- rbind(brapi_map, c("get_germplasm_list", "v2", "germplasm?studyDbId
 brapi_map <- rbind(brapi_map, c("list_locations", "v1", "locations"))
 brapi_map <- rbind(brapi_map, c("list_locations", "v2", "locations"))
 
-brapi_map <- rbind(brapi_map, c("get_trial_obs_ontology", "v1", "studies/{studyDbId}/table"))
+brapi_map <- rbind(brapi_map, c("get_trial_obs_ontology", "v1", "variables"))
+brapi_map <- rbind(brapi_map, c("get_trial_obs_ontology", "v2", "variables"))
 
 brapi_map <- rbind(brapi_map, c("get_germplasm_id", "v1", "germplasm?germplasmName={germplasmName}"))
 
@@ -698,6 +699,7 @@ set_crop <- function(crop_name) {
   
   qbms_globals$state$programs  <- NULL
   qbms_globals$state$locations <- NULL
+  qbms_globals$state$variables <- NULL
 }
 
 
@@ -1155,20 +1157,24 @@ get_study_data <- function() {
   call_url <- sub("\\{studyDbId\\}", qbms_globals$state$study_db_id, call_url)
 
   study_result <- brapi_get_call(call_url)
+  
+  if (qbms_globals$config$brapi_ver == "v1") {
+    qbms_globals$state$observationVariableDbIds <- study_result$observationVariableDbIds
+  } else if (qbms_globals$config$brapi_ver == "v2") {
+    qbms_globals$state$observationVariableDbIds <- study_result$observationVariables$observationVariableDbId
+  }
+  
   study_data   <- as.data.frame(study_result$data)
   
   if (qbms_globals$config$engine == "breedbase") {
-    qbms_globals$state$observationVariableDbIds <- study_result$observationVariableDbIds
     study_header <- study_data[1, ]
     study_data   <- study_data[-1, ]
     
   } else if (qbms_globals$config$brapi_ver == "v1") {
-    qbms_globals$state$observationVariableDbIds <- study_result$observationVariableDbIds
     study_header <- c(study_result$headerRow, 
                       study_result$observationVariableNames)
     
   } else if (qbms_globals$config$brapi_ver == "v2") {
-    qbms_globals$state$observationVariableDbIds <- study_result$observationVariables$observationVariableDbId
     study_header <- c(study_result$headerRow, 
                       study_result$observationVariables$observationVariableName)
   }
@@ -1359,23 +1365,20 @@ get_trial_obs_ontology <- function() {
     stop("No data has been imported yet! You have to set get study data first using the `get_study_data()` function")
   }
 
-  if (qbms_globals$config$engine == "breedbase") {
-    ontology <- as.data.frame(qbms_globals$state$observationVariableDbIds)
-
-    colnames(ontology) <- "observationVariableNames"
+  if (!is.null(qbms_globals$state$variables)) {
+    ontology <- qbms_globals$state$variables
   } else {
-    study_obs <- qbms_globals$state$observationVariableDbIds
-
-    my_url <- paste0(qbms_globals$config$base_url, "/crops/", qbms_globals$config$crop,
-                     "/variables/filter?programUUID=", qbms_globals$state$program_db_id,
-                     "&variableIds=", paste(study_obs, collapse = ","))
-
-    response <- httr::GET(url = utils::URLencode(my_url),
-                          httr::add_headers("X-Auth-Token" = qbms_globals$state$token, "Accept-Encoding" = "gzip, deflate"),
-                          httr::timeout(qbms_globals$config$time_out))
-
-    ontology <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
+    call_url <- paste0(qbms_globals$config$base_url, 
+                       ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop)), 
+                       "/brapi/", qbms_globals$config$brapi_ver, "/", 
+                       brapi_map[brapi_map$func_name == "get_trial_obs_ontology" & brapi_map$brapi_ver == qbms_globals$config$brapi_ver, "brapi_call"])
+    
+    ontology <- brapi_get_call(call_url)$data
+    
+    qbms_globals$state$variables <- ontology
   }
+  
+  ontology <- ontology[ontology$observationVariableDbId %in% qbms_globals$state$observationVariableDbIds, ]
 
   return(ontology)
 }

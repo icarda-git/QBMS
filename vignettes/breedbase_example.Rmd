@@ -72,7 +72,7 @@ data <- get_study_data()
 germplasm <- get_germplasm_list()
 
 # get observation variable ontology in the selected study/trial
-get_trial_obs_ontology()
+ontology <- get_trial_obs_ontology()
 
 # retrieve multi-environment trial data of the selected study/trial
 MET <- get_trial_data()
