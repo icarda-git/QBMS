@@ -47,7 +47,7 @@ brapi_map <- rbind(brapi_map, c("gigwa_list_runs", "v2", "search/variantsets"))
 #' POST: studyDbIds
 brapi_map <- rbind(brapi_map, c("gigwa_get_samples", "v2", "search/germplasm"))
 
-#' POST: germplasmDbIds (use gigwa_get_samples call to get germplasmDbIds)
+#' POST: germplasmDbIds
 brapi_map <- rbind(brapi_map, c("gigwa_get_metadata", "v2", "search/attributevalues"))
 
 ################################################################################
@@ -62,10 +62,6 @@ colnames(brapi_map) <- c("func_name", "brapi_ver", "brapi_call")
 #'
 #' get_germplasm_list()
 #' /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries (BMS: get entry type) (POST: body = "")
-#'
-#' get_trial_obs_ontology()
-#' to get the observationVariableNames list
-#' /crops/{cropName}/variables/filter?programUUID={programUUID}&variableIds={id1,id2,..} (BMS: gets all variables using filter)
 #'
 #' gigwa_get_variants()
 #' /ga4gh/variants/search 
