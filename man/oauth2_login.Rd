@@ -9,7 +9,8 @@ oauth2_login(
   access_url,
   client_id,
   client_secret = NULL,
-  redirect_uri = "http://localhost:1410"
+  redirect_uri = "http://localhost:1410",
+  oauth2_cache = FALSE
 )
 }
 \arguments{
@@ -22,6 +23,10 @@ oauth2_login(
 \item{client_secret}{Consumer secret, also sometimes called the client secret.}
 
 \item{redirect_uri}{The URL that user will be redirected to after authorization is complete (default is http://localhost:1410).}
+
+\item{oauth2_cache}{A logical value or a string. TRUE means to cache using the default cache file .httr-oauth, FALSE means don't cache, 
+and NA means to guess using some sensible heuristics. A string means use the specified path as the cache file.
+Default is FALSE (i.e., don't cache).}
 }
 \value{
 no return value

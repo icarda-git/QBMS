@@ -597,16 +597,19 @@ set_token <- function(token, user = '', expires_in = NULL) {
 #' @param client_id Consumer key, also sometimes called the client ID.
 #' @param client_secret Consumer secret, also sometimes called the client secret.
 #' @param redirect_uri The URL that user will be redirected to after authorization is complete (default is http://localhost:1410).
+#' @param oauth2_cache A logical value or a string. TRUE means to cache using the default cache file .httr-oauth, FALSE means don't cache, 
+#'                     and NA means to guess using some sensible heuristics. A string means use the specified path as the cache file.
+#'                     Default is FALSE (i.e., don't cache).
 #' @return no return value
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @export
 
-oauth2_login <- function(authorize_url, access_url, client_id, client_secret = NULL, redirect_uri = "http://localhost:1410") {
+oauth2_login <- function(authorize_url, access_url, client_id, client_secret = NULL, redirect_uri = "http://localhost:1410", oauth2_cache = FALSE) {
   app <- httr::oauth_app(appname = "QBMS", key = client_id, secret = client_secret, redirect_uri = redirect_uri)
   
   endpoint <- httr::oauth_endpoint(authorize = authorize_url, access = access_url)
   
-  token <- httr::oauth2.0_token(endpoint, app)
+  token <- httr::oauth2.0_token(endpoint, app, cache = oauth2_cache)
   
   set_token(token$credentials$id_token, '', token$credentials$expires_in)
 }
