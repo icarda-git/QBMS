@@ -2379,6 +2379,9 @@ gigwa_get_samples <- function() {
 #' @param max_missing maximum missing ratio (by sample) between 0 and 1 (default is 1 for 100\%).
 #' @param min_maf minimum Minor Allele Frequency (MAF) between 0 and 1 (default is 0 for 0\%).
 #' @param samples a list of a samples subset (default is NULL will retrieve for all samples).
+#' @param start start position of region (zero-based, inclusive) (e.g., 19750802).
+#' @param end end position of region (zero-based, exclusive)	(e.g., 19850125).
+#' @param referenceName reference sequence name	(e.g., '6H' in the Barley LI-AM).
 #' @return A data.frame that has the first 4 columns describe attributes of the SNP 
 #'         (rs#: variant name, alleles: reference allele / alternative allele, chrom: chromosome name, 
 #'         and pos: position in bp), while the following columns describe the SNP value for a 
@@ -2406,7 +2409,7 @@ gigwa_get_samples <- function() {
 #' }
 #' @export
 
-gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
+gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL, start = NULL, end = NULL, referenceName = NULL) {
   if (is.null(qbms_globals$state$study_db_id)) {
     stop("No project has been selected yet! You have to set your project first using the `gigwa_set_project()` function")
   }
@@ -2429,7 +2432,15 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
   } else {
     samples <- gigwa_get_samples()
   }
-
+  
+  if (!is.null(start) && !is.numeric(start)){
+    stop("Start position should be numeric!")
+  }
+  
+  if (!is.null(end) && !is.numeric(end)){
+    stop("End position should be numeric!")
+  }
+  
   # https://gigwa-dev.southgreen.fr/gigwaV2/rest/swagger-ui/index.html?urls.primaryName=GA4GH%20API%20v0.6.0a5#/ga-4gh-rest-controller/searchVariantsUsingPOST
   # https://rest.ensembl.org/documentation/info/gavariants
   # https://app.swaggerhub.com/apis/PlantBreedingAPI/BrAPI-Genotyping/2.1#/Allele%20Matrix/post_search_allelematrix
@@ -2447,6 +2458,10 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
                     minmaf = min_maf * 100,
                     maxmaf = 50,
                     missingData = max_missing * 100)
+  
+  if (!is.null(referenceName)) call_body$referenceName <- referenceName
+  if (!is.null(start)) call_body$start <- start
+  if (!is.null(end)) call_body$end <- end
   
   response <- httr::POST(url = utils::URLencode(call_url), body = call_body, encode = "json", 
                          httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
@@ -2473,7 +2488,11 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL) {
                     getGT = TRUE,
                     pageSize = qbms_globals$config$page_size,
                     pageToken = "0")
-
+  
+  if (!is.null(referenceName)) call_body$referenceName <- referenceName
+  if (!is.null(start)) call_body$start <- start
+  if (!is.null(end)) call_body$end <- end
+  
   g_matrix <- data.frame(matrix(ncol = length(samples) + 4, nrow = 0))
 
   repeat {

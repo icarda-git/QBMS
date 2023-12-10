@@ -5,6 +5,7 @@
   * Support external authorization option and set access token value manually using the new set_token() function.
   * Support downloading TerraClimate netCDF data files to extract their data offline using the new ini_terraclimate() function.
   * Add the new scan_brapi_endpoints() utility function to scan available BrAPI endpoints in the configured data source server.
+  * Enhance the gigwa_get_variants() function by adding 3 extra filtering parameters: start position, end position, and reference sequence name.
   * Fix the BreedBase login problem due to the form encoding issue by adding the new function login_breedbase() to pass the correct/expected encoding.
 
 # QBMS 0.9.1 _2023-03-28_

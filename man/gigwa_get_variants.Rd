@@ -4,7 +4,14 @@
 \alias{gigwa_get_variants}
 \title{Get variants in the selected GIGWA run}
 \usage{
-gigwa_get_variants(max_missing = 1, min_maf = 0, samples = NULL)
+gigwa_get_variants(
+  max_missing = 1,
+  min_maf = 0,
+  samples = NULL,
+  start = NULL,
+  end = NULL,
+  referenceName = NULL
+)
 }
 \arguments{
 \item{max_missing}{maximum missing ratio (by sample) between 0 and 1 (default is 1 for 100\%).}
@@ -12,6 +19,12 @@ gigwa_get_variants(max_missing = 1, min_maf = 0, samples = NULL)
 \item{min_maf}{minimum Minor Allele Frequency (MAF) between 0 and 1 (default is 0 for 0\%).}
 
 \item{samples}{a list of a samples subset (default is NULL will retrieve for all samples).}
+
+\item{start}{start position of region (zero-based, inclusive) (e.g., 19750802).}
+
+\item{end}{end position of region (zero-based, exclusive)    (e.g., 19850125).}
+
+\item{referenceName}{reference sequence name    (e.g., '6H' in the Barley LI-AM).}
 }
 \value{
 A data.frame that has the first 4 columns describe attributes of the SNP 

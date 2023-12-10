@@ -68,9 +68,14 @@ head(samples)
 # that match the given criteria:
 # - max_missing: maximum missing ratio (by sample) [0-1] (default is 1 for 100%) 
 # - min_maf: minimum Minor Allele Frequency (MAF) [0-1] (default is 0 for 0%) 
+# - start: start position of region (zero-based, inclusive) (e.g., 19750802)
+# - end: end position of region (zero-based, exclusive)	(e.g., 19850125)
+# - referenceName: reference sequence name	(e.g., '6H' in the Barley LI-AM)
 # - samples: a list of a samples subset (default is NULL will retrieve for all samples) 
 marker_matrix <- gigwa_get_variants(max_missing = 0.2, 
-                                    min_maf = 0.35, 
+                                    min_maf = 0.05, 
+                                    start = 100000,
+                                    end = 500000,
                                     samples = c("ind1", "ind3", "ind7"))
 
 # Data returns in data.frame format. The first 4 columns describe attributes of the SNP 
