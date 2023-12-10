@@ -4,12 +4,16 @@
 \alias{login_bms}
 \title{Login to the server}
 \usage{
-login_bms(username = NULL, password = NULL)
+login_bms(username = NULL, password = NULL, encoding = "json")
 }
 \arguments{
 \item{username}{the username (optional, default is NULL)}
 
 \item{password}{the password (optional, default is NULL)}
+
+\item{encoding}{how should the named list body be encoded? Can be one of form 
+(application/x-www-form-urlencoded), multipart, (multipart/form-data), 
+or json (application/json).}
 }
 \value{
 no return value

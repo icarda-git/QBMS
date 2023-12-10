@@ -37,6 +37,8 @@ library(QBMS)
 set_qbms_config("https://cassavabase.org/brapi/v1/calls/", 
                 time_out = 300, no_auth = TRUE, engine = "breedbase")
 
+# login_breedbase("username", "password")
+
 # list supported crops in the current BreedBase server
 list_crops()
 

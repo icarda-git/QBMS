@@ -630,6 +630,9 @@ login_oauth2 <- function(authorize_url, access_url, client_id, client_secret = N
 #'
 #' @param username the username (optional, default is NULL)
 #' @param password the password (optional, default is NULL)
+#' @param encoding how should the named list body be encoded? Can be one of form 
+#'                 (application/x-www-form-urlencoded), multipart, (multipart/form-data), 
+#'                 or json (application/json).
 #' @return no return value
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @examples
@@ -643,7 +646,7 @@ login_oauth2 <- function(authorize_url, access_url, client_id, client_secret = N
 #' }
 #' @export
 
-login_bms <- function(username = NULL, password = NULL) {
+login_bms <- function(username = NULL, password = NULL, encoding = "json") {
   if (is.null(username) || is.null(password)) {
     credentials <- get_login_details()
   } else {
@@ -653,7 +656,7 @@ login_bms <- function(username = NULL, password = NULL) {
   call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v1/token")
   call_body <- list(username = credentials["usr"], password = credentials["pwd"])
 
-  response <- httr::POST(url = utils::URLencode(call_url), body = call_body, encode = "json",
+  response <- httr::POST(url = utils::URLencode(call_url), body = call_body, encode = encoding,
                          httr::timeout(qbms_globals$config$time_out))
 
   if (!is.null(httr::content(response)$errors)) {
@@ -663,6 +666,19 @@ login_bms <- function(username = NULL, password = NULL) {
   set_token(httr::content(response)$access_token,
             httr::content(response)$userDisplayName,
             httr::content(response)$expires_in)
+}
+
+
+#' Login to the BreedBase server
+#'
+#' @param username the username (optional, default is NULL)
+#' @param password the password (optional, default is NULL)
+#' @return no return value
+#' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' @export
+
+login_breedbase <- function(username = NULL, password = NULL) {
+  login_bms(username, password, "form-data")
 }
 
 
