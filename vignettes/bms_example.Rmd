@@ -27,13 +27,15 @@ remotes::install_github("icarda-git/QBMS")
 
 ___If you are not already an active BMS user, you can contact [IBP support](https://ibplatform.atlassian.net/servicedesk/customer/portal/4/group/30/create/60) to get access to a trial BMS server.___
 
+> _From BMS version 25 onward, users must possess the necessary permissions to utilize the BrAPI services. [This table](https://ibplatform.atlassian.net/wiki/spaces/BMS/pages/2870968321/v25+BMS+permissions+required+for+using+BrAPI+services) outlines the permissions needed for accessing specific services._
+
 ## _Example_
 ```r
 # load the QBMS library
 library(QBMS)
 
 # config your BMS connection (by providing your BMS login page URL)
-set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench/controller/auth/login")
+set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench/main/app/#/login")
 
 # login using your BMS account (interactive mode)
 # or pass your BMS username and password as parameters (batch mode)
