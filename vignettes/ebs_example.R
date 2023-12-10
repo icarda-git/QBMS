@@ -33,7 +33,7 @@ set_qbms_config(url = 'https://cbbrapi-qa.ebsproject.org', engine = 'ebs', brapi
 #'
 #' https://jwt.io/ allows you to decode, verify and generate JWT.
 
-oauth2_login(authorize_url = 'https://auth-dev.ebsproject.org/oauth2/authorize', 
+login_oauth2(authorize_url = 'https://auth-dev.ebsproject.org/oauth2/authorize', 
              access_url    = 'https://auth-dev.ebsproject.org/oauth2/token', 
              client_id     = '5crahiqorgj0lppt3n9dkulkst', 
              client_secret = '1sf4tipbp4arj3d5cncjmrvk9c2cu30gor5618hnh8rgkp6v5fs')

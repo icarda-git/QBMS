@@ -604,7 +604,7 @@ set_token <- function(token, user = '', expires_in = NULL) {
 #' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @export
 
-oauth2_login <- function(authorize_url, access_url, client_id, client_secret = NULL, redirect_uri = "http://localhost:1410", oauth2_cache = FALSE) {
+login_oauth2 <- function(authorize_url, access_url, client_id, client_secret = NULL, redirect_uri = "http://localhost:1410", oauth2_cache = FALSE) {
   app <- httr::oauth_app(appname = "QBMS", key = client_id, secret = client_secret, redirect_uri = redirect_uri)
   
   endpoint <- httr::oauth_endpoint(authorize = authorize_url, access = access_url)
