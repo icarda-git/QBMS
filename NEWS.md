@@ -7,6 +7,7 @@
   * Add the new scan_brapi_endpoints() utility function to scan available BrAPI endpoints in the configured data source server.
   * Enhance the gigwa_get_variants() function by adding 3 extra filtering parameters: start position, end position, and reference sequence name.
   * Fix the BreedBase login problem due to the form encoding issue by adding the new function login_breedbase() to pass the correct/expected encoding.
+  * Add [HWSD v2.0](https://gaez.fao.org/pages/hwsd) support to query and retrieve the FAO harmonized soil data.
 
 # QBMS 0.9.1 _2023-03-28_
   * Hot fix the reported validation issue in the gigwa_set_db() function.
