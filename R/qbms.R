@@ -678,7 +678,11 @@ login_bms <- function(username = NULL, password = NULL, encoding = "json") {
 #' @export
 
 login_breedbase <- function(username = NULL, password = NULL) {
-  login_bms(username, password, encoding = "form-data")
+  login_bms(username, password, encoding = "form")
+  
+  if (is.null(qbms_globals$state$token)) {
+    stop("Bad credentials") 
+  }
 }
 
 
