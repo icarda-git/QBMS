@@ -934,8 +934,8 @@ list_trials <- function(year = NULL) {
     stop("Year parameter should be numeric")
   }
 
-  if (!is.null(year) && qbms_globals$config$engine == "breedbase") {
-    stop("Year parameter is not supported in BreedBase!")
+  if (!is.null(year) && qbms_globals$config$engine != "bms") {
+    stop("Year parameter is not supported in this database!")
   }
 
   bms_trials <- get_program_trials()
@@ -1507,8 +1507,8 @@ list_locations <- function() {
 #' @export
 
 get_program_studies <- function() {
-  if (qbms_globals$config$engine == "breedbase") {
-    stop("This function is not supported yet in BreedBase!")
+  if (qbms_globals$config$engine != "bms") {
+    stop("This function is not supported yet in this database!")
   }
 
   if (is.null(qbms_globals$state$program_db_id)) {
@@ -1641,8 +1641,8 @@ get_germplasm_id <- function(germplasm_name = "") {
 #' @export
 
 get_germplasm_data <- function(germplasm_name = "") {
-  if (qbms_globals$config$engine == "breedbase") {
-    stop("This function is not supported yet in BreedBase!")
+  if (qbms_globals$config$engine != "bms") {
+    stop("This function is not supported yet in this database!")
   }
   
   germplasm_db_id <- get_germplasm_id(germplasm_name)
@@ -1732,8 +1732,8 @@ get_germplasm_data <- function(germplasm_name = "") {
 #' @export
 
 get_germplasm_attributes <- function(germplasm_name = "") {
-  if (qbms_globals$config$engine == "breedbase") {
-    stop("This function is not supported yet in BreedBase!")
+  if (qbms_globals$config$engine != "bms") {
+    stop("This function is not supported yet in this database!")
   }
   
   germplasm_db_id <- get_germplasm_id(germplasm_name)
