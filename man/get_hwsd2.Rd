@@ -2,7 +2,7 @@
 % Please edit documentation in R/qbms.R
 \name{get_hwsd2}
 \alias{get_hwsd2}
-\title{Get HWSD v2 Soil data for any location(s)}
+\title{Get HWSD v2 Soil data for given location(s)}
 \usage{
 get_hwsd2(df, con, x = "longitude", y = "latitude", sequence = 1, layer = "D1")
 }
