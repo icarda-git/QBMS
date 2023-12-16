@@ -30,6 +30,7 @@ brapi_map <- rbind(brapi_map, c("get_trial_obs_ontology", "v1", "variables"))
 brapi_map <- rbind(brapi_map, c("get_trial_obs_ontology", "v2", "variables"))
 
 brapi_map <- rbind(brapi_map, c("get_germplasm_id", "v1", "germplasm?germplasmName={germplasmName}"))
+brapi_map <- rbind(brapi_map, c("get_germplasm_id", "v2", "germplasm?germplasmName={germplasmName}"))
 
 #' POST: germplasmDbIds, observationLevel = "PLOT"
 brapi_map <- rbind(brapi_map, c("get_germplasm_data", "v1", "phenotypes-search"))
@@ -1595,9 +1596,13 @@ get_germplasm_id <- function(germplasm_name = "") {
     stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
   }
   
-  crop_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1")
-  call_url <- paste0(crop_url, "/germplasm?germplasmName=", germplasm_name)
-  
+  call_url <- paste0(qbms_globals$config$base_url,
+                     ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop)),
+                     "/brapi/", qbms_globals$config$brapi_ver, "/",
+                     brapi_map[brapi_map$func_name == "get_germplasm_id" & brapi_map$brapi_ver == qbms_globals$config$brapi_ver, "brapi_call"])
+
+  call_url <- sub("\\{germplasmName\\}", germplasm_name, call_url)
+
   # this BrAPI call return all germplasm records start with the given name NOT exactly match!
   results <- brapi_get_call(call_url)$data
   
