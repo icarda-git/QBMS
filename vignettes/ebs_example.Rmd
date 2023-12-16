@@ -1,0 +1,93 @@
+---
+title: "EBS Example"
+author: "Khaled Al-Shamaa"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{EBS Example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## QBMS
+This R package assists breeders in linking data systems with their analytic pipelines, a crucial step in digitizing breeding processes. It supports querying and retrieving phenotypic and genotypic data from systems like [EBS](https://ebs.excellenceinbreeding.org/), [BMS](https://bmspro.io/), [BreedBase](https://breedbase.org), and [GIGWA](https://southgreen.fr/content/gigwa) (using [BrAPI](https://brapi.org/) calls). Extra helper functions support environmental data sources, including [TerraClimate](https://www.climatologylab.org/terraclimate.html) and FAO [HWSDv2](https://gaez.fao.org/pages/hwsd) soil database.
+
+## EBS
+The Enterprise Breeding System ([EBS](https://ebs.excellenceinbreeding.org/)) is an open-source breeding informatics software being developed for crop breeding programs serving resource-poor farmers in Africa, Asia and Latin America.
+
+EBS connects, merges and builds upon existing breeding software and data solutions to offer a single powerful tool, so that breeders can focus on using data to create better varieties, faster.
+
+Development is led by the [CGIAR Excellence in Breeding Platform](https://excellenceinbreeding.org/) and the CGIAR Breeding Resources Initiative, which support CGIAR and national agricultural research system programs to adopt the breeding workflows and data management practices required to adopt EBS.
+
+EBS has been chosen as the preferred data management system of CGIAR ([source](https://www.cgiar.org/news-events/news/cgiar-announces-new-breeding-data-strategy-and-endorses-single-data-platform/)).
+
+## BrAPI
+The Breeding API ([BrAPI](https://brapi.org/)) project is an effort to enable interoperability among plant breeding databases. BrAPI is a standardized RESTful web service API specification for communicating plant breeding data. This community driven standard is free to be used by anyone interested in plant breeding data management.
+
+## OAuth 2.0
+[OAuth 2.0](https://oauth.net/2/) is the industry-standard protocol for authorization. OAuth 2.0 focuses on client developer simplicity while providing specific authorization flows for web applications, desktop applications, mobile phones, and living room devices. This specification and its extensions are being developed within the [IETF OAuth Working Group](https://www.ietf.org/mailman/listinfo/oauth).
+
+> Package maintainers might want to build this app in as a fallback, possibly taking some measures to obfuscate the client ID and secret and limit its use to your package.
+>
+> Note that three-legged OAuth always requires the involvement of a user, so the word “secret” here can be somewhat confusing. It is not a secret in the same sense as a password or token. But you probably still want to store it in an opaque way, so that someone else cannot easily “borrow” it and present an OAuth consent screen that impersonates your package.
+>
+> The Client ID is a public identifier of your application, it is not a secret anyway and any end user can see what it is when the app redirects them to sign in (e.g., if they use browser tools to view the HTTP request).
+>
+> JSON Web Tokens are an open, industry standard RFC 7519 method for representing claims securely between two parties. [https://jwt.io/](https://jwt.io/) allows you to decode, verify and generate JWT.
+
+## _Install_
+```r
+install.packages("remotes")
+remotes::install_github("icarda-git/QBMS")
+```
+
+## _Example_
+```r
+# load the QBMS library
+library(QBMS)
+
+# config the EBS connection
+set_qbms_config(url = 'https://cbbrapi-qa.ebsproject.org', engine = 'ebs', brapi_ver = 'v2')
+
+# set your access token manually
+# set_token(readline('token:'))
+
+# EBS OAuth 2.0 configuration
+login_oauth2(authorize_url = 'https://auth-dev.ebsproject.org/oauth2/authorize', 
+             access_url    = 'https://auth-dev.ebsproject.org/oauth2/token', 
+             client_id     = '<your client id>', 
+             client_secret = '<your client secret>')
+
+# list all breeding programs
+list_programs()
+
+# select a breeding program by name
+set_program('Irrigated South-East Asia')
+
+# list all trials in the selected program
+list_trials()
+
+# select a specific trial by name
+set_trial('CORB-5272 -test1')
+
+# list all studies (occurancies) in the selected trial
+list_studies()
+
+# select a specific study (occurance) by name
+set_study('CORB-5272 -test1-001')
+
+# retrieve study (occurance) metadata/information
+info <- get_study_info()
+
+# retrieve study (occurance) data
+data <- get_study_data()
+
+# retrieve study (occurance) germplasm list
+germplasm <- get_germplasm_list()
+
+# retrieve traits ontology for the selected trial
+ontology <- get_trial_obs_ontology()
+
+# retrieve multi-environment (occurencies) data of the selected trial
+MET <- get_trial_data()
+```
