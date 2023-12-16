@@ -90,4 +90,5 @@ ontology <- get_trial_obs_ontology()
 
 # retrieve multi-environment (occurencies) data of the selected trial
 MET <- get_trial_data()
+
 ```
