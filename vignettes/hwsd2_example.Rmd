@@ -1,0 +1,73 @@
+---
+title: "FAO HWSD v2 Example"
+author: "Khaled Al-Shamaa"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{FAO HWSD v2 Example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## QBMS
+This R package assists breeders in linking data systems with their analytic pipelines, a crucial step in digitizing breeding processes. It supports querying and retrieving phenotypic and genotypic data from systems like [EBS](https://ebs.excellenceinbreeding.org/), [BMS](https://bmspro.io/), [BreedBase](https://breedbase.org), and [GIGWA](https://southgreen.fr/content/gigwa) (using [BrAPI](https://brapi.org/) calls). Extra helper functions support environmental data sources, including [TerraClimate](https://www.climatologylab.org/terraclimate.html) and FAO [HWSDv2](https://gaez.fao.org/pages/hwsd) soil database.
+
+## FAO HWSD v2 Soil Database
+The Harmonized World Soil Database version 2.0 ([HWSD v2.0](https://gaez.fao.org/pages/hwsd)) is a unique global soil inventory providing information on the morphological, chemical and physical properties of soils at approximately 1 km resolution. Its main objective is to serve as a basis for prospective studies on agro-ecological zoning, food security and climate change.
+
+> For more details, you can get the HWSD v2.0 technical report and instructions [https://doi.org/10.4060/cc3823en](https://doi.org/10.4060/cc3823en).
+
+## _Install_
+```r
+install.packages("remotes")
+remotes::install_github("icarda-git/QBMS")
+```
+
+## _Example_
+```r
+# load the QBMS library
+library(QBMS)
+
+# create a simple data.frame for a list of locations and their coordinates
+Location  <- c('Tel-Hadya', 'Terbol', 'Marchouch')
+Latitude  <- c(36.016, 33.808, 33.616)
+Longitude <- c(36.943, 35.991, -6.716)
+
+sites <- data.frame(Location, Latitude, Longitude)
+
+# initiate, download, and setup the HWSD v2 in a given local directory
+hwsd2 <- ini_hwsd2()
+
+# query soil attributes for given sites using the HWSD v2 connection object
+#  
+# sequence parameter, range between 1 and 12 (max), 1 is the dominant soil. 
+# returned df has SHARE column refers to share% 
+# 
+# layer parameter refers to depth layer (D1 to D7). 
+# returned df has TOPDEP/BOTDEP columns represent top/bottom layer depth in cm.
+sites <- get_hwsd2(df = sites, 
+                   con = hwsd2, 
+                   x = 'Longitude', 
+                   y = 'Latitude', 
+                   sequence = 1, 
+                   layer = 'D1')
+
+```
+
+## _Advanced Users_
+```r
+# check the HWSD v2 raster 
+print(hwsd2$raster)
+ 
+# display the metadata for the layers table
+DBI::dbGetQuery(hwsd2$sqlite, 'select * from HWSD2_LAYERS_METADATA')
+ 
+# the lookup tables are shown for the coded fields
+# for example, the USDA Texture Class codes (the column TEXTURE_USDA value)
+# are linked to their names in table D_TEXTURE_USDA
+DBI::dbGetQuery(hwsd2$sqlite, 'select * from D_TEXTURE_USDA')
+ 
+# disconnect (close) the SQLite connection
+DBI::dbDisconnect(hwsd2$sqlite)
+
+```
