@@ -35,7 +35,7 @@ ___If you are not already an active BMS user, you can contact [IBP support](http
 library(QBMS)
 
 # config your BMS connection (by providing your BMS login page URL)
-set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench/main/app/#/login")
+set_qbms_config("https://bms.icarda.org/ibpworkbench/controller/auth/login")
 
 # login using your BMS account (interactive mode)
 # or pass your BMS username and password as parameters (batch mode)
@@ -45,32 +45,32 @@ login_bms()
 list_crops()
 
 # select a crop by name
-set_crop("maize")
+set_crop("wheat")
 
 # list all breeding programs in the selected crop
 list_programs()
 
 # select a breeding program by name
-set_program("MC Maize")
+set_program("Wheat International Nurseries")
 
 # list all studies/trials in the selected program
 list_trials()
 
 # filtered by year of starting date
-list_trials(2020)
+list_trials(2022)
 
 # select a specific study/trial by name
-set_trial("2018 PVT")
+set_trial("IDYT39")
 
 # list all environments/locations information in the selected study/trial
 list_studies()
 
 # select a specific environment/location by name
-set_study("2018 PVT Environment Number 1")
+set_study("IDYT39 Environment Number 9")
 
 # select a specific study by location name (first match)
 studies <- list_studies()
-set_study(studies[studies$locationName == "BASF Bremen", "studyName"][1])
+set_study(studies[studies$locationName == "Amlaha", "studyName"][1])
 
 # retrieve data, general information, and germplasm list 
 # of the selected environment/location
@@ -92,7 +92,8 @@ program_studies <- get_program_studies()
 
 # retrieve observations data of given germplasm aggregated from all trials 
 # in the selected program
-germplasm_observations <- get_germplasm_data("BASFCORN-2-1")
+# e.g., https://www.croptrust.org/news-events/campaigns/jabal-durum-wheat-variety/
+germplasm_observations <- get_germplasm_data("Jabal")
 
 # retrieve germplasm attributes for a given germplasm in a crop
 germplasm_attributes <- get_germplasm_attributes("BASFCORN-2-1")

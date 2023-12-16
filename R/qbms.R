@@ -639,7 +639,7 @@ login_oauth2 <- function(authorize_url, access_url, client_id, client_secret = N
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
-#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+#' set_qbms_config("https://bms.icarda.org/ibpworkbench")
 #'
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -695,7 +695,7 @@ login_breedbase <- function(username = NULL, password = NULL) {
 #' @examples
 #' if(interactive()) {
 #' # config your BMS connection
-#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+#' set_qbms_config("https://bms.icarda.org/ibpworkbench")
 #'
 #' # login using your BMS account (interactive mode)
 #' # you can pass BMS username and password as parameters (batch mode)
@@ -736,14 +736,14 @@ list_crops <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{list_crops}}
 #' @examples
 #' if(interactive()) {
-#' # config your BMS connection
-#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+#' # config your server connection
+#' set_qbms_config("https://bms.icarda.org/ibpworkbench")
 #'
-#' # login using your BMS account (interactive mode)
-#' # you can pass BMS username and password as parameters (batch mode)
+#' # login using your account (interactive mode)
+#' # you can pass your username and password as parameters (batch mode)
 #' login_bms()
 #'
-#' set_crop("maize")
+#' set_crop("wheat")
 #' }
 #' @export
 
@@ -778,14 +778,14 @@ set_crop <- function(crop_name) {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}
 #' @examples
 #' if(interactive()) {
-#' # config your BMS connection
-#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+#' # config your server connection
+#' set_qbms_config("https://bms.icarda.org/ibpworkbench")
 #'
-#' # login using your BMS account (interactive mode)
-#' # you can pass BMS username and password as parameters (batch mode)
+#' # login using your account (interactive mode)
+#' # you can pass your username and password as parameters (batch mode)
 #' login_bms()
 #'
-#' set_crop("maize")
+#' set_crop("wheat")
 #'
 #' # list existing breeding programs
 #' list_programs()
@@ -836,17 +836,17 @@ list_programs <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{list_programs}}
 #' @examples
 #' if(interactive()) {
-#' # config your BMS connection
-#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+#' # config your server connection
+#' set_qbms_config("https://bms.icarda.org/ibpworkbench")
 #'
-#' # login using your BMS account (interactive mode)
-#' # you can pass BMS username and password as parameters (batch mode)
+#' # login using your account (interactive mode)
+#' # you can pass your username and password as parameters (batch mode)
 #' login_bms()
 #'
-#' set_crop("maize")
+#' set_crop("wheat")
 #'
 #' # select a breeding program by name
-#' set_program("MC Maize")
+#' set_program("Wheat International Nurseries")
 #' }
 #' @export
 
@@ -910,23 +910,23 @@ get_program_trials <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}
 #' @examples
 #' if(interactive()) {
-#' # config your BMS connection
-#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+#' # config your server connection
+#' set_qbms_config("https://bms.icarda.org/ibpworkbench")
 #'
-#' # login using your BMS account (interactive mode)
-#' # you can pass BMS username and password as parameters (batch mode)
+#' # login using your account (interactive mode)
+#' # you can pass your username and password as parameters (batch mode)
 #' login_bms()
 #'
-#' set_crop("maize")
+#' set_crop("wheat")
 #'
 #' # select a breeding program by name
-#' set_program("MC Maize")
+#' set_program("Wheat International Nurseries")
 #'
 #' # list all studies/trials in the selected program
 #' list_trials()
 #'
 #' # filter listed studies/trials by year
-#' list_trials(2020)
+#' list_trials(2022)
 #' }
 #' @export
 
@@ -974,20 +974,20 @@ list_trials <- function(year = NULL) {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}}
 #' @examples
 #' if(interactive()) {
-#' # config your BMS connection
-#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+#' # config your server connection
+#' set_qbms_config("https://bms.icarda.org/ibpworkbench")
 #'
-#' # login using your BMS account (interactive mode)
-#' # you can pass BMS username and password as parameters (batch mode)
+#' # login using your account (interactive mode)
+#' # you can pass your username and password as parameters (batch mode)
 #' login_bms()
 #'
-#' set_crop("maize")
+#' set_crop("wheat")
 #'
 #' # select a breeding program by name
-#' set_program("MC Maize")
+#' set_program("Wheat International Nurseries")
 #'
 #' # select a specific study/trial by name
-#' set_trial("2018 PVT")
+#' set_trial("IDYT39")
 #' }
 #' @export
 
@@ -1020,20 +1020,20 @@ set_trial <- function(trial_name) {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
 #' @examples
 #' if(interactive()) {
-#' # config your BMS connection
-#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+#' # config your server connection
+#' set_qbms_config("https://bms.icarda.org/ibpworkbench")
 #'
-#' # login using your BMS account (interactive mode)
-#' # you can pass BMS username and password as parameters (batch mode)
+#' # login using your account (interactive mode)
+#' # you can pass your username and password as parameters (batch mode)
 #' login_bms()
 #'
-#' set_crop("maize")
+#' set_crop("wheat")
 #'
 #' # select a breeding program by name
-#' set_program("MC Maize")
+#' set_program("Wheat International Nurseries")
 #'
 #' # select a specific study/trial by name
-#' set_trial("2018 PVT")
+#' set_trial("IDYT39")
 #'
 #' # list all environments/locations information in the selected study/trial
 #' list_studies()
@@ -1080,23 +1080,23 @@ list_studies <- function() {
 #'          \code{\link{set_trial}}, \code{\link{list_studies}}
 #' @examples
 #' if(interactive()) {
-#' # config your BMS connection
-#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+#' # config your server connection
+#' set_qbms_config("https://bms.icarda.org/ibpworkbench")
 #'
-#' # login using your BMS account (interactive mode)
-#' # you can pass BMS username and password as parameters (batch mode)
+#' # login using your account (interactive mode)
+#' # you can pass your username and password as parameters (batch mode)
 #' login_bms()
 #'
-#' set_crop("maize")
+#' set_crop("wheat")
 #'
 #' # select a breeding program by name
-#' set_program("MC Maize")
+#' set_program("Wheat International Nurseries")
 #'
 #' # select a specific study/trial by name
-#' set_trial("2018 PVT")
+#' set_trial("IDYT39")
 #'
 #' # select a specific environment/location dataset
-#' set_study("2018 PVT Environment Number 1")
+#' set_study("IDYT39 Environment Number 9")
 #' }
 #' @export
 
@@ -1125,23 +1125,23 @@ set_study <- function(study_name) {
 #'          \code{\link{set_trial}}, \code{\link{set_study}}
 #' @examples
 #' if(interactive()) {
-#' # config your BMS connection
-#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+#' # config your server connection
+#' set_qbms_config("https://bms.icarda.org/ibpworkbench")
 #'
-#' # login using your BMS account (interactive mode)
-#' # you can pass BMS username and password as parameters (batch mode)
+#' # login using your account (interactive mode)
+#' # you can pass your username and password as parameters (batch mode)
 #' login_bms()
 #'
-#' set_crop("maize")
+#' set_crop("wheat")
 #'
 #' # select a breeding program by name
-#' set_program("MC Maize")
+#' set_program("Wheat International Nurseries")
 #'
 #' # select a specific study/trial by name
-#' set_trial("2018 PVT")
+#' set_trial("IDYT39")
 #'
 #' # select a specific environment/location dataset
-#' set_study("2018 PVT Environment Number 1")
+#' set_study("IDYT39 Environment Number 9")
 #'
 #' # retrieve the general information of the selected environment/location
 #' info <- get_study_info()
@@ -1184,23 +1184,23 @@ get_study_info <- function() {
 #'          \code{\link{set_trial}}, \code{\link{set_study}}
 #' @examples
 #' if(interactive()) {
-#' # config your BMS connection
-#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+#' # config your server connection
+#' set_qbms_config("https://bms.icarda.org/ibpworkbench")
 #'
-#' # login using your BMS account (interactive mode)
-#' # you can pass BMS username and password as parameters (batch mode)
+#' # login using your account (interactive mode)
+#' # you can pass your username and password as parameters (batch mode)
 #' login_bms()
 #'
-#' set_crop("maize")
+#' set_crop("wheat")
 #'
 #' # select a breeding program by name
-#' set_program("MC Maize")
+#' set_program("Wheat International Nurseries")
 #'
 #' # select a specific study/trial by name
-#' set_trial("2018 PVT")
+#' set_trial("IDYT39")
 #'
 #' # select a specific environment/location dataset
-#' set_study("2018 PVT Environment Number 1")
+#' set_study("IDYT39 Environment Number 9")
 #'
 #' # retrieve the data of the selected environment/location
 #' data <- get_study_data()
@@ -1264,23 +1264,23 @@ get_study_data <- function() {
 #'          \code{\link{set_trial}}, \code{\link{set_study}}
 #' @examples
 #' if(interactive()) {
-#' # config your BMS connection
-#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+#' # config your server connection
+#' set_qbms_config("https://bms.icarda.org/ibpworkbench")
 #'
-#' # login using your BMS account (interactive mode)
-#' # you can pass BMS username and password as parameters (batch mode)
+#' # login using your account (interactive mode)
+#' # you can pass your username and password as parameters (batch mode)
 #' login_bms()
 #'
-#' set_crop("maize")
+#' set_crop("wheat")
 #'
 #' # select a breeding program by name
-#' set_program("MC Maize")
+#' set_program("Wheat International Nurseries")
 #'
 #' # select a specific study/trial by name
-#' set_trial("2018 PVT")
+#' set_trial("IDYT39")
 #'
 #' # select a specific environment/location dataset
-#' set_study("2018 PVT Environment Number 1")
+#' set_study("IDYT39 Environment Number 9")
 #'
 #' # retrieve the germplasm list of the selected environment/location
 #' germplasm <- get_germplasm_list()
@@ -1355,23 +1355,20 @@ get_germplasm_list <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
 #' @examples
 #' if(interactive()) {
-#' # config your BMS connection
-#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+#' # config your server connection
+#' set_qbms_config("https://bms.icarda.org/ibpworkbench")
 #'
-#' # login using your BMS account (interactive mode)
-#' # you can pass BMS username and password as parameters (batch mode)
+#' # login using your account (interactive mode)
+#' # you can pass your username and password as parameters (batch mode)
 #' login_bms()
 #'
-#' set_crop("maize")
+#' set_crop("wheat")
 #'
 #' # select a breeding program by name
-#' set_program("MC Maize")
+#' set_program("Wheat International Nurseries")
 #'
 #' # select a specific study/trial by name
-#' set_trial("2018 PVT")
-#'
-#' # select a specific environment/location dataset
-#' set_study("2018 PVT Environment Number 1")
+#' set_trial("IDYT39")
 #'
 #' # retrive multi-environment trial data
 #' MET <- get_trial_data()
@@ -1407,20 +1404,20 @@ get_trial_data <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
 #' @examples
 #' if(interactive()) {
-#' # config your BMS connection
-#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+#' # config your server connection
+#' set_qbms_config("https://bms.icarda.org/ibpworkbench")
 #'
-#' # login using your BMS account (interactive mode)
-#' # you can pass BMS username and password as parameters (batch mode)
+#' # login using your account (interactive mode)
+#' # you can pass your username and password as parameters (batch mode)
 #' login_bms()
 #'
-#' set_crop("maize")
+#' set_crop("wheat")
 #'
 #' # select a breeding program by name
-#' set_program("MC Maize")
+#' set_program("Wheat International Nurseries")
 #'
 #' # select a specific study/trial by name
-#' set_trial("2018 PVT")
+#' set_trial("IDYT39")
 #'
 #' # get observation variable ontology
 #' ontology <- get_trial_obs_ontology()
@@ -1494,17 +1491,17 @@ list_locations <- function() {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}
 #' @examples
 #' if(interactive()) {
-#' # config your BMS connection
-#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+#' # config your server connection
+#' set_qbms_config("https://bms.icarda.org/ibpworkbench")
 #'
-#' # login using your BMS account (interactive mode)
-#' # you can pass BMS username and password as parameters (batch mode)
+#' # login using your account (interactive mode)
+#' # you can pass your username and password as parameters (batch mode)
 #' login_bms()
 #'
-#' set_crop("maize")
+#' set_crop("wheat")
 #'
 #' # select a breeding program by name
-#' set_program("MC Maize")
+#' set_program("Wheat International Nurseries")
 #'
 #' # retrive all environments/locations information in the selected program studies/trials
 #' program_studies <- get_program_studies()
@@ -1632,20 +1629,20 @@ get_germplasm_id <- function(germplasm_name = "") {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{get_germplasm_attributes}}
 #' @examples
 #' if(interactive()) {
-#' # config your BMS connection
-#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+#' # config your server connection
+#' set_qbms_config("https://bms.icarda.org/ibpworkbench")
 #'
-#' # login using your BMS account (interactive mode)
-#' # you can pass BMS username and password as parameters (batch mode)
+#' # login using your account (interactive mode)
+#' # you can pass your username and password as parameters (batch mode)
 #' login_bms()
 #'
-#' set_crop("maize")
+#' set_crop("wheat")
 #'
 #' # select a breeding program by name
-#' set_program("MC Maize")
+#' set_program("Wheat International Nurseries")
 #'
 #' # retrive observations data of a given germplasm aggregated from all trials
-#' germplasm_observations <- get_germplasm_data("BASFCORN-2-1")
+#' germplasm_observations <- get_germplasm_data("Jabal")
 #' }
 #' @export
 
@@ -1723,20 +1720,20 @@ get_germplasm_data <- function(germplasm_name = "") {
 #' @seealso \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{get_germplasm_data}}
 #' @examples
 #' if(interactive()) {
-#' # config your BMS connection
-#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+#' # config your server connection
+#' set_qbms_config("https://bms.icarda.org/ibpworkbench")
 #'
-#' # login using your BMS account (interactive mode)
-#' # you can pass BMS username and password as parameters (batch mode)
+#' # login using your account (interactive mode)
+#' # you can pass your username and password as parameters (batch mode)
 #' login_bms()
 #'
-#' set_crop("maize")
+#' set_crop("wheat")
 #'
 #' # select a breeding program by name
-#' set_program("MC Maize")
+#' set_program("Wheat International Nurseries")
 #'
 #' # retrive attributes data of a given germplasm in a crop
-#' germplasm_attributes <- get_germplasm_attributes("BASFCORN-2-1")
+#' germplasm_attributes <- get_germplasm_attributes("Jabal")
 #' }
 #' @export
 
