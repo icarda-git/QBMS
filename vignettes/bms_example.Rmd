@@ -96,6 +96,6 @@ program_studies <- get_program_studies()
 germplasm_observations <- get_germplasm_data("Jabal")
 
 # retrieve germplasm attributes for a given germplasm in a crop
-germplasm_attributes <- get_germplasm_attributes("BASFCORN-2-1")
+germplasm_attributes <- get_germplasm_attributes("Jabal")
 
 ```
