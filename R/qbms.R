@@ -4,6 +4,7 @@ brapi_map <- data.frame(func_name  = character(),
                         brapi_call = character())
 
 brapi_map <- rbind(brapi_map, c("list_crops", "v1", "crops"))
+brapi_map <- rbind(brapi_map, c("list_crops", "v2", "commoncropnames"))
 
 brapi_map <- rbind(brapi_map, c("list_programs", "v1", "programs"))
 brapi_map <- rbind(brapi_map, c("list_programs", "v2", "programs"))
@@ -326,7 +327,7 @@ set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth
   qbms_globals$config <- list(crop = NULL)
   qbms_globals$state  <- list(token = NULL)
   
-  qbms_globals$config$server    <- regmatches(url, regexpr("^(?://|[^/]+)*", url))
+  qbms_globals$config$server    <- url
   qbms_globals$config$path      <- path
   qbms_globals$config$page_size <- page_size
   qbms_globals$config$time_out  <- time_out
@@ -714,7 +715,8 @@ list_crops <- function() {
   if (!is.null(qbms_globals$state$crops)) {
     bms_crops <- qbms_globals$state$crops
   } else {
-    call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v1/crops")
+    call_url  <- paste0(qbms_globals$config$base_url, "/brapi/", qbms_globals$config$brapi_ver, "/", 
+                        brapi_map[brapi_map$func_name == "list_crops" & brapi_map$brapi_ver == qbms_globals$config$brapi_ver, "brapi_call"])
     bms_crops <- brapi_get_call(call_url)$data
 
     qbms_globals$state$crops <- bms_crops
