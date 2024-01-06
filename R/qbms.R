@@ -323,8 +323,10 @@ set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth
     if (engine == "ebs") { path = "" }
   }
   
-  qbms_globals$config <- list(crop = NULL)
+  qbms_globals$config <- list(crop = "")
   qbms_globals$state  <- list(token = NULL)
+  
+  if (engine == "bms") { qbms_globals$config$crop <- NULL }
   
   qbms_globals$config$server    <- regmatches(url, regexpr("^(?://|[^/]+)*", url))
   qbms_globals$config$path      <- path
@@ -334,10 +336,6 @@ set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth
   qbms_globals$config$engine    <- engine
   qbms_globals$config$brapi_ver <- brapi_ver
   qbms_globals$config$verbose   <- verbose
-  
-  if (engine == "ebs") {
-    qbms_globals$config$crop <- ""
-  }
   
   if (no_auth == TRUE) {
     qbms_globals$state$token <- NA
@@ -754,11 +752,7 @@ set_crop <- function(crop_name) {
     stop("Your crop name is not supported in this connected BMS server! You may use the `list_crops()` function to check the available crops")
   }
 
-  if (qbms_globals$config$engine == "breedbase") {
-    qbms_globals$config$crop <- ""
-  } else {
-    qbms_globals$config$crop <- crop_name
-  }
+  qbms_globals$config$crop <- crop_name
   
   qbms_globals$state$programs  <- NULL
   qbms_globals$state$locations <- NULL
