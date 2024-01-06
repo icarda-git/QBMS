@@ -40,9 +40,6 @@ set_qbms_config("https://cassavabase.org/brapi/v1/calls/",
 # list supported crops in the current BreedBase server
 list_crops()
 
-# select a crop by name
-set_crop("Cassava")
-
 # list all breeding programs in the selected crop
 list_programs()
 
