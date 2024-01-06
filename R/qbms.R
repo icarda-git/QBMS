@@ -1738,6 +1738,8 @@ get_germplasm_attributes <- function(germplasm_name = "") {
   
   germplasm_db_id <- get_germplasm_id(germplasm_name)
   
+  if (length(germplasm_db_id) > 1) { germplasm_db_id <- germplasm_db_id[1] }
+  
   crop_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop)
   call_url <- paste0(crop_url, "/brapi/v1/germplasm/", germplasm_db_id, "/attributes")
   
