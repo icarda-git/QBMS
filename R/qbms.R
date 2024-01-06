@@ -1297,7 +1297,7 @@ get_germplasm_list <- function() {
   
   call_url <- sub("\\{studyDbId\\}", qbms_globals$state$study_db_id, call_url)
 
-  germplasm_list <- brapi_get_call(call_url)$data
+  germplasm_list <- brapi_get_call(call_url, nested = FALSE)$data
 
   if (qbms_globals$config$engine == "ebs") {
     germplasm_list$check <- 0
