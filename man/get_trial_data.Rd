@@ -16,23 +16,20 @@ object using `set_trial()` function.
 }
 \examples{
 if(interactive()) {
-# config your BMS connection
-set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+# config your server connection
+set_qbms_config("https://bms.icarda.org/ibpworkbench")
 
-# login using your BMS account (interactive mode)
-# you can pass BMS username and password as parameters (batch mode)
+# login using your account (interactive mode)
+# you can pass your username and password as parameters (batch mode)
 login_bms()
 
-set_crop("maize")
+set_crop("wheat")
 
 # select a breeding program by name
-set_program("MC Maize")
+set_program("Wheat International Nurseries")
 
 # select a specific study/trial by name
-set_trial("2018 PVT")
-
-# select a specific environment/location dataset
-set_study("2018 PVT Environment Number 1")
+set_trial("IDYT39")
 
 # retrive multi-environment trial data
 MET <- get_trial_data()

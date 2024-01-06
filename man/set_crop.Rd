@@ -18,14 +18,14 @@ configuration object (including the brapi connection object).
 }
 \examples{
 if(interactive()) {
-# config your BMS connection
-set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+# config your server connection
+set_qbms_config("https://bms.icarda.org/ibpworkbench")
 
-# login using your BMS account (interactive mode)
-# you can pass BMS username and password as parameters (batch mode)
+# login using your account (interactive mode)
+# you can pass your username and password as parameters (batch mode)
 login_bms()
 
-set_crop("maize")
+set_crop("wheat")
 }
 }
 \seealso{
