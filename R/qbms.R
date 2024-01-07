@@ -36,6 +36,7 @@ brapi_map <- rbind(brapi_map, c("get_germplasm_id", "v2", "germplasm?germplasmNa
 brapi_map <- rbind(brapi_map, c("get_germplasm_data", "v1", "phenotypes-search"))
 
 brapi_map <- rbind(brapi_map, c("get_germplasm_attributes", "v1", "germplasm/{germplasmDbId}/attributes"))
+brapi_map <- rbind(brapi_map, c("get_germplasm_attributes", "v2", "attributes?germplasmDbId={germplasmDbId}"))
 
 ############################### GIGWA calls ####################################
 
@@ -1732,16 +1733,16 @@ get_germplasm_data <- function(germplasm_name = "") {
 #' @export
 
 get_germplasm_attributes <- function(germplasm_name = "") {
-  if (qbms_globals$config$engine != "bms") {
-    stop("This function is not supported yet in this database!")
-  }
-  
   germplasm_db_id <- get_germplasm_id(germplasm_name)
   
   if (length(germplasm_db_id) > 1) { germplasm_db_id <- germplasm_db_id[1] }
   
-  crop_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop)
-  call_url <- paste0(crop_url, "/brapi/v1/germplasm/", germplasm_db_id, "/attributes")
+  call_url <- paste0(qbms_globals$config$base_url, 
+                     ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop)), 
+                     "/brapi/", qbms_globals$config$brapi_ver, "/", 
+                     brapi_map[brapi_map$func_name == "get_germplasm_attributes" & brapi_map$brapi_ver == qbms_globals$config$brapi_ver, "brapi_call"])
+  
+  call_url <- sub("\\{germplasmDbId\\}", germplasm_db_id, call_url)
   
   results <- brapi_get_call(call_url)$data
 
