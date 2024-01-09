@@ -18,20 +18,20 @@ in the current crop database regardless of the programs/trials nested structure.
 }
 \examples{
 if(interactive()) {
-# config your BMS connection
-set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+# config your server connection
+set_qbms_config("https://bms.icarda.org/ibpworkbench")
 
-# login using your BMS account (interactive mode)
-# you can pass BMS username and password as parameters (batch mode)
+# login using your account (interactive mode)
+# you can pass your username and password as parameters (batch mode)
 login_bms()
 
-set_crop("maize")
+set_crop("wheat")
 
 # select a breeding program by name
-set_program("MC Maize")
+set_program("Wheat International Nurseries")
 
 # retrive observations data of a given germplasm aggregated from all trials
-germplasm_observations <- get_germplasm_data("BASFCORN-2-1")
+germplasm_observations <- get_germplasm_data("Jabal")
 }
 }
 \seealso{

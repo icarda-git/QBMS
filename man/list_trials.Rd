@@ -19,23 +19,23 @@ function.
 }
 \examples{
 if(interactive()) {
-# config your BMS connection
-set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+# config your server connection
+set_qbms_config("https://bms.icarda.org/ibpworkbench")
 
-# login using your BMS account (interactive mode)
-# you can pass BMS username and password as parameters (batch mode)
+# login using your account (interactive mode)
+# you can pass your username and password as parameters (batch mode)
 login_bms()
 
-set_crop("maize")
+set_crop("wheat")
 
 # select a breeding program by name
-set_program("MC Maize")
+set_program("Wheat International Nurseries")
 
 # list all studies/trials in the selected program
 list_trials()
 
 # filter listed studies/trials by year
-list_trials(2020)
+list_trials(2022)
 }
 }
 \seealso{

@@ -5,15 +5,15 @@
 \alias{brapi_map}
 \title{/brapi/{brapi_ver}/{brapi_call}}
 \format{
-An object of class \code{data.frame} with 25 rows and 3 columns.
+An object of class \code{data.frame} with 26 rows and 3 columns.
 
-An object of class \code{data.frame} with 25 rows and 3 columns.
+An object of class \code{data.frame} with 26 rows and 3 columns.
 
-An object of class \code{data.frame} with 25 rows and 3 columns.
+An object of class \code{data.frame} with 26 rows and 3 columns.
 
-An object of class \code{data.frame} with 25 rows and 3 columns.
+An object of class \code{data.frame} with 26 rows and 3 columns.
 
-An object of class \code{data.frame} with 25 rows and 3 columns.
+An object of class \code{data.frame} with 26 rows and 3 columns.
 }
 \usage{
 brapi_map

@@ -37,6 +37,7 @@ brapi_map <- rbind(brapi_map, c("get_germplasm_id", "v2", "germplasm?germplasmNa
 brapi_map <- rbind(brapi_map, c("get_germplasm_data", "v1", "phenotypes-search"))
 
 brapi_map <- rbind(brapi_map, c("get_germplasm_attributes", "v1", "germplasm/{germplasmDbId}/attributes"))
+brapi_map <- rbind(brapi_map, c("get_germplasm_attributes", "v2", "attributes?germplasmDbId={germplasmDbId}"))
 
 ############################### GIGWA calls ####################################
 
@@ -324,8 +325,10 @@ set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth
     if (engine == "ebs") { path = "" }
   }
   
-  qbms_globals$config <- list(crop = NULL)
+  qbms_globals$config <- list(crop = "")
   qbms_globals$state  <- list(token = NULL)
+  
+  if (engine == "bms") { qbms_globals$config$crop <- NULL }
   
   qbms_globals$config$server    <- url
   qbms_globals$config$path      <- path
@@ -335,10 +338,6 @@ set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth
   qbms_globals$config$engine    <- engine
   qbms_globals$config$brapi_ver <- brapi_ver
   qbms_globals$config$verbose   <- verbose
-  
-  if (engine == "ebs") {
-    qbms_globals$config$crop <- ""
-  }
   
   if (no_auth == TRUE) {
     qbms_globals$state$token <- NA
@@ -756,11 +755,7 @@ set_crop <- function(crop_name) {
     stop("Your crop name is not supported in this connected BMS server! You may use the `list_crops()` function to check the available crops")
   }
 
-  if (qbms_globals$config$engine == "breedbase") {
-    qbms_globals$config$crop <- ""
-  } else {
-    qbms_globals$config$crop <- crop_name
-  }
+  qbms_globals$config$crop <- crop_name
   
   qbms_globals$state$programs  <- NULL
   qbms_globals$state$locations <- NULL
@@ -1305,7 +1300,7 @@ get_germplasm_list <- function() {
   
   call_url <- sub("\\{studyDbId\\}", qbms_globals$state$study_db_id, call_url)
 
-  germplasm_list <- brapi_get_call(call_url)$data
+  germplasm_list <- brapi_get_call(call_url, nested = FALSE)$data
 
   if (qbms_globals$config$engine == "ebs") {
     germplasm_list$check <- 0
@@ -1740,14 +1735,16 @@ get_germplasm_data <- function(germplasm_name = "") {
 #' @export
 
 get_germplasm_attributes <- function(germplasm_name = "") {
-  if (qbms_globals$config$engine != "bms") {
-    stop("This function is not supported yet in this database!")
-  }
-  
   germplasm_db_id <- get_germplasm_id(germplasm_name)
   
-  crop_url <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop)
-  call_url <- paste0(crop_url, "/brapi/v1/germplasm/", germplasm_db_id, "/attributes")
+  if (length(germplasm_db_id) > 1) { germplasm_db_id <- germplasm_db_id[1] }
+  
+  call_url <- paste0(qbms_globals$config$base_url, 
+                     ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop)), 
+                     "/brapi/", qbms_globals$config$brapi_ver, "/", 
+                     brapi_map[brapi_map$func_name == "get_germplasm_attributes" & brapi_map$brapi_ver == qbms_globals$config$brapi_ver, "brapi_call"])
+  
+  call_url <- sub("\\{germplasmDbId\\}", germplasm_db_id, call_url)
   
   results <- brapi_get_call(call_url)$data
 

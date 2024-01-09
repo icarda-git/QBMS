@@ -32,7 +32,7 @@ object in the con key) and qbms_state list (token value in the token key).
 \examples{
 if(interactive()) {
 # config your BMS connection
-set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+set_qbms_config("https://bms.icarda.org/ibpworkbench")
 
 # login using your BMS account (interactive mode)
 # you can pass BMS username and password as parameters (batch mode)
