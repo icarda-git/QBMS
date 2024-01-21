@@ -3,6 +3,8 @@ brapi_map <- data.frame(func_name  = character(),
                         brapi_ver  = character(),
                         brapi_call = character())
 
+#' need to be deprecated in favor of list_dbs() and set_db() functions
+#' https://github.com/plantbreeding/BrAPI/issues/495
 brapi_map <- rbind(brapi_map, c("list_crops", "v1", "crops"))
 
 brapi_map <- rbind(brapi_map, c("list_programs", "v1", "programs"))
@@ -1596,7 +1598,7 @@ get_germplasm_id <- function(germplasm_name = "") {
   call_url <- sub("\\{germplasmName\\}", germplasm_name, call_url)
 
   # this BrAPI call return all germplasm records start with the given name NOT exactly match!
-  results <- brapi_get_call(call_url)$data
+  results <- brapi_get_call(call_url, FALSE)$data
   
   if (length(results) == 0) {
     stop("No germplasm in this crop database start with your filtering name!")
