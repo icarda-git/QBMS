@@ -75,3 +75,11 @@ ini_terraclimate('2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'))
 data <- get_terraclimate(y, x, '2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'), offline = TRUE)
 
 ```
+
+_If you encounter a timeout error during the execution of the `ini-terraclimate()` function, you can extend the timeout duration of your environment with the following command (e.g., to 5 minutes, which is 300 seconds, instead of the default 60 seconds):_
+
+```r
+options(timeout = max(300, getOption("timeout")))
+```
+
+_The default timeout of 60 seconds is often not sufficient for downloading large files (over 50 MB). Additionally, expecting download times of less than 1MB per second is unrealistic._
