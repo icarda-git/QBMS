@@ -46,7 +46,7 @@ install.packages("QBMS")
 To get a bug fix or to use a feature from the development version, you can install the development version of QBMS from GitHub.
 
 ```r
-install.packages("remotes")
+if (!require("remotes")) install.packages("remotes")
 remotes::install_github("icarda-git/QBMS")
 ```
 

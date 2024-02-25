@@ -24,7 +24,7 @@ Abatzoglou, J., Dobrowski, S., Parks, S. et al. TerraClimate, a high-resolution 
 
 ## _Install_
 ```r
-install.packages("remotes")
+if (!require("remotes")) install.packages("remotes")
 remotes::install_github("icarda-git/QBMS")
 ```
 

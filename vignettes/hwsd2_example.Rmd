@@ -19,7 +19,7 @@ The Harmonized World Soil Database version 2.0 ([HWSD v2.0](https://gaez.fao.org
 
 ## _Install_
 ```r
-install.packages("remotes")
+if (!require("remotes")) install.packages("remotes")
 remotes::install_github("icarda-git/QBMS")
 ```
 
