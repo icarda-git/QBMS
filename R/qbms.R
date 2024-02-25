@@ -1116,7 +1116,7 @@ set_study <- function(study_name) {
   valid_studies <- list_studies()
 
   if (!study_name %in% valid_studies$studyName) {
-    stop("Your location name is not exists in this trial! You may use the `list_studies()` function to check the available study location names")
+    stop("Your study name is not exists in this trial! You may use the `list_studies()` function to check the available study names")
   }
 
   study_db_id <- qbms_globals$state$studies[qbms_globals$state$studies$studyName == study_name, "studyDbId"]
