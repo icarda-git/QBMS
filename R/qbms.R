@@ -1054,6 +1054,10 @@ list_studies <- function() {
     
     bms_trial_studies <- brapi_get_call(call_url, FALSE)$data
     
+    if (nrow(bms_trial_studies) == 0) {
+      stop("No studies in the selected trial! Please check what you have set in the `set_trial()` function")
+    }
+    
     studies <- bms_trial_studies[, c("studyName", "locationName", "studyDbId")]
 
     qbms_globals$state$studies <- studies
