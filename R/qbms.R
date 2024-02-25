@@ -1052,7 +1052,18 @@ list_studies <- function() {
     
     call_url <- sub("\\{trialDbId\\}", qbms_globals$state$trial_db_id, call_url)
     
+    # handle the case of BreedBase trials (studies) listed in the root program folder (trial)
+    if (qbms_globals$config$engine == "breedbase" && qbms_globals$state$trial_db_id == qbms_globals$state$program_db_id) {
+      call_url <- sub("\\?trialDbId\\=", '?programDbId=', call_url)
+    }
+
     bms_trial_studies <- brapi_get_call(call_url, FALSE)$data
+    
+    # handle the case of BreedBase trials (studies) listed in the root program folder (trial)
+    if (qbms_globals$config$engine == "breedbase" && qbms_globals$state$trial_db_id == qbms_globals$state$program_db_id) {
+      bms_trial_studies <- bms_trial_studies[is.na(bms_trial_studies$trialName), ]
+      rownames(bms_trial_studies) <- NULL
+    }
     
     if (nrow(bms_trial_studies) == 0) {
       stop("No studies in the selected trial! Please check what you have set in the `set_trial()` function")
