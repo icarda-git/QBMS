@@ -32,8 +32,7 @@ remotes::install_github("icarda-git/QBMS")
 library(QBMS)
 
 # Cassava BreedBase server
-set_qbms_config("https://cassavabase.org/brapi/v1/calls/", 
-                time_out = 300, no_auth = TRUE, engine = "breedbase")
+set_qbms_config("https://cassavabase.org/", no_auth = TRUE, engine = "breedbase")
 
 # login_breedbase("username", "password")
 
@@ -46,32 +45,45 @@ list_programs()
 # select a breeding program by name
 set_program("IITA")
 
-# list all studies/trials in the selected program
+# list all folders in the selected program
 list_trials()
 
-# select a specific study/trial by name
+# select a specific folder by name, choose the last/final folder that contains 
+# your experiments in any nested folder structure
 set_trial("20_Abuja")
 
-# list all environments/locations information in the selected study/trial
+# list all studies/experiments in the selected folder
 list_studies()
 
-# select a specific environment/location by name
+# select a specific study/experiment by name
 set_study("20NCRP12yrtAB")
 
-# another option, select a specific study by location name (first match)
+# another option, select a specific study/experiment by location name (first match)
 # studies <- list_studies()
 # set_study(studies[studies$locationName == "Abuja", "studyName"][1])
 
 # retrieve general information, data, and germplasm list 
-# of the selected environment/location
+# of the selected study/experiment
 info <- get_study_info()
 data <- get_study_data()
+
+# not effecient call at the BreedBase backend BrAPI endpoint
 germplasm <- get_germplasm_list()
 
-# get observation variable ontology in the selected study/trial
+# get observation variable ontology in the selected study/experiment
 ontology <- get_trial_obs_ontology()
 
-# retrieve multi-environment trial data of the selected study/trial
+# replace long trait names with short ones from the ontology 
+fields <- colnames(data) 
+
+for (i in 1:length(fields)) {
+  j <- which(ontology$name %in% fields[i])
+  if (length(j) > 0) fields[i] <- ontology$synonyms[[j]][1]
+}
+
+colnames(data) <- fields
+
+# retrieve all studies/experiments data in the selected folder
 MET <- get_trial_data()
 
 ```
