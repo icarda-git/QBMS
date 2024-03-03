@@ -302,7 +302,7 @@ set_qbms_connection <- function(env) {
 #' Set the connection configuration of the BMS server
 #'
 #' @param url       URL of the BMS login page (default is "http://localhost/ibpworkbench/")
-#' @param path      BMS API path (default is NULL)
+#' @param path      API path (default is NULL)
 #' @param page_size Page size (default is 1000)
 #' @param time_out  Number of seconds to wait for a response until giving up (default is 10)
 #' @param no_auth   TRUE if the server doesn't require authentication/login (default is FALSE)
