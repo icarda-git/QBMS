@@ -166,10 +166,13 @@ remotes::install_github("icarda-git/QBMS", upgrade = "always")
 Sys.setlocale("LC_ALL", "English_United States.utf8")
 ```
 
-4. If you get the following error message, then make sure to [install the suggested `async` package](#boosting-big-queries-performance) to fix it.
+4. If you get the following error message: `'synchronise' is not an exported object from 'namespace:async'`, then double-check that you have installed the correct `async` package we [recommended](#boosting-big-queries-performance). Users may encounter this error because they installed a [different `async` package](https://cran.r-project.org/package=async) from the **CRAN** repository! Please uninstall it before installing the required R package from Github (for more details, please refer to this [GitHub issue](https://github.com/icarda-git/QBMS/issues/15)):
 
 ```r
-Error: 'synchronise' is not an exported object from 'namespace:async'
+remove.packages("async")
+if("package:async" %in% search()) detach("package:async", unload = TRUE)
+
+remotes::install_github("r-lib/async")
 ```
 
 5. If the `get_terraclimate()` function takes a long time to run and the progress bar stays at 0%, it might be due to using an outdated version of the R language. Make sure you're using the latest version. For more details, please refer to this [GitHub issue](https://github.com/mjwoods/RNetCDF/issues/140).
