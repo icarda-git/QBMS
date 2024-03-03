@@ -172,6 +172,8 @@ Sys.setlocale("LC_ALL", "English_United States.utf8")
 Error: 'synchronise' is not an exported object from 'namespace:async'
 ```
 
+5. If the `get_terraclimate()` function takes a long time to run and the progress bar stays at 0%, it might be due to using an outdated version of the R language. Make sure you're using the latest version. For more details, please refer to this [GitHub issue](https://github.com/mjwoods/RNetCDF/issues/140).
+
 ## References
 * Peter Selby et al., BrAPI-an application programming interface for plant breeding applications, _Bioinformatics_, Volume 35, Issue 20, 15 October 2019, Pages 4147–4155, [https://doi.org/10.1093/bioinformatics/btz190](https://doi.org/10.1093/bioinformatics/btz190)
 

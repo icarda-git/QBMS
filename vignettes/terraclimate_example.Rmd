@@ -66,15 +66,6 @@ worldclim_norm  <- apply(worldclim_range$biovars[[2]][,1:19], 2, function(x) rou
 
 ```
 
-___Notification!___
-
-_We identified an [issue](https://github.com/mjwoods/RNetCDF/issues/140) in the RNetCDF package affecting OpenDAP support for Windows users starting from version 2.7-1 ([released on October 2, 2023](https://cran.r-project.org/web/packages/RNetCDF/NEWS)). This problem prevents QBMS users from executing the get_terraclimate() function without downloading the entire raster files. Until RNetCDF addresses this issue, you can overcome this temporary limitation by either:_
-
-* _Utilizing the offline mode (as described below), or installing and utilizing version 2.6-2 of the RNetCDF package using this [Posit Package Manager](https://packagemanager.posit.co/client/#/repos/cran/setup?distribution=windows&snapshot=2023-09-01) instructions (recommended)._
-
-* _Downloading and compiling version 2.6-2 from their [CRAN archive](https://cran.r-project.org/src/contrib/Archive/RNetCDF/)._
-
-
 ## _Offline Mode (Download TerraClimate netCDF data files)_
 ```r
 # ?ini_terraclimate
