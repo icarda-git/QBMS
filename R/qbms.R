@@ -332,7 +332,7 @@ set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth
   
   if (engine == "bms") { qbms_globals$config$crop <- NULL }
   
-  qbms_globals$config$server    <- url
+  qbms_globals$config$server    <- regmatches(url, regexpr("^(?://|[^/]+)*", url))
   qbms_globals$config$path      <- path
   qbms_globals$config$page_size <- page_size
   qbms_globals$config$time_out  <- time_out
