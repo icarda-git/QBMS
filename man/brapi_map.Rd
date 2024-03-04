@@ -5,17 +5,21 @@
 \alias{brapi_map}
 \title{/brapi/{brapi_ver}/{brapi_call}}
 \format{
-An object of class \code{data.frame} with 26 rows and 3 columns.
+An object of class \code{data.frame} with 28 rows and 3 columns.
 
-An object of class \code{data.frame} with 26 rows and 3 columns.
+An object of class \code{data.frame} with 28 rows and 3 columns.
 
-An object of class \code{data.frame} with 26 rows and 3 columns.
+An object of class \code{data.frame} with 28 rows and 3 columns.
 
-An object of class \code{data.frame} with 26 rows and 3 columns.
+An object of class \code{data.frame} with 28 rows and 3 columns.
 
-An object of class \code{data.frame} with 26 rows and 3 columns.
+An object of class \code{data.frame} with 28 rows and 3 columns.
+
+An object of class \code{data.frame} with 28 rows and 3 columns.
 }
 \usage{
+brapi_map
+
 brapi_map
 
 brapi_map
@@ -28,6 +32,9 @@ brapi_map
 }
 \description{
 /brapi/{brapi_ver}/{brapi_call}
+
+need to be deprecated in favor of list_dbs() and set_db() functions
+https://github.com/plantbreeding/BrAPI/issues/495
 
 POST: germplasmDbIds, observationLevel = "PLOT"
 

@@ -18,7 +18,7 @@ set_qbms_config(
 \arguments{
 \item{url}{URL of the BMS login page (default is "http://localhost/ibpworkbench/")}
 
-\item{path}{BMS API path (default is NULL)}
+\item{path}{API path (default is NULL)}
 
 \item{page_size}{Page size (default is 1000)}
 
