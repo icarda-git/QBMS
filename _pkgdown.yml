@@ -7,3 +7,4 @@ template:
     line-height-base:	1.75
     line-height-sm:	1.5
     line-height-lg: 2.25
+    headings-font-weight: 600

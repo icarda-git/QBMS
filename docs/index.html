@@ -38,70 +38,6 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
-<script>
-	var TxtType = function(el, toRotate, period) {
-		this.toRotate = toRotate;
-		this.el = el;
-		this.loopNum = 0;
-		this.period = parseInt(period, 10) || 2000;
-		this.txt = '';
-		this.tick();
-		this.isDeleting = false;
-	};
-
-	TxtType.prototype.tick = function() {
-		var i = this.loopNum % this.toRotate.length;
-		var fullTxt = this.toRotate[i];
-
-		if (this.isDeleting) {
-		this.txt = fullTxt.substring(0, this.txt.length - 1);
-		} else {
-		this.txt = fullTxt.substring(0, this.txt.length + 1);
-		}
-
-		this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
-
-		var that = this;
-		var delta = 200 - Math.random() * 100;
-
-		if (this.isDeleting) { delta /= 2; }
-
-		if (!this.isDeleting && this.txt === fullTxt) {
-		delta = this.period;
-		this.isDeleting = true;
-		} else if (this.isDeleting && this.txt === '') {
-		this.isDeleting = false;
-		this.loopNum++;
-		delta = 500;
-		}
-
-		setTimeout(function() {
-		that.tick();
-		}, delta);
-	};
-
-	window.onload = function() {
-		var elements = document.getElementsByClassName('typewrite');
-		for (var i=0; i<elements.length; i++) {
-			var toRotate = elements[i].getAttribute('data-type');
-			var period = elements[i].getAttribute('data-period');
-			if (toRotate) {
-			  new TxtType(elements[i], JSON.parse(toRotate), period);
-			}
-		}
-		// INJECT CSS
-		var css = document.createElement("style");
-		css.type = "text/css";
-		css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #000}";
-		document.body.appendChild(css);
-	};
-</script>
-
-<link href="https://owlcarousel2.github.io/OwlCarousel2/assets/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-<link href="https://owlcarousel2.github.io/OwlCarousel2/assets/owlcarousel/assets/owl.theme.default.min.css" rel="stylesheet">
-<script src="https://owlcarousel2.github.io/OwlCarousel2/assets/vendors/jquery.min.js"></script>
-<script src="https://owlcarousel2.github.io/OwlCarousel2/assets/owlcarousel/owl.carousel.js"></script>
-
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -168,12 +104,80 @@
 </h2>
 <p>This R package assists breeders in linking data systems with their analytic pipelines, a crucial step in digitizing breeding processes. It supports querying and retrieving phenotypic and genotypic data from systems like <a href="https://ebs.excellenceinbreeding.org/" class="external-link">EBS</a>, <a href="https://bmspro.io/" class="external-link">BMS</a>, <a href="https://breedbase.org" class="external-link">BreedBase</a>, and <a href="https://github.com/SouthGreenPlatform/Gigwa2" class="external-link">GIGWA</a> (using <a href="https://brapi.org/" class="external-link">BrAPI</a> calls). Extra helper functions support environmental data sources, including <a href="https://www.climatologylab.org/terraclimate.html" class="external-link">TerraClimate</a> and FAO <a href="https://gaez.fao.org/pages/hwsd" class="external-link">HWSDv2</a> soil database.</p>
 
+<!---------------------------------------------------------------------------->
+<script>
+	var TxtType = function(el, toRotate, period) {
+		this.toRotate = toRotate;
+		this.el = el;
+		this.loopNum = 0;
+		this.period = parseInt(period, 10) || 2000;
+		this.txt = '';
+		this.tick();
+		this.isDeleting = false;
+	};
+
+	TxtType.prototype.tick = function() {
+		var i = this.loopNum % this.toRotate.length;
+		var fullTxt = this.toRotate[i];
+
+		if (this.isDeleting) {
+		this.txt = fullTxt.substring(0, this.txt.length - 1);
+		} else {
+		this.txt = fullTxt.substring(0, this.txt.length + 1);
+		}
+
+		this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
+
+		var that = this;
+		var delta = 200 - Math.random() * 100;
+
+		if (this.isDeleting) { delta /= 2; }
+
+		if (!this.isDeleting && this.txt === fullTxt) {
+		delta = this.period;
+		this.isDeleting = true;
+		} else if (this.isDeleting && this.txt === '') {
+		this.isDeleting = false;
+		this.loopNum++;
+		delta = 500;
+		}
+
+		setTimeout(function() {
+		that.tick();
+		}, delta);
+	};
+
+	window.onload = function() {
+		var elements = document.getElementsByClassName('typewrite');
+		for (var i=0; i<elements.length; i++) {
+			var toRotate = elements[i].getAttribute('data-type');
+			var period = elements[i].getAttribute('data-period');
+			if (toRotate) {
+			  new TxtType(elements[i], JSON.parse(toRotate), period);
+			}
+		}
+		// INJECT CSS
+		var css = document.createElement("style");
+		css.type = "text/css";
+		css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #000}";
+		document.body.appendChild(css);
+	};
+</script>
+
+<link href="https://owlcarousel2.github.io/OwlCarousel2/assets/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+<link href="https://owlcarousel2.github.io/OwlCarousel2/assets/owlcarousel/assets/owl.theme.default.min.css" rel="stylesheet">
+<script src="https://owlcarousel2.github.io/OwlCarousel2/assets/vendors/jquery.min.js"></script>
+<script src="https://owlcarousel2.github.io/OwlCarousel2/assets/owlcarousel/owl.carousel.js"></script>
+
+
 <center>
-	QBMS Query & Retrive Data from 
-	<strong class="typewrite" data-period="2000" data-type='[ "EBS", "BMS", "BreedBase", "GIGWA" ]'>
-		<span class="wrap"></span>
-	</strong>
-	using BrAPI Calls.
+	<div style="background-color: papayawhip">
+		QBMS Query & Retrive Data from 
+		<strong style="color: maroon" class="typewrite" data-period="2000" data-type='[ "EBS", "BMS", "BreedBase", "GIGWA" ]'>
+			<span class="wrap"></span>
+		</strong>
+		using BrAPI Calls.
+	</div>
 	
 	<div class="owl-carousel owl-theme">
 		<div class="item"><img src="carousel/bms.png" width="800" height="400"></div>
@@ -198,6 +202,7 @@
 		});
 	});
 </script>
+<!---------------------------------------------------------------------------->
 
 <blockquote>
 <p><em><strong>Author and Maintainer:</strong> <a href="https://github.com/khaled-alshamaa" class="external-link">Khaled Al-Shamaa</a> &lt;k.el-shamaa (at) cgiar (dot) org&gt;</em></p>
@@ -226,7 +231,7 @@
 <a href="https://github.com/SouthGreenPlatform/Gigwa2" class="external-link">GIGWA</a>: <code><a href="articles/gigwa_example.html">vignette("gigwa_example")</a></code>.</li>
 </ul>
 <blockquote>
-<p><strong>Extra sub-systems supported:</strong></p>
+<p><strong><em>Extra sub-systems supported:</em></strong></p>
 <ul>
 <li>
 <a href="https://www.climatologylab.org/terraclimate.html" class="external-link">TerraClimate</a>: <code><a href="articles/terraclimate_example.html">vignette("terraclimate_example")</a></code>.</li>
@@ -240,15 +245,13 @@
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"QBMS"</span><span class="op">)</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="development-version">
-<em>Development version</em><a class="anchor" aria-label="anchor" href="#development-version"></a>
-</h3>
+<blockquote>
+<p><strong><em>Development version</em></strong></p>
 <p>To get a bug fix or to use a feature from the development version, you can install the development version of QBMS from GitHub.</p>
+</blockquote>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://remotes.r-lib.org" class="external-link">"remotes"</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"icarda-git/QBMS"</span><span class="op">)</span></span></code></pre></div>
-</div>
 </div>
 <div class="section level2">
 <h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>

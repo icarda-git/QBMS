@@ -35,7 +35,7 @@ The Breeding API ([BrAPI](https://brapi.org/)) project is an effort to enable in
 * [Breedbase](https://breedbase.org/): `vignette("breedbase_example")`.
 * [GIGWA](https://github.com/SouthGreenPlatform/Gigwa2): `vignette("gigwa_example")`.
 
-> __Extra sub-systems supported:__
+> ___Extra sub-systems supported:___
 > 
 > * [TerraClimate](https://www.climatologylab.org/terraclimate.html): `vignette("terraclimate_example")`.
 > * [HWSD v2.0](https://gaez.fao.org/pages/hwsd): `vignette("hwsd2_example")`.
@@ -45,8 +45,9 @@ The Breeding API ([BrAPI](https://brapi.org/)) project is an effort to enable in
 install.packages("QBMS")
 ```
 
-### _Development version_
-To get a bug fix or to use a feature from the development version, you can install the development version of QBMS from GitHub.
+> ___Development version___
+>
+> To get a bug fix or to use a feature from the development version, you can install the development version of QBMS from GitHub.
 
 ```r
 if (!require("remotes")) install.packages("remotes")
