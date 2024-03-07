@@ -1,10 +1,10 @@
-#' /brapi/{brapi_ver}/{brapi_call}
+# /brapi/{brapi_ver}/{brapi_call}
 brapi_map <- data.frame(func_name  = character(), 
                         brapi_ver  = character(),
                         brapi_call = character())
 
-#' need to be deprecated in favor of list_dbs() and set_db() functions
-#' https://github.com/plantbreeding/BrAPI/issues/495
+# need to be deprecated in favor of list_dbs() and set_db() functions
+# https://github.com/plantbreeding/BrAPI/issues/495
 brapi_map <- rbind(brapi_map, c("list_crops", "v1", "crops"))
 brapi_map <- rbind(brapi_map, c("list_crops", "v2", "commoncropnames"))
 
@@ -35,7 +35,7 @@ brapi_map <- rbind(brapi_map, c("get_trial_obs_ontology", "v2", "variables"))
 brapi_map <- rbind(brapi_map, c("get_germplasm_id", "v1", "germplasm?germplasmName={germplasmName}"))
 brapi_map <- rbind(brapi_map, c("get_germplasm_id", "v2", "germplasm?germplasmName={germplasmName}"))
 
-#' POST: germplasmDbIds, observationLevel = "PLOT"
+# POST: germplasmDbIds, observationLevel = "PLOT"
 brapi_map <- rbind(brapi_map, c("get_germplasm_data", "v1", "phenotypes-search"))
 
 brapi_map <- rbind(brapi_map, c("get_germplasm_attributes", "v1", "germplasm/{germplasmDbId}/attributes"))
@@ -46,13 +46,13 @@ brapi_map <- rbind(brapi_map, c("get_germplasm_attributes", "v2", "attributes?ge
 brapi_map <- rbind(brapi_map, c("gigwa_list_dbs", "v2", "programs"))
 brapi_map <- rbind(brapi_map, c("gigwa_list_projects", "v2", "studies?programDbId={programDbId}"))
 
-#' POST: studyDbIds
+# POST: studyDbIds
 brapi_map <- rbind(brapi_map, c("gigwa_list_runs", "v2", "search/variantsets"))
 
-#' POST: studyDbIds
+# POST: studyDbIds
 brapi_map <- rbind(brapi_map, c("gigwa_get_samples", "v2", "search/germplasm"))
 
-#' POST: germplasmDbIds
+# POST: germplasmDbIds
 brapi_map <- rbind(brapi_map, c("gigwa_get_metadata", "v2", "search/attributevalues"))
 
 ################################################################################
@@ -107,28 +107,28 @@ scan_brapi_endpoints <- function(programDbId = 0, trialDbId = 0, studyDbId = 0) 
 }
 
 
-#' List of non-BrAPI calls in QBMS functions
-#'
-#' get_program_studies()
-#' /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries/metadata (BMS: get study entries metadata)
-#'
-#' get_germplasm_list()
-#' /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries (BMS: get entry type) (POST: body = "")
-#'
-#' gigwa_get_variants()
-#' /ga4gh/variants/search 
-#' 
-#' dancing steps: 
-#' - searchMode = 0 to get total
-#' - then searchMode = 3 to request actual results
-#' - keep checking progress status /gigwa/progress
-#' - then call the same /ga4gh/variants/search to get the ready results
-#' 
-#' GA4GH: https://rest.ensembl.org/documentation/info/gavariants
-#' BrAPI: https://app.swaggerhub.com/apis/PlantBreedingAPI/BrAPI-Genotyping/2.1#/Allele%20Matrix
+# List of non-BrAPI calls in QBMS functions
+#
+# get_program_studies()
+# /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries/metadata (BMS: get study entries metadata)
+#
+# get_germplasm_list()
+# /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries (BMS: get entry type) (POST: body = "")
+#
+# gigwa_get_variants()
+# /ga4gh/variants/search 
+# 
+# dancing steps: 
+# - searchMode = 0 to get total
+# - then searchMode = 3 to request actual results
+# - keep checking progress status /gigwa/progress
+# - then call the same /ga4gh/variants/search to get the ready results
+# 
+# GA4GH: https://rest.ensembl.org/documentation/info/gavariants
+# BrAPI: https://app.swaggerhub.com/apis/PlantBreedingAPI/BrAPI-Genotyping/2.1#/Allele%20Matrix
 
 
-#' Internal state variables/lists
+# Internal state variables/lists
 qbms_globals <- new.env()
 qbms_globals$config <- list(crop = NULL)
 qbms_globals$state  <- list(token = NULL)
