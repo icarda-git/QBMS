@@ -10,7 +10,13 @@
     <loc>/articles/breedbase_example.html</loc>
   </url>
   <url>
+    <loc>/articles/ebs_example.html</loc>
+  </url>
+  <url>
     <loc>/articles/gigwa_example.html</loc>
+  </url>
+  <url>
+    <loc>/articles/hwsd2_example.html</loc>
   </url>
   <url>
     <loc>/articles/index.html</loc>
@@ -23,6 +29,9 @@
   </url>
   <url>
     <loc>/authors.html</loc>
+  </url>
+  <url>
+    <loc>/CODE_OF_CONDUCT.html</loc>
   </url>
   <url>
     <loc>/index.html</loc>
@@ -38,6 +47,9 @@
   </url>
   <url>
     <loc>/reference/brapi_headers.html</loc>
+  </url>
+  <url>
+    <loc>/reference/brapi_map.html</loc>
   </url>
   <url>
     <loc>/reference/build_pedigree_table.html</loc>
@@ -68,6 +80,9 @@
   </url>
   <url>
     <loc>/reference/get_germplasm_list.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_hwsd2.html</loc>
   </url>
   <url>
     <loc>/reference/get_login_details.html</loc>
@@ -133,6 +148,12 @@
     <loc>/reference/index.html</loc>
   </url>
   <url>
+    <loc>/reference/ini_hwsd2.html</loc>
+  </url>
+  <url>
+    <loc>/reference/ini_terraclimate.html</loc>
+  </url>
+  <url>
     <loc>/reference/list_crops.html</loc>
   </url>
   <url>
@@ -151,7 +172,13 @@
     <loc>/reference/login_bms.html</loc>
   </url>
   <url>
+    <loc>/reference/login_breedbase.html</loc>
+  </url>
+  <url>
     <loc>/reference/login_gigwa.html</loc>
+  </url>
+  <url>
+    <loc>/reference/login_oauth2.html</loc>
   </url>
   <url>
     <loc>/reference/qbms_globals.html</loc>
@@ -161,6 +188,9 @@
   </url>
   <url>
     <loc>/reference/rbindx.html</loc>
+  </url>
+  <url>
+    <loc>/reference/scan_brapi_endpoints.html</loc>
   </url>
   <url>
     <loc>/reference/set_crop.html</loc>
@@ -176,6 +206,9 @@
   </url>
   <url>
     <loc>/reference/set_study.html</loc>
+  </url>
+  <url>
+    <loc>/reference/set_token.html</loc>
   </url>
   <url>
     <loc>/reference/set_trial.html</loc>

@@ -19,14 +19,8 @@ This R package assists breeders in linking data systems with their analytic pipe
 
 You can retrieve TerraClimate data using the QBMS R package in two modes, Online using API calls (minimizing download size), or Offline by downloading required NetCDF rasters first (minimizing query time). QBMS also calculate the 19 derivatives [bioclimatic variables](https://www.worldclim.org/data/bioclim.html) on-fly.
 
-### Reference:
-Abatzoglou, J., Dobrowski, S., Parks, S. et al. TerraClimate, a high-resolution global dataset of monthly climate and climatic water balance from 1958–2015. Sci Data 5, 170191 (2018). [https://doi.org/10.1038/sdata.2017.191](https://doi.org/10.1038/sdata.2017.191)
-
-## _Install_
-```r
-if (!require("remotes")) install.packages("remotes")
-remotes::install_github("icarda-git/QBMS")
-```
+> ### Reference:
+> Abatzoglou, J., Dobrowski, S., Parks, S. et al. TerraClimate, a high-resolution global dataset of monthly climate and climatic water balance from 1958–2015. Sci Data 5, 170191 (2018). [https://doi.org/10.1038/sdata.2017.191](https://doi.org/10.1038/sdata.2017.191)
 
 ## _Example_
 ```r
@@ -66,7 +60,10 @@ worldclim_norm  <- apply(worldclim_range$biovars[[2]][,1:19], 2, function(x) rou
 
 ```
 
-## _Offline Mode (Download TerraClimate netCDF data files)_
+## _Offline Mode_
+
+Download TerraClimate netCDF data files:
+
 ```r
 # ?ini_terraclimate
 ini_terraclimate('2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'))
@@ -76,7 +73,7 @@ data <- get_terraclimate(y, x, '2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tma
 
 ```
 
-_If you encounter a timeout error during the execution of the `ini-terraclimate()` function, you can extend the timeout duration of your environment with the following command (e.g., to 5 minutes, which is 300 seconds, instead of the default 60 seconds):_
+_If you encounter a timeout error during the execution of the `ini_terraclimate()` function, you can extend the timeout duration of your environment with the following command (e.g., to 5 minutes, which is 300 seconds, instead of the default 60 seconds):_
 
 ```r
 options(timeout = max(300, getOption("timeout")))

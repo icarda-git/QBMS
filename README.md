@@ -1,8 +1,11 @@
 # QBMS <img src='man/figures/logo.png' align="right" height="140" />
 <!-- badges: start -->
 [![CRAN version](https://www.r-pkg.org/badges/version/QBMS)](https://cran.r-project.org/package=QBMS)
+<!--
 [![CRAN checks](https://badges.cranchecks.info/summary/QBMS.svg)](https://cran.r-project.org/web/checks/check_results_QBMS.html)
+-->
 [![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/QBMS)](https://cran.r-project.org/package=QBMS)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10791627.svg)](https://doi.org/10.5281/zenodo.10791627)
 [![CRAN license](https://img.shields.io/github/license/icarda-git/QBMS)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![GitHub commits](https://img.shields.io/github/last-commit/icarda-git/QBMS)](https://github.com/icarda-git/QBMS/commits/master)
 [![GitHub issues](https://img.shields.io/github/issues-raw/icarda-git/QBMS)](https://github.com/icarda-git/QBMS/issues)
@@ -10,7 +13,7 @@
 <!-- badges: end -->
 
 ## Overview
-Linking data management systems to analytics is an important step in breeding digitalization. Breeders can use this R package to Query the Breeding Management System(s) like [BMS](https://bmspro.io/), [BreedBase](https://breedbase.org), and [GIGWA](https://southgreen.fr/content/gigwa) (using [BrAPI](https://brapi.org/) calls) and help them to retrieve phenotypic and genotypic data directly into their analyzing pipelines developed in R statistical environment.
+This R package assists breeders in linking data systems with their analytic pipelines, a crucial step in digitizing breeding processes. It supports querying and retrieving phenotypic and genotypic data from systems like [EBS](https://ebs.excellenceinbreeding.org/), [BMS](https://bmspro.io/), [BreedBase](https://breedbase.org), and [GIGWA](https://github.com/SouthGreenPlatform/Gigwa2) (using [BrAPI](https://brapi.org/) calls). Extra helper functions support environmental data sources, including [TerraClimate](https://www.climatologylab.org/terraclimate.html) and FAO [HWSDv2](https://gaez.fao.org/pages/hwsd) soil database.
 
 >___Author and Maintainer:__ [Khaled Al-Shamaa](https://github.com/khaled-alshamaa) <k.el-shamaa (at) cgiar (dot) org>_
 >
@@ -22,20 +25,20 @@ Linking data management systems to analytics is an important step in breeding di
 >
 >___Copyright Holder:__ [International Center for Agricultural Research in the Dry Areas (ICARDA)](https://www.icarda.org/)_
 
-## Breeding Management System (BMS)
-Breeding Management System ([BMS](https://bmspro.io/)) is an information management system developed by the Integrated Breeding Platform to help breeders manage the breeding process, from programme planning to decision-making. The BMS is customizable for most crop breeding programs, and comes pre-loaded with curated ontology terms for many crops (bean, cassava, chickpea, cowpea, groundnut, maize, rice, sorghum, soybean, wheat, and others). The BMS is available as a cloud application, which can be installed on local or remote servers and accessed by multiple users.
-
-## BreedBase
-[Breedbase](https://breedbase.org/) is a comprehensive breeding management and analysis software. It can be used to design field layouts, collect phenotypic information using tablets, support the collection of genotyping samples in a field, store large amounts of high density genotypic information, and provide Genomic Selection related analyses and predictions.
-
-## GIGWA
-[GIGWA](https://southgreen.fr/content/gigwa) is a web-based tool which provides an easy and intuitive way to explore large amounts of genotyping data by filtering the latter based not only on variant features, including functional annotations, but also on genotype patterns. The data storage relies on MongoDB, which offers good scalability perspectives. GIGWA can handle multiple databases and may be deployed in either single or multi-user mode. Finally, it provides a wide range of popular export formats.
-
 ## BrAPI
 The Breeding API ([BrAPI](https://brapi.org/)) project is an effort to enable interoperability among plant breeding databases. BrAPI is a standardized RESTful web service API specification for communicating plant breeding data. This community driven standard is free to be used by anyone interested in plant breeding data management.
 
-## TerraClimate
-[TerraClimate](https://www.climatologylab.org/terraclimate.html) is a dataset of monthly climate and climatic water balance for global terrestrial surfaces from 1958-2019. These data provide important inputs for ecological and hydrological studies at global scales that require high spatial resolution and time-varying data. All data have monthly temporal resolution and a ~4-km (1/24th degree) spatial resolution. The data cover the period from 1958-2020. We plan to update these data periodically (annually).
+## Supported Data Sources
+
+* [BMS](https://bmspro.io/): `vignette("bms_example")`.
+* [EBS](https://ebs.excellenceinbreeding.org/): `vignette("ebs_example")`.
+* [Breedbase](https://breedbase.org/): `vignette("breedbase_example")`.
+* [GIGWA](https://github.com/SouthGreenPlatform/Gigwa2): `vignette("gigwa_example")`.
+
+> __Extra sub-systems supported:__
+> 
+> * [TerraClimate](https://www.climatologylab.org/terraclimate.html): `vignette("terraclimate_example")`.
+> * [HWSD v2.0](https://gaez.fao.org/pages/hwsd): `vignette("hwsd2_example")`.
 
 ## Installation
 ```r
@@ -51,14 +54,14 @@ remotes::install_github("icarda-git/QBMS")
 ```
 
 ## Getting Started
-Once you successfully install the QBMS R package, you can load it as a library and set up your remote server configuration (e.g., BMS, BreedBase, or GIGWA) by simply copying and pasting the login page URL from your web browser.
+Once you successfully install the QBMS R package, you can load it as a library and set up your remote server configuration (e.g., EBS, BMS, BreedBase, or GIGWA) by simply copying and pasting the login page URL from your web browser.
 
 ```r
 # load the QBMS library
 library(QBMS)
 
 # config your BMS connection (by providing your BMS login page URL)
-set_qbms_config("https://www.bms-uat-test.net/ibpworkbench/controller/auth/login")
+set_qbms_config("https://bms.icarda.org/ibpworkbench/controller/auth/login")
 ```
 
 To start querying and retrieving data from your remote server, you have to login using the same credentials for that server’s GUI/web interface. Please note that you can call the login function(s) with no parameters (interactive mode), where you will get a popup window to insert your username and password (highly advised as one of the best security practices). Although, for automatic analysis pipeline(s) or server services, you can still provide the required username and password as login function parameters (i.e., batch mode).

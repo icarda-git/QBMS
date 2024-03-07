@@ -18,12 +18,6 @@ This R package assists breeders in linking data systems with their analytic pipe
 ## BrAPI
 The Breeding API ([BrAPI](https://brapi.org/)) project is an effort to enable interoperability among plant breeding databases. BrAPI is a standardized RESTful web service API specification for communicating plant breeding data. This community driven standard is free to be used by anyone interested in plant breeding data management.
 
-## _Install_
-```r
-if (!require("remotes")) install.packages("remotes")
-remotes::install_github("icarda-git/QBMS")
-```
-
 >*You can find a set of Breedbase based servers available for several crops and accessible with no authentication required are listed at the BrAPI website on the following page under the group of **Boyce Thompson Institute (BTI)**, discovery and innovation in the life sciences: [https://brapi.org/servers](https://brapi.org/servers).*
 
 ## _Example_

@@ -1,4 +1,9 @@
 url: ~
 template:
   bootstrap: 5
-
+  bslib:
+    font-size-base: "0.8rem"
+    body-text-align: "justify"
+    line-height-base:	1.75
+    line-height-sm:	1.5
+    line-height-lg: 2.25

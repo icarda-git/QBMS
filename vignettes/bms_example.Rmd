@@ -19,14 +19,6 @@ Breeding Management System ([BMS](https://bmspro.io/)) is an information managem
 ## BrAPI
 The Breeding API ([BrAPI](https://brapi.org/)) project is an effort to enable interoperability among plant breeding databases. BrAPI is a standardized RESTful web service API specification for communicating plant breeding data. This community driven standard is free to be used by anyone interested in plant breeding data management.
 
-## _Install_
-```r
-if (!require("remotes")) install.packages("remotes")
-remotes::install_github("icarda-git/QBMS")
-```
-
-___If you are not already an active BMS user, you can contact [IBP support](https://ibplatform.atlassian.net/servicedesk/customer/portal/4/group/30/create/60) to get access to a trial BMS server.___
-
 > _From BMS version 25 onward, users must possess the necessary permissions to utilize the BrAPI services. [This table](https://ibplatform.atlassian.net/wiki/spaces/BMS/pages/2870968321/v25+BMS+permissions+required+for+using+BrAPI+services) outlines the permissions needed for accessing specific services._
 
 ## _Example_
