@@ -11,71 +11,72 @@ get_pedigree_table(
 )
 }
 \arguments{
-\item{data}{germplasm dataset as a data.frame.}
+\item{data}{Germplasm dataset as a data.frame.}
 
-\item{geno_column}{name of the column that identifies the genotype/germplasm names.}
+\item{geno_column}{Name of the column that identifies the genotype/germplasm names.}
 
-\item{pedigree_column}{name of the column that identifies the pedigree strings.}
+\item{pedigree_column}{Name of the column that identifies the pedigree strings.}
 }
 \value{
-A data.frame that has three columns correspond to the identifiers for the individual,
-        female parent and male parent, respectively. The row giving the pedigree of an
-        individual appears before any row where that individual appears as a parent.
-        Founders use NA in the parental columns.
+A data.frame with three columns corresponding to the identifiers for the individual,
+female parent, and male parent, respectively. The row giving the pedigree of an
+individual appears before any row where that individual appears as a parent.
+Founders use NA in the parental columns.
 }
 \description{
-Get the pedigree table starting from current germplasm list and associated
+Retrieve the pedigree table starting from the current germplasm list and associated
 pedigree string that provides the parentage through which a cultivar was obtained.
 }
 \examples{
-if(interactive()) {
-# config your BMS connection
-set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+if (interactive()) {
+  # Configure your server connection
+  set_qbms_config("https://bms.icarda.org/ibpworkbench")
 
-# login using your BMS account (interactive mode)
-# you can pass BMS username and password as parameters (batch mode)
-login_bms()
+  # Login using your account (interactive mode)
+  # You can pass your username and password as parameters (batch mode)
+  login_bms()
 
-set_crop("maize")
+  # Select a crop by name
+  set_crop("wheat")
 
-# select a breeding program by name
-set_program("MC Maize")
+  # Select a breeding program by name
+  set_program("Wheat International Nurseries")
 
-# select a specific study/trial by name
-set_trial("2018 PVT")
+  # Select a specific study/trial by name
+  set_trial("IDYT39")
 
-# select a specific environment/location dataset
-set_study("2018 PVT Environment Number 1")
+  # Select a specific environment/location dataset
+  set_study("IDYT39 Environment Number 9")
 
-# retrieve the germplasm list of the selected environment/location
-germplasm <- get_germplasm_list()
+  # Retrieve the germplasm list of the selected environment/location
+  germplasm <- get_germplasm_list()
 
-pedigree_table <- get_pedigree_table(germplasm, "germplasmName", "pedigree")
+  pedigree_table <- get_pedigree_table(germplasm, "germplasmName", "pedigree")
 
-#############################
-# nadiv package way
-# library(nadiv)
+  #############################
+  # nadiv package way
+  # library(nadiv)
 
-# get additive relationship matrix in sparse matrix format
-# A <- nadiv::makeA(pedigree_table)
+  # Get additive relationship matrix in sparse matrix format
+  # A <- nadiv::makeA(pedigree_table)
 
-# get A inverse matrix using base R function
-# AINV <- solve(as.matrix(A))
+  # Get A inverse matrix using base R function
+  # AINV <- solve(as.matrix(A))
 
-#############################
-# ASReml-R package way
-# library(asreml)
+  #############################
+  # ASReml-R package way
+  # library(asreml)
 
-# represent A inverse matrix in efficient way using i,j index and Ainverse value
-# actual genotype names of any given index are in the attr(ainv, "rowNames")
-# ainv <- asreml::ainverse(pedigree_table)
+  # Represent A inverse matrix in an efficient way using i, j index and Ainverse value
+  # Actual genotype names of any given index are in the attr(ainv, "rowNames")
+  # ainv <- asreml::ainverse(pedigree_table)
 
-#############################
-# dummy data set for testing
-test <- data.frame(genotype = c("X", "Y"),
-                   pedigree = c("A//B/D/2/C", "B/C/3/A//B/C/2/D"))
+  #############################
+  # Dummy data set for testing
+  test <- data.frame(genotype = c("X", "Y"),
+                     pedigree = c("A//B/D/2/C", "B/C/3/A//B/C/2/D"))
 
-pedigree_table <- get_pedigree_table(test, "genotype", "pedigree")
+  pedigree_table <- get_pedigree_table(test, "genotype", "pedigree")
 }
 }
 \author{

@@ -2,28 +2,28 @@
 % Please edit documentation in R/qbms.R
 \name{gigwa_set_db}
 \alias{gigwa_set_db}
-\title{Set the current active GIGWA database by name}
+\title{Set the Current Active GIGWA Database by Name}
 \usage{
 gigwa_set_db(db_name)
 }
 \arguments{
-\item{db_name}{the name of the database}
+\item{db_name}{The name of the database.}
 }
 \value{
-no return value
+No return value.
 }
 \description{
-This function will update the current active database in the internal
+This function updates the current active database in the internal
 configuration object (including the brapi connection object).
 }
 \examples{
-if(interactive()) {
-# config your GIGWA connection
-set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
-                time_out = 300, engine = "gigwa", no_auth = TRUE)
+if (interactive()) {
+  # Configure your GIGWA connection
+  set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
+                  time_out = 300, engine = "gigwa", no_auth = TRUE)
 
-# select a database by name
-gigwa_set_db("Sorghum-JGI_v1")
+  # Select a database by name
+  gigwa_set_db("Sorghum-JGI_v1")
 }
 }
 \seealso{

@@ -7,14 +7,14 @@
 get_parents(pedigree)
 }
 \arguments{
-\item{pedigree}{String provide the parentage through which a cultivar was obtained.}
+\item{pedigree}{A string providing the parentage through which a cultivar was obtained.}
 }
 \value{
-Vector of two items, the direct female and male parents.
+A vector of two items, representing the direct female and male parents.
 }
 \description{
-Internal helping function to split the given pedigree string that provides the parentage
-through which a cultivar was obtained, and get the pedigrees of the direct parents.
+Internal helper function to split the given pedigree string that provides the parentage
+through which a cultivar was obtained and retrieve the pedigrees of the direct parents.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

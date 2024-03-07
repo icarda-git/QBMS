@@ -2,35 +2,36 @@
 % Please edit documentation in R/qbms.R
 \name{set_program}
 \alias{set_program}
-\title{Set the current active breeding program}
+\title{Set the Current Active Breeding Program}
 \usage{
 set_program(program_name)
 }
 \arguments{
-\item{program_name}{the name of the breeding program}
+\item{program_name}{The name of the breeding program.}
 }
 \value{
-no return value
+No return value.
 }
 \description{
-This function will update the current active breeding program in the
-internal state object using the programDbId retrieved from BMS which is
-associated to the given program_name parameter.
+Updates the current active breeding program in the internal state object 
+using the programDbId which is associated with the given program_name parameter.
 }
 \examples{
 if(interactive()) {
-# config your server connection
-set_qbms_config("https://bms.icarda.org/ibpworkbench")
+  # Configure your server connection
+  set_qbms_config("https://bms.icarda.org/ibpworkbench")
 
-# login using your account (interactive mode)
-# you can pass your username and password as parameters (batch mode)
-login_bms()
+  # Login using your account (interactive mode)
+  # You can pass your username and password as parameters (batch mode)
+  login_bms()
 
-set_crop("wheat")
+  # Select a crop by name
+  set_crop("wheat")
 
-# select a breeding program by name
-set_program("Wheat International Nurseries")
+  # Select a breeding program by name
+  set_program("Wheat International Nurseries")
 }
+
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{list_programs}}

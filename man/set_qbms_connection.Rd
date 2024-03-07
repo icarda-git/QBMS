@@ -2,52 +2,58 @@
 % Please edit documentation in R/qbms.R
 \name{set_qbms_connection}
 \alias{set_qbms_connection}
-\title{Set the QBMS connection}
+\title{Set the QBMS Connection}
 \usage{
 set_qbms_connection(env)
 }
 \arguments{
-\item{env}{a list of the connection config and status to load}
+\item{env}{A list containing the connection configuration and status to load.}
 }
 \description{
-Set the QBMS connection object to the current environment
+Sets the QBMS connection object to the current environment.
 }
 \examples{
 if(interactive()) {
-# configure QBMS to connect the phenotypics server
-set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench/controller/auth/login")
+  # Configure your server connection
+  set_qbms_config("https://bms.icarda.org/ibpworkbench")
 
-# login, set the crop, and program
-login_bms()
-set_crop("maize")
-set_program("MC Maize")
+  # Login using your account (interactive mode)
+  # You can pass your username and password as parameters (batch mode)
+  login_bms()
 
-# get germplasm data
-df1 <- get_germplasm_data("BASFCORN-2-1")
+  # Select a crop by name
+  set_crop("wheat")
 
-# save current connection (phenotypic server)
-con1 <- get_qbms_connection()
-
-# configure QBMS to connect the genotypic server
-set_qbms_config("https://gigwa.southgreen.fr/gigwa/", engine = "gigwa", no_auth = TRUE)
-
-# set the db, project, and run
-gigwa_set_db("3kG_10M")
-gigwa_set_project("3003_ind")
-gigwa_set_run("1")
-
-# get associated metadata
-df2 <- gigwa_get_metadata()
-
-# save current connection (before switch)
-con2 <- get_qbms_connection()
-
-# load the saved phenotypic server connection
-set_qbms_connection(con1)
-
-# continue retrieving germplasm attributes from the phenotypic server
-df3 <- get_germplasm_attributes("BASFCORN-2-1")
+  # Select a breeding program by name
+  set_program("Wheat International Nurseries")
+     
+  # Get germplasm data
+  df1 <- get_germplasm_data("Jabal")
+  
+  # Save the current connection (phenotypic server)
+  con1 <- get_qbms_connection()
+  
+  # Configure QBMS to connect to the genotypic server
+  set_qbms_config("https://gigwa.southgreen.fr/gigwa/", engine = "gigwa", no_auth = TRUE)
+  
+  # Set the db, project, and run
+  gigwa_set_db("DIVRICE_NB")
+  gigwa_set_project("refNB")
+  gigwa_set_run("03052022")
+  
+  # Get associated metadata
+  df2 <- gigwa_get_metadata()
+  
+  # Save the current connection (before switch)
+  con2 <- get_qbms_connection()
+  
+  # Load the saved phenotypic server connection
+  set_qbms_connection(con1)
+  
+  # Continue retrieving germplasm attributes from the phenotypic server
+  df3 <- get_germplasm_attributes("Jabal")
 }
+
 }
 \seealso{
 \code{\link{get_qbms_connection}}

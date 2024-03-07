@@ -14,7 +14,7 @@ set_token(token, user = "", expires_in = NULL)
 \item{expires_in}{The lifetime in seconds of the access token (optional).}
 }
 \value{
-no return value
+No return value.
 }
 \description{
 If the request for an access token is valid, the authorization server needs 

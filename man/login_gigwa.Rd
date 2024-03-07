@@ -2,38 +2,39 @@
 % Please edit documentation in R/qbms.R
 \name{login_gigwa}
 \alias{login_gigwa}
-\title{Login to the GIGWA server}
+\title{Login to the GIGWA Server}
 \usage{
 login_gigwa(username = NULL, password = NULL)
 }
 \arguments{
-\item{username}{the GIGWA username (optional, default is NULL)}
+\item{username}{The GIGWA username (optional, default is NULL).}
 
-\item{password}{the GIGWA password (optional, default is NULL)}
+\item{password}{The GIGWA password (optional, default is NULL).}
 }
 \value{
-no return value
+No return value.
 }
 \description{
-Connect to the GIGWA server. If username or password parameters are missing,
-then a login window will pop-up to insert username and password.
+Connect to the GIGWA server. If the username or password parameters are missing,
+a login window will pop up to insert the username and password.
 
-All other connection parameters (i.e. server IP or domain, connection port,
-API path, and connection protocol e.g. http://) will retrieve from the
-qbms_config list.
+All other connection parameters (i.e., server IP or domain, connection port,
+API path, and connection protocol e.g., http://) will be retrieved from the
+`qbms_config` list.
 
-This function will update both of the qbms_config list (brapi connection
+This function will update both the qbms_config list (brapi connection
 object in the con key) and qbms_state list (token value in the token key).
 }
 \examples{
-if(interactive()) {
-# config your GIGWA connection
-set_qbms_config("http://localhost:59395/gigwa/index.jsp", time_out = 300, engine = "gigwa")
+if (interactive()) {
+  # Configure your GIGWA connection
+  set_qbms_config("http://localhost:59395/gigwa/index.jsp", time_out = 300, engine = "gigwa")
 
-# login using your GIGWA account (interactive mode)
-# you can pass GIGWA username and password as parameters (batch mode)
-login_gigwa()
-login_gigwa("gigwadmin", "nimda")
+  # Login using your GIGWA account (interactive mode)
+  login_gigwa()
+  
+  # You can pass GIGWA username and password as parameters (batch mode)
+  # login_gigwa("gigwadmin", "nimda")
 }
 }
 \author{

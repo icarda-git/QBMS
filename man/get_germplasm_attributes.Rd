@@ -2,35 +2,36 @@
 % Please edit documentation in R/qbms.R
 \name{get_germplasm_attributes}
 \alias{get_germplasm_attributes}
-\title{Get germplasm attributes for a given germplasm in a crop}
+\title{Retrieve Attributes for a Specified Germplasm}
 \usage{
 get_germplasm_attributes(germplasm_name = "")
 }
 \arguments{
-\item{germplasm_name}{the name of the germplasm}
+\item{germplasm_name}{The name of the germplasm.}
 }
 \value{
-a data frame of the germplasm attributes
+A data frame containing the attributes of the specified germplasm.
 }
 \description{
-Get germplasm attributes for a given germplasm in a crop
+Retrieve Attributes for a Specified Germplasm
 }
 \examples{
-if(interactive()) {
-# config your server connection
-set_qbms_config("https://bms.icarda.org/ibpworkbench")
+if (interactive()) {
+  # Configure your server connection
+  set_qbms_config("https://bms.icarda.org/ibpworkbench")
 
-# login using your account (interactive mode)
-# you can pass your username and password as parameters (batch mode)
-login_bms()
+  # Log in using your account (interactive mode)
+  # You can pass your username and password as parameters (batch mode)
+  login_bms()
 
-set_crop("wheat")
+  # Select a crop
+  set_crop("wheat")
 
-# select a breeding program by name
-set_program("Wheat International Nurseries")
+  # Select a breeding program by name
+  set_program("Wheat International Nurseries")
 
-# retrive attributes data of a given germplasm in a crop
-germplasm_attributes <- get_germplasm_attributes("Jabal")
+  # Retrieve attribute data of a specified germplasm in a crop
+  germplasm_attributes <- get_germplasm_attributes("Jabal")
 }
 }
 \seealso{

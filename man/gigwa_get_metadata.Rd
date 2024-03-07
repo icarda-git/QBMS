@@ -2,34 +2,34 @@
 % Please edit documentation in R/qbms.R
 \name{gigwa_get_metadata}
 \alias{gigwa_get_metadata}
-\title{Get the metadate of the current active GIGWA run}
+\title{Get the Metadata of the Current Active GIGWA Run}
 \usage{
 gigwa_get_metadata()
 }
 \value{
-a data.frame of all metadata associated to the samples in the selected run
+A data.frame of all metadata associated with the samples in the selected run.
 }
 \description{
-This function will retrieve the metadata of the current active run
-as configured in the internal state object using `gigwa_set_run()` function.
+This function retrieves the metadata of the current active run
+as configured in the internal state object using the `gigwa_set_run()` function.
 }
 \examples{
-if(interactive()) {
-# config your GIGWA connection
-set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
-                time_out = 300, engine = "gigwa", no_auth = TRUE)
+if (interactive()) {
+  # Configure your GIGWA connection
+  set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
+                  time_out = 300, engine = "gigwa", no_auth = TRUE)
 
-# select a database by name
-gigwa_set_db("3kG_10M")
+  # Select a database by name
+  gigwa_set_db("3kG_10M")
 
-# select a project by name
-gigwa_set_project("3003_ind")
-
-# select a specific run by name
-gigwa_set_run("1")
-
-# get a list of all samples in the selected run
-metadata <- gigwa_get_metadata()
+  # Select a project by name
+  gigwa_set_project("3003_ind")
+  
+  # Select a specific run by name
+  gigwa_set_run("1")
+  
+  # Get a list of all samples in the selected run
+  metadata <- gigwa_get_metadata()
 }
 }
 \seealso{

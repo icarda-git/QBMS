@@ -2,7 +2,7 @@
 % Please edit documentation in R/qbms.R
 \name{get_hwsd2}
 \alias{get_hwsd2}
-\title{Get HWSD v2 Soil data for given location(s)}
+\title{Get HWSD v2 Soil Data for a Given Location(s)}
 \usage{
 get_hwsd2(df, con, x = "longitude", y = "latitude", sequence = 1, layer = "D1")
 }
@@ -38,10 +38,7 @@ HWSD2_LAYERS table). The depth of the top and bottom of each layer is defined in
 the TOPDEP and BOTDEP columns, respectively.
 }
 \examples{
-if(interactive()) {
-  remotes::install_github("icarda-git/QBMS")
-  library(QBMS)
-  
+if (interactive()) {
   # create a simple data.frame for a list of locations and their coordinates
   Location  <- c('Tel-Hadya', 'Terbol', 'Marchouch')
   Latitude  <- c(36.016, 33.808, 33.616)

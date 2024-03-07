@@ -2,14 +2,14 @@
 % Please edit documentation in R/qbms.R
 \name{get_async_pages}
 \alias{get_async_pages}
-\title{Run all supplied pages}
+\title{Run All Supplied Pages}
 \usage{
 get_async_pages(pages, nested)
 }
 \arguments{
-\item{pages}{List of URLs to retrieve}
+\item{pages}{List of URLs to retrieve.}
 
-\item{nested}{Don't flatten nested data.frames}
+\item{nested}{Logical indicating whether to flatten nested data frames. Default is FALSE.}
 }
 \value{
 Async deferred object.

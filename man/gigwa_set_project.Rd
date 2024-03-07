@@ -2,32 +2,32 @@
 % Please edit documentation in R/qbms.R
 \name{gigwa_set_project}
 \alias{gigwa_set_project}
-\title{Set the current active GIGWA project}
+\title{Set the Current Active GIGWA Project}
 \usage{
 gigwa_set_project(project_name)
 }
 \arguments{
-\item{project_name}{the name of the project}
+\item{project_name}{The name of the project.}
 }
 \value{
-no return value
+No return value.
 }
 \description{
-This function will update the current active project in the internal state object 
-using the programDbId retrieved from GIGWA which is associated to the given 
+This function updates the current active project in the internal state object 
+using the programDbId retrieved from GIGWA which is associated with the given 
 `project_name` parameter.
 }
 \examples{
-if(interactive()) {
-# config your GIGWA connection
-set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
-                time_out = 300, engine = "gigwa", no_auth = TRUE)
+if (interactive()) {
+  # Configure your GIGWA connection
+  set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
+                  time_out = 300, engine = "gigwa", no_auth = TRUE)
 
-# select a database by name
-gigwa_set_db("Sorghum-JGI_v1")
+  # Select a database by name
+  gigwa_set_db("Sorghum-JGI_v1")
 
-# select a project by name
-gigwa_set_project("Nelson_et_al_2011")
+  # Select a project by name
+  gigwa_set_project("Nelson_et_al_2011")
 }
 }
 \seealso{

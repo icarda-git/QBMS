@@ -2,36 +2,37 @@
 % Please edit documentation in R/qbms.R
 \name{get_germplasm_data}
 \alias{get_germplasm_data}
-\title{Get the observations data of a given germplasm name in a crop}
+\title{Retrieve Observations Data for a Specified Germplasm.}
 \usage{
 get_germplasm_data(germplasm_name = "")
 }
 \arguments{
-\item{germplasm_name}{the name of the germplasm}
+\item{germplasm_name}{The name of the germplasm.}
 }
 \value{
-a data frame of the germplasm observations data aggregate from all trials
+A data frame containing the aggregated observations data for the germplasm from all trials.
 }
 \description{
-This function will retrieve all the observations data available for a given germplasm
-in the current crop database regardless of the programs/trials nested structure.
+Retrieves all available observations data for a given germplasm in the current 
+crop database, regardless of the nested structure of programs/trials.
 }
 \examples{
-if(interactive()) {
-# config your server connection
-set_qbms_config("https://bms.icarda.org/ibpworkbench")
-
-# login using your account (interactive mode)
-# you can pass your username and password as parameters (batch mode)
-login_bms()
-
-set_crop("wheat")
-
-# select a breeding program by name
-set_program("Wheat International Nurseries")
-
-# retrive observations data of a given germplasm aggregated from all trials
-germplasm_observations <- get_germplasm_data("Jabal")
+if (interactive()) {
+  # Configure server connection
+  set_qbms_config("https://bms.icarda.org/ibpworkbench")
+  
+  # Log in using your account (interactive mode)
+  # You can pass your username and password as parameters (batch mode)
+  login_bms()
+  
+  # Select a crop
+  set_crop("wheat")
+  
+  # Select a breeding program by name
+  set_program("Wheat International Nurseries")
+  
+  # Retrieve observations data for a specified germplasm aggregated from all trials
+  germplasm_observations <- get_germplasm_data("Jabal")
 }
 }
 \seealso{

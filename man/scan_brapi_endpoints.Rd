@@ -2,22 +2,22 @@
 % Please edit documentation in R/qbms.R
 \name{scan_brapi_endpoints}
 \alias{scan_brapi_endpoints}
-\title{Scan BrAPI endpoints}
+\title{Scan BrAPI Endpoints}
 \usage{
 scan_brapi_endpoints(programDbId = 0, trialDbId = 0, studyDbId = 0)
 }
 \arguments{
-\item{programDbId}{programDbId used for BrAPI endpoints scanning (default is 0)}
+\item{programDbId}{(numeric) ProgramDbId used for BrAPI endpoints scanning. Default is 0.}
 
-\item{trialDbId}{trialDbId used for BrAPI endpoints scanning (default is 0)}
+\item{trialDbId}{(numeric) TrialDbId used for BrAPI endpoints scanning. Default is 0.}
 
-\item{studyDbId}{studyDbId used for BrAPI endpoints scanning (default is 0)}
+\item{studyDbId}{(numeric) StudyDbId used for BrAPI endpoints scanning. Default is 0.}
 }
 \value{
-a data.frame list the QBMS function, BrAPI endpoint URL, and status
+A data frame listing the QBMS function, BrAPI endpoint URL, and status.
 }
 \description{
-Scan available BrAPI endpoints in the configured source server
+Scan available BrAPI endpoints on the configured source server.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

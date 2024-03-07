@@ -2,18 +2,18 @@
 % Please edit documentation in R/qbms.R
 \name{get_async_page}
 \alias{get_async_page}
-\title{Async version of HTTP GET request}
+\title{Async Version of HTTP GET Request}
 \usage{
 get_async_page(full_url, nested)
 }
 \arguments{
-\item{full_url}{URL to retrieve}
+\item{full_url}{URL to retrieve.}
 
-\item{nested}{Don't flatten nested data.frames}
+\item{nested}{Logical indicating whether to flatten nested data frames. Default is FALSE.}
 }
 \value{
-Async version of HTTP GET request.
+Async version of the HTTP GET request.
 }
 \description{
-A small helper function to create `async` version of the original HTTP GET request.
+A small helper function to create an `async` version of the original HTTP GET request.
 }

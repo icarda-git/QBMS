@@ -2,44 +2,45 @@
 % Please edit documentation in R/qbms.R
 \name{get_germplasm_list}
 \alias{get_germplasm_list}
-\title{Get the germplasm list of the current active study}
+\title{Get the Germplasm List of the Current Active Study}
 \usage{
 get_germplasm_list()
 }
 \value{
-a data frame of the study germplasm list
+A data frame of the study germplasm list.
 }
 \description{
-This function will retrieve the germplasm list of the current active study
-as configured in the internal state object using `set_study()` function.
+Retrieves the germplasm list of the current active study as configured in the 
+internal state object using `set_study()` function.
 }
 \examples{
 if(interactive()) {
-# config your server connection
-set_qbms_config("https://bms.icarda.org/ibpworkbench")
+  # Configure your server connection
+  set_qbms_config("https://bms.icarda.org/ibpworkbench")
 
-# login using your account (interactive mode)
-# you can pass your username and password as parameters (batch mode)
-login_bms()
+  # Login using your account (interactive mode)
+  # You can pass your username and password as parameters (batch mode)
+  login_bms()
 
-set_crop("wheat")
+  # Select a crop by name
+  set_crop("wheat")
 
-# select a breeding program by name
-set_program("Wheat International Nurseries")
+  # Select a breeding program by name
+  set_program("Wheat International Nurseries")
 
-# select a specific study/trial by name
-set_trial("IDYT39")
+  # Select a specific study/trial by name
+  set_trial("IDYT39")
 
-# select a specific environment/location dataset
-set_study("IDYT39 Environment Number 9")
+  # Select a specific environment/location dataset
+  set_study("IDYT39 Environment Number 9")
 
-# retrieve the germplasm list of the selected environment/location
-germplasm <- get_germplasm_list()
+  # Retrieve the germplasm list of the selected environment/location
+  germplasm <- get_germplasm_list()
 }
+
 }
 \seealso{
-\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, 
-         \code{\link{set_trial}}, \code{\link{set_study}}
+\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

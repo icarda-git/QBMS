@@ -7,13 +7,13 @@
 get_germplasm_id(germplasm_name = "")
 }
 \arguments{
-\item{germplasm_name}{the name of the germplasm}
+\item{germplasm_name}{The name of the germplasm.}
 }
 \value{
-a string of the germplasm id
+A string of the germplasm ID.
 }
 \description{
-Get the germplasm id for the given germplasm name in the current crop
+Retrieves the germplasm ID for the given germplasm name in the current crop.
 }
 \seealso{
 \code{\link{set_crop}}, \code{\link{get_germplasm_data}}, \code{\link{get_germplasm_attributes}}

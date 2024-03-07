@@ -2,20 +2,20 @@
 % Please edit documentation in R/qbms.R
 \name{login_breedbase}
 \alias{login_breedbase}
-\title{Login to the BreedBase server}
+\title{Login to the BreedBase Server}
 \usage{
 login_breedbase(username = NULL, password = NULL)
 }
 \arguments{
-\item{username}{the username (optional, default is NULL)}
+\item{username}{The username (optional, default is NULL).}
 
-\item{password}{the password (optional, default is NULL)}
+\item{password}{The password (optional, default is NULL).}
 }
 \value{
-no return value
+No return value.
 }
 \description{
-Login to the BreedBase server
+Logs in to the BreedBase server.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

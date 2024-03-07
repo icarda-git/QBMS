@@ -2,7 +2,7 @@
 % Please edit documentation in R/qbms.R
 \name{set_qbms_config}
 \alias{set_qbms_config}
-\title{Configure BMS server settings}
+\title{Configure BMS Server Settings}
 \usage{
 set_qbms_config(
   url = "http://localhost/ibpworkbench/controller/auth/login",
@@ -16,30 +16,31 @@ set_qbms_config(
 )
 }
 \arguments{
-\item{url}{URL of the BMS login page (default is "http://localhost/ibpworkbench/")}
+\item{url}{URL of the BMS login page. Default is "http://localhost/ibpworkbench/".}
 
-\item{path}{API path (default is NULL)}
+\item{path}{API path. Default is NULL.}
 
-\item{page_size}{Page size (default is 1000)}
+\item{page_size}{Page size. Default is 1000.}
 
-\item{time_out}{Number of seconds to wait for a response until giving up (default is 10)}
+\item{time_out}{Number of seconds to wait for a response until giving up. Default is 10.}
 
-\item{no_auth}{TRUE if the server doesn't require authentication/login (default is FALSE)}
+\item{no_auth}{TRUE if the server doesn't require authentication/login. Default is FALSE.}
 
-\item{engine}{Backend database (bms default, breedbase, gigwa, ebs)}
+\item{engine}{Backend database (bms default, breedbase, gigwa, ebs).}
 
-\item{brapi_ver}{BrAPI version (v1 or v2)}
+\item{brapi_ver}{BrAPI version (v1 or v2).}
 
-\item{verbose}{Logical indicating if progress bar will display on the console when retrieve data from API (TRUE by default).}
+\item{verbose}{Logical indicating if progress bar will display on the console when retrieving data from API. TRUE by default.}
 }
 \value{
-no return value
+No return value.
 }
 \description{
-Set the connection configuration of the BMS server
+Sets the connection configuration of the BMS server.
 }
 \examples{
 set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

@@ -2,31 +2,31 @@
 % Please edit documentation in R/qbms.R
 \name{gigwa_list_runs}
 \alias{gigwa_list_runs}
-\title{Get the list of run names in the selected GIGWA project}
+\title{Get the List of the Run Names Available in the Selected GIGWA Project}
 \usage{
 gigwa_list_runs()
 }
 \value{
-a list of runs names
+A list of run names.
 }
 \description{
-This function will retrieve the runs list from the current active project as configured 
-in the internal configuration object using `gigwa_set_project()` function.
+This function retrieves the runs list from the currently active project as configured 
+in the internal configuration object using the `gigwa_set_project()` function.
 }
 \examples{
-if(interactive()) {
-# config your GIGWA connection
-set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
-                time_out = 300, engine = "gigwa", no_auth = TRUE)
+if (interactive()) {
+  # Configure your GIGWA connection
+  set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
+                  time_out = 300, engine = "gigwa", no_auth = TRUE)
 
-# select a database by name
-gigwa_set_db("Sorghum-JGI_v1")
+  # Select a database by name
+  gigwa_set_db("Sorghum-JGI_v1")
 
-# select a project by name
-gigwa_set_project("Nelson_et_al_2011")
-
-# list all runs in the selected project
-gigwa_list_runs()
+  # Select a project by name
+  gigwa_set_project("Nelson_et_al_2011")
+  
+  # List all runs in the selected project
+  gigwa_list_runs()
 }
 }
 \seealso{

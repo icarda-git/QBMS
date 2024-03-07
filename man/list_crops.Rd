@@ -2,28 +2,29 @@
 % Please edit documentation in R/qbms.R
 \name{list_crops}
 \alias{list_crops}
-\title{Get the list of supported crops}
+\title{Get the List of Supported Crops}
 \usage{
 list_crops()
 }
 \value{
-a list of supported crops
+A list of supported crops.
 }
 \description{
-Get the list of supported crops
+Retrieves the list of supported crops.
 }
 \examples{
 if(interactive()) {
-# config your BMS connection
-set_qbms_config("https://bms.icarda.org/ibpworkbench")
+  # Configure your BMS connection
+  set_qbms_config("https://bms.icarda.org/ibpworkbench")
 
-# login using your BMS account (interactive mode)
-# you can pass BMS username and password as parameters (batch mode)
-login_bms()
+  # Login using your BMS account (interactive mode)
+  # You can pass the BMS username and password as parameters (batch mode)
+  login_bms()
 
-# list supported crops in the bms server
-list_crops()
+  # List supported crops in the BMS server
+  list_crops()
 }
+
 }
 \seealso{
 \code{\link{login_bms}}

@@ -2,18 +2,18 @@
 % Please edit documentation in R/qbms.R
 \name{rbindx}
 \alias{rbindx}
-\title{Combine data.frames by row, filling in missing columns}
+\title{Combine Data Frames by Row, Filling in Missing Columns}
 \usage{
 rbindx(..., dfs = list(...))
 }
 \arguments{
-\item{...}{the first argument data frame.}
+\item{...}{The first argument data frame.}
 
-\item{dfs}{input data frames to row bind together.}
+\item{dfs}{Input data frames to row bind together.}
 }
 \value{
-a single data frame
+A single data frame.
 }
 \description{
-rbinds a list of data frames filling missing columns with NA
+Combines a list of data frames by row, filling in missing columns with NA.
 }

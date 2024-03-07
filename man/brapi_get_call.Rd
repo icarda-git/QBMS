@@ -2,22 +2,22 @@
 % Please edit documentation in R/qbms.R
 \name{brapi_get_call}
 \alias{brapi_get_call}
-\title{Internal function used for core BrAPI GET calls}
+\title{Internal Function Used for Core BrAPI GET Calls}
 \usage{
 brapi_get_call(call_url, nested = TRUE)
 }
 \arguments{
-\item{call_url}{BrAPI URL to call in GET method}
+\item{call_url}{BrAPI URL to call in GET method.}
 
-\item{nested}{If FALSE, then retrieved JSON data will be flatten (default is TRUE)}
+\item{nested}{Logical indicating whether retrieved JSON data will be flattened. Default is TRUE.}
 }
 \value{
-result object returned by JSON API response
+Result object returned by the JSON API response.
 }
 \description{
-This function created for *internal use only* to cal BrAPI in GET method and
-retrieve the rough response data and send back the results. This function take
-care of pagination, authentication, encoding, compress, decode JSON response, etc.
+This function is created for *internal use only* to call BrAPI in the GET method and
+retrieve the raw response data and send back the results. This function takes
+care of pagination, authentication, encoding, compression, decoding JSON response, etc.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

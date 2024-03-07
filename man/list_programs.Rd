@@ -2,32 +2,33 @@
 % Please edit documentation in R/qbms.R
 \name{list_programs}
 \alias{list_programs}
-\title{Get the list of breeding programs names}
+\title{Get the List of Breeding Programs Names}
 \usage{
 list_programs()
 }
 \value{
-a list of breeding programs names
+A list of breeding programs names.
 }
 \description{
-This function will retrieve the breeding programs list from the current active
-crop as configured in the internal configuration object using `set_crop()`
-function.
+Retrieves the breeding programs list from the current active crop as configured 
+in the internal configuration object using `set_crop()` function.
 }
 \examples{
 if(interactive()) {
-# config your server connection
-set_qbms_config("https://bms.icarda.org/ibpworkbench")
+  # Configure your server connection
+  set_qbms_config("https://bms.icarda.org/ibpworkbench")
 
-# login using your account (interactive mode)
-# you can pass your username and password as parameters (batch mode)
-login_bms()
+  # Login using your account (interactive mode)
+  # You can pass your username and password as parameters (batch mode)
+  login_bms()
 
-set_crop("wheat")
+  # Select a crop by name
+  set_crop("wheat")
 
-# list existing breeding programs
-list_programs()
+  # List existing breeding programs
+  list_programs()
 }
+
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{set_crop}}

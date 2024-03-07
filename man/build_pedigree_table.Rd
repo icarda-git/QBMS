@@ -11,18 +11,18 @@ build_pedigree_table(
 )
 }
 \arguments{
-\item{geno_list}{List of genotypes/germplasms names.}
+\item{geno_list}{A list of genotypes/germplasm names.}
 
-\item{pedigree_list}{List of associated pedigree strings.}
+\item{pedigree_list}{A list of associated pedigree strings.}
 
-\item{pedigree_df}{Pedigree data.frame as per previous call/iteration.}
+\item{pedigree_df}{Pedigree data.frame as per the previous call/iteration.}
 }
 \value{
-A data.frame that has three columns correspond to the identifiers for the individual,
-        female parent and male parent, respectively.
+A data.frame with three columns corresponding to the identifiers for the 
+individual, female parent, and male parent, respectively.
 }
 \description{
-Internal helping function to build the pedigree table recursively.
+Internal helper function to build the pedigree table recursively.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

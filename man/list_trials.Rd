@@ -2,41 +2,42 @@
 % Please edit documentation in R/qbms.R
 \name{list_trials}
 \alias{list_trials}
-\title{Get the list of trials in the current active breeding program}
+\title{Get the List of Trials in the Current Active Breeding Program}
 \usage{
 list_trials(year = NULL)
 }
 \arguments{
-\item{year}{the starting year to filter the list of trials (optional, default is NULL)}
+\item{year}{The starting year to filter the list of trials (optional, default is NULL).}
 }
 \value{
-a list of trials names
+A list of trials names.
 }
 \description{
-This function will retrieve the trials list from the current active breeding
-program as configured in the internal state object using `set_program()`
-function.
+Retrieves the trials list from the current active breeding program as configured 
+in the internal state object using `set_program()` function.
 }
 \examples{
 if(interactive()) {
-# config your server connection
-set_qbms_config("https://bms.icarda.org/ibpworkbench")
+  # Configure your server connection
+  set_qbms_config("https://bms.icarda.org/ibpworkbench")
 
-# login using your account (interactive mode)
-# you can pass your username and password as parameters (batch mode)
-login_bms()
+  # Login using your account (interactive mode)
+  # You can pass your username and password as parameters (batch mode)
+  login_bms()
 
-set_crop("wheat")
+  # Select a crop by name
+  set_crop("wheat")
 
-# select a breeding program by name
-set_program("Wheat International Nurseries")
+  # Select a breeding program by name
+  set_program("Wheat International Nurseries")
 
-# list all studies/trials in the selected program
-list_trials()
+  # List all studies/trials in the selected program
+  list_trials()
 
-# filter listed studies/trials by year
-list_trials(2022)
+  # Filter listed studies/trials by year
+  list_trials(2022)
 }
+
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}

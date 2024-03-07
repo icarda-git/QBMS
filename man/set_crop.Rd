@@ -2,31 +2,33 @@
 % Please edit documentation in R/qbms.R
 \name{set_crop}
 \alias{set_crop}
-\title{Set the current active crop}
+\title{Set the Current Active Crop}
 \usage{
 set_crop(crop_name)
 }
 \arguments{
-\item{crop_name}{the name of the crop}
+\item{crop_name}{The name of the crop.}
 }
 \value{
-no return value
+No return value.
 }
 \description{
-This function will update the current active crop in the internal
-configuration object (including the brapi connection object).
+Updates the current active crop in the internal configuration object (including 
+the BrAPI connection object).
 }
 \examples{
 if(interactive()) {
-# config your server connection
-set_qbms_config("https://bms.icarda.org/ibpworkbench")
+  # Configure your server connection
+  set_qbms_config("https://bms.icarda.org/ibpworkbench")
 
-# login using your account (interactive mode)
-# you can pass your username and password as parameters (batch mode)
-login_bms()
+  # Login using your account (interactive mode)
+  # You can pass your username and password as parameters (batch mode)
+  login_bms()
 
-set_crop("wheat")
+  # Select a crop by name
+  set_crop("wheat")
 }
+
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{list_crops}}

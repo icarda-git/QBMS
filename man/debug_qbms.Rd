@@ -2,20 +2,21 @@
 % Please edit documentation in R/qbms.R
 \name{debug_qbms}
 \alias{debug_qbms}
-\title{Debug internal QBMS status object}
+\title{Debug Internal QBMS Status Object}
 \usage{
 debug_qbms()
 }
 \value{
-an environment object for the package config and status
+An environment object containing package configuration and status.
 }
 \description{
-Return the internal QBMS status object for debugging
+Returns the internal QBMS status object for debugging purposes.
 }
 \examples{
 obj <- debug_qbms()
 obj$config
 obj$state
+
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

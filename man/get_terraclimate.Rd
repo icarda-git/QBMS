@@ -2,7 +2,7 @@
 % Please edit documentation in R/qbms.R
 \name{get_terraclimate}
 \alias{get_terraclimate}
-\title{Get TerraClimate data for a given coordinate(s)}
+\title{Get TerraClimate Data for a Given Coordinate(s)}
 \usage{
 get_terraclimate(
   lat,
@@ -61,15 +61,15 @@ TerraClimate vs. \href{https://www.worldclim.org/data/worldclim21.html}{WorldCli
 }
 }
 \examples{
-if(interactive()) {
-# data <- get_terraclimate(36.016, 36.943, 
-#                          '1979-09-01', '2012-06-30', 
-#                          c('ppt', 'tmin', 'tmax'), c(10:12,1:5))
-data <- get_terraclimate(36.016, 36.943, '1979-09-01', '2012-06-30')
+if (interactive()) {
+  # data <- get_terraclimate(36.016, 36.943, 
+  #                          '1979-09-01', '2012-06-30', 
+  #                          c('ppt', 'tmin', 'tmax'), c(10:12,1:5))
+  data <- get_terraclimate(36.016, 36.943, '1979-09-01', '2012-06-30')
 
-View(data$climate[[1]])
+  View(data$climate[[1]])
 
-View(data$biovars[[1]])
+  View(data$biovars[[1]])
 }
 }
 \references{

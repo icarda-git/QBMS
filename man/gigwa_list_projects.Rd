@@ -2,29 +2,28 @@
 % Please edit documentation in R/qbms.R
 \name{gigwa_list_projects}
 \alias{gigwa_list_projects}
-\title{Get the list of all projects in the selected GIGWA database}
+\title{Get the List of All Projects in the Selected GIGWA Database}
 \usage{
 gigwa_list_projects()
 }
 \value{
-a list of projects names
+A list of project names.
 }
 \description{
-This function will retrieve the projects list from the current active
-database as configured in the internal configuration object using `gigwa_set_db()`
-function.
+Retrieves the projects list from the currently active database as configured 
+in the internal configuration object using the `gigwa_set_db()` function.
 }
 \examples{
-if(interactive()) {
-# config your GIGWA connection
-set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
-                time_out = 300, engine = "gigwa", no_auth = TRUE)
+if (interactive()) {
+  # Configure your GIGWA connection
+  set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
+                  time_out = 300, engine = "gigwa", no_auth = TRUE)
 
-# select a database by name
-gigwa_set_db("Sorghum-JGI_v1")
+  # Select a database by name
+  gigwa_set_db("Sorghum-JGI_v1")
 
-# list existing projects
-gigwa_list_projects()
+  # List existing projects
+  gigwa_list_projects()
 }
 }
 \seealso{

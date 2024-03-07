@@ -2,38 +2,39 @@
 % Please edit documentation in R/qbms.R
 \name{set_trial}
 \alias{set_trial}
-\title{Set the current active trial}
+\title{Set the Current Active Trial}
 \usage{
 set_trial(trial_name)
 }
 \arguments{
-\item{trial_name}{the name of the trial}
+\item{trial_name}{The name of the trial.}
 }
 \value{
-no return value
+No return value.
 }
 \description{
-This function will update the current active trial in the internal state
-object using the trialDbId retrieved from BMS which is associated to the
-given trial_name parameter.
+Updates the current active trial in the internal state object using the 
+trialDbId which is associated with the given trial_name parameter.
 }
 \examples{
 if(interactive()) {
-# config your server connection
-set_qbms_config("https://bms.icarda.org/ibpworkbench")
+  # Configure your server connection
+  set_qbms_config("https://bms.icarda.org/ibpworkbench")
 
-# login using your account (interactive mode)
-# you can pass your username and password as parameters (batch mode)
-login_bms()
+  # Login using your account (interactive mode)
+  # You can pass your username and password as parameters (batch mode)
+  login_bms()
 
-set_crop("wheat")
+  # Select a crop by name
+  set_crop("wheat")
 
-# select a breeding program by name
-set_program("Wheat International Nurseries")
+  # Select a breeding program by name
+  set_program("Wheat International Nurseries")
 
-# select a specific study/trial by name
-set_trial("IDYT39")
+  # Select a specific study/trial by name
+  set_trial("IDYT39")
 }
+
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}}

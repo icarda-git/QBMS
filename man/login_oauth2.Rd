@@ -2,7 +2,7 @@
 % Please edit documentation in R/qbms.R
 \name{login_oauth2}
 \alias{login_oauth2}
-\title{Login using OAuth 2.0 Authentication}
+\title{Login Using OAuth 2.0 Authentication}
 \usage{
 login_oauth2(
   authorize_url,
@@ -14,7 +14,7 @@ login_oauth2(
 )
 }
 \arguments{
-\item{authorize_url}{URL to send client to for authorization.}
+\item{authorize_url}{URL to send the client for authorization.}
 
 \item{access_url}{URL used to exchange unauthenticated for authenticated token.}
 
@@ -22,14 +22,14 @@ login_oauth2(
 
 \item{client_secret}{Consumer secret, also sometimes called the client secret.}
 
-\item{redirect_uri}{The URL that user will be redirected to after authorization is complete (default is http://localhost:1410).}
+\item{redirect_uri}{The URL that the user will be redirected to after authorization is complete (default is http://localhost:1410).}
 
 \item{oauth2_cache}{A logical value or a string. TRUE means to cache using the default cache file .httr-oauth, FALSE means don't cache, 
 and NA means to guess using some sensible heuristics. A string means use the specified path as the cache file.
 Default is FALSE (i.e., don't cache).}
 }
 \value{
-no return value
+No return value.
 }
 \description{
 If the request for an access token is valid, the authorization server needs 

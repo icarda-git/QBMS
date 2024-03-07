@@ -2,15 +2,15 @@
 % Please edit documentation in R/qbms.R
 \name{get_login_details}
 \alias{get_login_details}
-\title{Login pop-up window}
+\title{Login Pop-Up Window}
 \usage{
 get_login_details()
 }
 \value{
-a vector of inserted username and password
+A vector of inserted username and password.
 }
 \description{
-Build a GUI pop-up window using Tcl/Tk to insert BMS username and password
+Builds a GUI pop-up window using Tcl/Tk to insert the username and password.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

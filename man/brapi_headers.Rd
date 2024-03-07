@@ -2,7 +2,7 @@
 % Please edit documentation in R/qbms.R
 \name{brapi_headers}
 \alias{brapi_headers}
-\title{Common HTTP headers to send}
+\title{Common HTTP Headers to Send}
 \usage{
 brapi_headers()
 }
@@ -10,5 +10,5 @@ brapi_headers()
 A list of common HTTP headers to send.
 }
 \description{
-Build the list of common HTTP headers to send with each API call
+Builds the list of common HTTP headers to send with each API call.
 }

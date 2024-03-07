@@ -2,20 +2,20 @@
 % Please edit documentation in R/qbms.R
 \name{ini_hwsd2}
 \alias{ini_hwsd2}
-\title{Download and setup HWSD v2.0 data files to extract their data offline}
+\title{Download and Setup HWSD v2.0 Data Files to Extract their Data Offline}
 \usage{
 ini_hwsd2(data_path = "./data/", timeout = 300)
 }
 \arguments{
-\item{data_path}{String contains the directory path where downloaded HWSD v2.0 data files exists (default is './data/')}
+\item{data_path}{String containing the directory path where downloaded HWSD v2.0 data files exist (default is './data/').}
 
-\item{timeout}{Timeout in seconds to download each HWSD v2.0 data files (default is 300)}
+\item{timeout}{Timeout in seconds to download each HWSD v2.0 data file (default is 300).}
 }
 \value{
-HWSDv2 object that has a list of two items, the HWSD2 raster and the HWSD2 sqlite connection.
+HWSDv2 object that has a list of two items: the HWSD2 raster and the HWSD2 SQLite connection.
 }
 \description{
-Download and setup HWSD v2.0 data files to extract their data offline
+Download and Setup HWSD v2.0 Data Files to Extract their Data Offline
 }
 \seealso{
 \code{\link{get_hwsd2}}

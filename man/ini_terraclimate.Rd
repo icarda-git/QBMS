@@ -2,7 +2,7 @@
 % Please edit documentation in R/qbms.R
 \name{ini_terraclimate}
 \alias{ini_terraclimate}
-\title{Download TerraClimate netCDF data files to extract their data offline}
+\title{Download TerraClimate netCDF Data Files to Extract their Data Offline}
 \usage{
 ini_terraclimate(
   from = "2019-09-01",
@@ -20,18 +20,15 @@ ini_terraclimate(
 \item{clim_vars}{List of all climate variables to be imported. Valid list includes: \emph{aet, def, pet,
 ppt, q, soil, srad, swe, tmax, tmin, vap, ws, vpd, and PDSI}. Default is NULL for all.}
 
-\item{data_path}{String contains the directory path where downloaded netCDF files exists (default is './data/')}
+\item{data_path}{String containing the directory path where downloaded netCDF files exist (default is './data/')}
 
-\item{timeout}{Timeout in seconds to download each netCDF raster file (default is 300)}
+\item{timeout}{Timeout in seconds to download each netCDF raster file (default is 300).}
 }
 \description{
-Download TerraClimate netCDF data files to extract their data offline
+Download TerraClimate netCDF Data Files to Extract their Data Offline
 }
 \examples{
-if(interactive()) {
-  remotes::install_github("icarda-git/QBMS")
-  library(QBMS)
-  
+if (interactive()) {
   ini_terraclimate('2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'))
   
   x <- c(-6.716, 35.917, 76.884)

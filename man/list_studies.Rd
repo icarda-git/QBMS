@@ -2,37 +2,39 @@
 % Please edit documentation in R/qbms.R
 \name{list_studies}
 \alias{list_studies}
-\title{Get the list of studies in the current active trial}
+\title{Get the List of Studies in the Current Active Trial}
 \usage{
 list_studies()
 }
 \value{
-a list of study and location names
+A list of study and location names.
 }
 \description{
-This function will retrieve the studies list from the current active trial
-as configured in the internal state object using `set_trial()` function.
+Retrieves the studies list from the current active trial as configured in the 
+internal state object using `set_trial()` function.
 }
 \examples{
 if(interactive()) {
-# config your server connection
-set_qbms_config("https://bms.icarda.org/ibpworkbench")
+  # Configure your server connection
+  set_qbms_config("https://bms.icarda.org/ibpworkbench")
 
-# login using your account (interactive mode)
-# you can pass your username and password as parameters (batch mode)
-login_bms()
+  # Login using your account (interactive mode)
+  # You can pass your username and password as parameters (batch mode)
+  login_bms()
 
-set_crop("wheat")
+  # Select a crop by name
+  set_crop("wheat")
 
-# select a breeding program by name
-set_program("Wheat International Nurseries")
+  # Select a breeding program by name
+  set_program("Wheat International Nurseries")
 
-# select a specific study/trial by name
-set_trial("IDYT39")
+  # Select a specific study/trial by name
+  set_trial("IDYT39")
 
-# list all environments/locations information in the selected study/trial
-list_studies()
+  # List all environments/locations information in the selected study/trial
+  list_studies()
 }
+
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
