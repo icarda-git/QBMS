@@ -1,4 +1,4 @@
-# QBMS 1.0.0 _2024-04-07_
+# QBMS 1.0.0 _2024-03-07_
   * Add [EBS](https://ebs.excellenceinbreeding.org/) support using BrAPI v2 calls.
   * Implement a new generic internal mechanism that supports both BrAPI versions 1 and 2 calls for all core functions.
   * Support the OAuth 2.0 authentication (Authorization Code Grant flow) using the new `login_oauth2()` function.
