@@ -2762,6 +2762,57 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL, sta
   # https://app.swaggerhub.com/apis/PlantBreedingAPI/BrAPI-Genotyping/2.1#/Allele%20Matrix/post_search_allelematrix
   # https://brapigenotyping21.docs.apiary.io/#/reference/allele-matrix
   
+  ##############################################################################
+  #' BrAPI hackathon 15-19 April 2024
+  #' 
+  #' BrAPI POST Search Entity: 
+  #' https://plant-breeding-api.readthedocs.io/en/latest/docs/best_practices/Search_Services.html#post-search-entity
+  #' 
+  ### Get Geno Map #############################################################
+  #
+  # # https://app.swaggerhub.com/apis/PlantBreedingAPI/BrAPI-Genotyping/2.1#/Variants/post_search_variants
+  # 
+  # auth_code <- paste0("Bearer ", qbms_globals$state$token)
+  # headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
+  # 
+  # referenceName  <- c("Sb01", "Sb03")
+  # referenceDbIds <- paste(paste0(qbms_globals$state$study_db_id, "\u00A7\u00A7", referenceName), collapse = '","')
+  # 
+  # call_url  <- "https://gigwa-dev.southgreen.fr/gigwaV2/rest/brapi/v2/search/variants"
+  # call_body <- paste0('{"start": 100000, "end": 500000, 
+  #                       "referenceDbIds": ["', referenceDbIds,'"],
+  #                       "page": 0, "pageSize": 1000,
+  #                       "variantSetDbIds": ["', qbms_globals$state$variant_set_db_id, '"]}')
+  # 
+  # response <- httr::POST(url = utils::URLencode(call_url), body = call_body, 
+  #                        encode = "raw", httr::accept_json(), httr::content_type_json(), 
+  #                        httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
+  # 
+  # # if (response$status_code == 202) then get the searchResultsDbId from the results
+  # # then use GET /search/variants/{searchResultsDbId} to retrieve the results of the search
+  # # if this GET call (response$status_code == 202) keep looping until response$status_code == 200
+  # 
+  # results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
+  # 
+  # # pagination info:
+  # # results$metadata$pagination$totalCount
+  # 
+  # # pagination GIGWA issues:
+  # # - not responding to the page parameter!
+  # # - can't increase pageSize > 10000
+  # 
+  # geno_map <- as.data.frame(results$result$data)
+  # 
+  # geno_map$alleles <- paste0(geno_map$referenceBases, "/", geno_map$alternateBases)
+  # 
+  # geno_map <- geno_map[, c("variantNames", "alleles", "referenceName", "start")]
+  # geno_map <- geno_map[with(geno_map, order(referenceName, start)),]
+  # 
+  # colnames(geno_map) <- c("rs#", "alleles", "chrom", "pos")
+  # rownames(geno_map) <- NULL
+  # 
+  ############################################################################## 
+  
   call_url <- paste0(qbms_globals$config$base_url, "/ga4gh/variants/search")
   
   auth_code <- paste0("Bearer ", qbms_globals$state$token)
