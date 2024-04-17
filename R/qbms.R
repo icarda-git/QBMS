@@ -3059,6 +3059,107 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
 }
 
 
+brapi_get_allelematrix <- function(samples = NULL, start = 0, end = '', chrom = NULL, 
+                                   snps = NULL, snps_pageSize = 10000, samples_pageSize = 100) {
+  germplasmNames <- samples
+  germplasmDbIds <- paste(paste0(qbms_globals$config$db, "\u00A7", germplasmNames), collapse = '","')
+  
+  referenceStart <- start
+  referenceEnd   <- end
+  referenceName  <- chrom
+  positionRanges <- paste0(referenceName, ":", format(referenceStart, scientific = FALSE), "-", format(referenceEnd, scientific = FALSE))
+  
+  variantNames <- unlist(snps)
+  variantDbIds <- paste(paste0(qbms_globals$config$db, "\u00A7", variantNames), collapse = '","')
+  
+  variants_pageSize <- snps_pageSize
+  callsets_pageSize <- samples_pageSize
+  
+  variants_page <- 0
+  callsets_page <- 0
+  
+  variantSetDbIds <- qbms_globals$state$variant_set_db_id
+  
+  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/allelematrix")
+  
+  post_schema <- paste0('{
+                   "dataMatrixAbbreviations": ["GT"],
+                   "variantSetDbIds": ["', variantSetDbIds, '"],
+                   "positionRanges":  ["', positionRanges, '"],
+                   "germplasmDbIds":  ["', germplasmDbIds, '"],
+                   "variantDbIds":    ["', variantDbIds, '"],
+                   "pagination": [
+                      {"dimension": "variants", "page": {variants_page}, "pageSize": ', variants_pageSize, '}, 
+                      {"dimension": "callsets", "page": {callsets_page}, "pageSize": ', callsets_pageSize, '}
+                   ]
+                }')
+  
+  call_body <- sub("\\{callsets_page\\}", callsets_page, sub("\\{variants_page\\}", variants_page, post_schema))
+  
+  results <- brapi_post_call(call_url, call_body, FALSE)
+  
+  pagination <- results$result$pagination
+  
+  geno_data <- as.data.frame(matrix(nrow = pagination$totalCount[1], ncol = pagination$totalCount[2]))
+  
+  range_start <- (pagination$page * pagination$pageSize) + 1
+  range_end   <- ifelse(pagination$totalPages == (pagination$page + 1), 
+                        pagination$totalCount, 
+                        (pagination$page + 1) * pagination$pageSize)
+  
+  page_data <- as.data.frame(results$result$dataMatrices$dataMatrix)
+  
+  geno_data[range_start[1]:range_end[1], range_start[2]:range_end[2]] <- page_data
+  
+  total_pages <- pagination$totalPages[1] * pagination$totalPages[2] - 1
+  pb <- txtProgressBar(min = 0, max = total_pages, initial = 0, style = 3) 
+  
+  for (i in 0:(pagination$totalPages[1] - 1)) {
+    for (j in 0:(pagination$totalPages[2] - 1)) {
+      if (i == 0 & j == 0) next
+      
+      call_body <- sub("\\{callsets_page\\}", j, sub("\\{variants_page\\}", i, post_schema))
+      
+      results <- brapi_post_call(call_url, call_body, FALSE)
+      
+      pagination <- results$result$pagination
+      
+      range_start <- (pagination$page * pagination$pageSize) + 1
+      range_end   <- ifelse(pagination$totalPages == (pagination$page + 1),
+                            pagination$totalCount,
+                            (pagination$page + 1) * pagination$pageSize)
+      
+      page_data <- as.data.frame(results$result$dataMatrices$dataMatrix)
+      
+      geno_data[range_start[1]:range_end[1], range_start[2]:range_end[2]] <- page_data
+      
+      setTxtProgressBar(pb, i * pagination$totalPages[2] + j)
+    }
+  }
+  
+  close(pb)
+  
+  geno_data[geno_data == "."] <- NA
+  geno_data[geno_data == "1"] <- 2
+  
+  # results$result$sepPhased
+  # results$result$sepUnphased
+  heterozygous <- c(paste(0, 1, sep = results$result$sepPhased),
+                    paste(1, 0, sep = results$result$sepPhased),
+                    paste(0, 1, sep = results$result$sepUnphased),
+                    paste(1, 0, sep = results$result$sepUnphased))
+  
+  geno_data[geno_data %in% heterozygous] <- 1
+  
+  geno_data <- as.data.frame(sapply(geno_data, as.numeric))
+  
+  colnames(geno_data) <- germplasmNames
+  rownames(geno_data) <- variantNames
+  
+  return(geno_data)
+}
+
+
 #' Get the Metadata of the Current Active GIGWA Run
 #'
 #' @description
