@@ -380,6 +380,7 @@ set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth
   qbms_globals$config$engine    <- engine
   qbms_globals$config$brapi_ver <- brapi_ver
   qbms_globals$config$verbose   <- verbose
+  qbms_globals$config$sleep     <- 1
   
   if (no_auth == TRUE) {
     qbms_globals$state$token <- NA
@@ -562,6 +563,38 @@ if (requireNamespace("async", quietly = TRUE)) {
     
     return(result_data)
   }
+}
+
+
+brapi_post_call <- function(call_url, call_body, nested = TRUE) {
+  headers  <- brapi_headers()
+  call_url <- utils::URLencode(call_url)
+  
+  response <- httr::POST(url = call_url, body = call_body,
+                         encode = "raw", httr::accept_json(), httr::content_type_json(),
+                         httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
+  
+  results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
+  
+  # https://plant-breeding-api.readthedocs.io/en/latest/docs/best_practices/Search_Services.html#post-search-entity
+  if (response$status_code == 202) {
+    repeat {
+      Sys.sleep(qbms_globals$config$sleep)
+      
+      searchResultsDbId <- results$result$searchResultsDbId
+      
+      response <- httr::GET(url = paste(call_url, searchResultsDbId, sep = "/"), 
+                            httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
+      
+      results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
+      
+      if (response$status_code == 200) {
+        break
+      }
+    }
+  }
+  
+  return(results)
 }
 
 
@@ -2834,8 +2867,8 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
   # variants_page <- 0
   # callsets_page <- 0
   # 
-  # variants_pageSize <- 1000
-  # callsets_pageSize <- 1000
+  # variants_pageSize <- 10000
+  # callsets_pageSize <- 100
   # 
   # call_url    <- "https://gigwa-dev.southgreen.fr/gigwaV2/rest/brapi/v2/search/allelematrix"
   # post_schema <- paste0('{
