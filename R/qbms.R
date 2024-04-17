@@ -2725,7 +2725,7 @@ gigwa_get_samples <- function() {
 #' }
 #' @export
 
-gigwa_get_variants <- function(max_missing = 1, min_maf = 0, samples = NULL, start = NULL, end = NULL, referenceName = NULL) {
+gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, start = NULL, end = NULL, referenceName = NULL) {
   if (is.null(qbms_globals$state$study_db_id)) {
     stop("No project has been selected yet! You have to set your project first using the `gigwa_set_project()` function")
   }
