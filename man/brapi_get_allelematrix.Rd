@@ -17,3 +17,32 @@ brapi_get_allelematrix(
 \description{
 BrAPI Get Allele Matrix
 }
+\examples{
+if (interactive()) {
+  # Configure your GIGWA connection
+  set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
+                  time_out = 300, engine = "gigwa", no_auth = TRUE)
+
+  # Select a database by name
+  gigwa_set_db("Sorghum-JGI_v1")
+
+  # Select a project by name
+  gigwa_set_project("Nelson_et_al_2011")
+  
+  # Select a specific run by name
+  gigwa_set_run("run1")
+  
+  chk <- Sys.time()
+  marker_matrix <- gigwa_get_variants(start = 0, end = 9999999, referenceName = "Sb01", samples = samples)
+  round(Sys.time()-chk, 2)
+  
+  chk <- Sys.time()
+  geno_data <- brapi_get_allelematrix(samples, 0, 9999999, "Sb01", marker_matrix$`rs#`) 
+  round(Sys.time()-chk, 2)
+  
+  all.equal(geno_data, marker_matrix[,5:12], check.attributes = FALSE)
+}
+}
+\author{
+Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+}

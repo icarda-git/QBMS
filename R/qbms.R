@@ -2900,6 +2900,34 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
 
 #' BrAPI Get Allele Matrix
 #' 
+#' @author 
+#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' 
+#' @examples
+#' if (interactive()) {
+#'   # Configure your GIGWA connection
+#'   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
+#'                   time_out = 300, engine = "gigwa", no_auth = TRUE)
+#'
+#'   # Select a database by name
+#'   gigwa_set_db("Sorghum-JGI_v1")
+#'
+#'   # Select a project by name
+#'   gigwa_set_project("Nelson_et_al_2011")
+#'   
+#'   # Select a specific run by name
+#'   gigwa_set_run("run1")
+#'   
+#'   chk <- Sys.time()
+#'   marker_matrix <- gigwa_get_variants(start = 0, end = 9999999, referenceName = "Sb01", samples = samples)
+#'   round(Sys.time()-chk, 2)
+#'   
+#'   chk <- Sys.time()
+#'   geno_data <- brapi_get_allelematrix(samples, 0, 9999999, "Sb01", marker_matrix$`rs#`) 
+#'   round(Sys.time()-chk, 2)
+#'   
+#'   all.equal(geno_data, marker_matrix[,5:12], check.attributes = FALSE)
+#' }
 #' @export
 
 brapi_get_allelematrix <- function(samples = NULL, start = 0, end = '', chrom = NULL, 
@@ -3007,6 +3035,71 @@ brapi_get_allelematrix <- function(samples = NULL, start = 0, end = '', chrom = 
   rownames(geno_data) <- variantNames
   
   return(geno_data)
+}
+
+
+#' BrAPI Get Geno Map
+#' 
+#' @author 
+#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' 
+#' @examples
+#' if (interactive()) {
+#'   # Configure your GIGWA connection
+#'   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
+#'                   time_out = 300, engine = "gigwa", no_auth = TRUE)
+#'
+#'   # Select a database by name
+#'   gigwa_set_db("Sorghum-JGI_v1")
+#'
+#'   # Select a project by name
+#'   gigwa_set_project("Nelson_et_al_2011")
+#'   
+#'   # Select a specific run by name
+#'   gigwa_set_run("run1")
+#'   
+#'   geno_map <- brapi_get_variants(start = 0, end = 999999, chrom = c("Sb01", "Sb03"))
+#' }
+#' @export
+
+brapi_get_variants <- function(start = 0, end = 999999, chrom = NULL) {
+  referenceName  <- chrom
+  referenceDbIds <- paste(paste0(qbms_globals$state$study_db_id, "\u00A7\u00A7", referenceName), collapse = '","')
+  
+  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/variants")
+  page <- 0
+  
+  post_schema <- paste0('{
+                            "start": ', start,', 
+                            "end": ', end,',
+                            "referenceDbIds": ["', referenceDbIds,'"],
+                            "page": {page}, 
+                            "pageSize": ', qbms_globals$config$page_size, ',
+                            "variantSetDbIds": ["', qbms_globals$state$variant_set_db_id, '"]
+                        }')
+  
+  call_body <- sub("\\{page\\}", page, post_schema)
+  
+  results <- brapi_post_call(call_url, call_body, FALSE)
+  
+  # pagination info:
+  # results$metadata$pagination
+  
+  # pagination GIGWA issues:
+  # - not responding to the page parameter!
+  # - can't increase pageSize > 10000
+  
+  geno_map <- as.data.frame(results$result$data)
+  
+  geno_map$alleles <- paste0(geno_map$referenceBases, "/", geno_map$alternateBases)
+  
+  geno_map <- geno_map[, c("variantNames", "alleles", "referenceName", "start")]
+  geno_map <- geno_map[with(geno_map, order(referenceName, start)),]
+  
+  colnames(geno_map) <- c("rs#", "alleles", "chrom", "pos")
+  rownames(geno_map) <- NULL
+  
+  return(geno_map)
 }
 
 
