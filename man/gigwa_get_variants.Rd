@@ -6,7 +6,7 @@
 \usage{
 gigwa_get_variants(
   max_missing = 1,
-  min_maf = 0,
+  min_maf = 0.5,
   samples = NULL,
   start = NULL,
   end = NULL,

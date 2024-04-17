@@ -2794,168 +2794,7 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
   # https://rest.ensembl.org/documentation/info/gavariants
   # https://app.swaggerhub.com/apis/PlantBreedingAPI/BrAPI-Genotyping/2.1#/Allele%20Matrix/post_search_allelematrix
   # https://brapigenotyping21.docs.apiary.io/#/reference/allele-matrix
-  
-  ##############################################################################
-  #' BrAPI hackathon 15-19 April 2024
-  #' 
-  #' BrAPI POST Search Entity: 
-  #' https://plant-breeding-api.readthedocs.io/en/latest/docs/best_practices/Search_Services.html#post-search-entity
-  #' 
-  ### Get Geno Map #############################################################
-  #
-  # # https://app.swaggerhub.com/apis/PlantBreedingAPI/BrAPI-Genotyping/2.1#/Variants/post_search_variants
-  # 
-  # auth_code <- paste0("Bearer ", qbms_globals$state$token)
-  # headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
-  # 
-  # referenceName  <- c("Sb01", "Sb03")
-  # referenceDbIds <- paste(paste0(qbms_globals$state$study_db_id, "\u00A7\u00A7", referenceName), collapse = '","')
-  # 
-  # call_url  <- "https://gigwa-dev.southgreen.fr/gigwaV2/rest/brapi/v2/search/variants"
-  # call_body <- paste0('{"start": 100000, "end": 500000, 
-  #                       "referenceDbIds": ["', referenceDbIds,'"],
-  #                       "page": 0, "pageSize": 1000,
-  #                       "variantSetDbIds": ["', qbms_globals$state$variant_set_db_id, '"]}')
-  # 
-  # response <- httr::POST(url = utils::URLencode(call_url), body = call_body, 
-  #                        encode = "raw", httr::accept_json(), httr::content_type_json(), 
-  #                        httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
-  # 
-  # # if (response$status_code == 202) then get the searchResultsDbId from the results
-  # # then use GET /search/variants/{searchResultsDbId} to retrieve the results of the search
-  # # if this GET call (response$status_code == 202) keep looping until response$status_code == 200
-  # 
-  # results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
-  # 
-  # # pagination info:
-  # # results$metadata$pagination$totalCount
-  # 
-  # # pagination GIGWA issues:
-  # # - not responding to the page parameter!
-  # # - can't increase pageSize > 10000
-  # 
-  # geno_map <- as.data.frame(results$result$data)
-  # 
-  # geno_map$alleles <- paste0(geno_map$referenceBases, "/", geno_map$alternateBases)
-  # 
-  # geno_map <- geno_map[, c("variantNames", "alleles", "referenceName", "start")]
-  # geno_map <- geno_map[with(geno_map, order(referenceName, start)),]
-  # 
-  # colnames(geno_map) <- c("rs#", "alleles", "chrom", "pos")
-  # rownames(geno_map) <- NULL
-  # 
-  ### Get Geno Matrix ##########################################################
-  #
-  # # https://app.swaggerhub.com/apis/PlantBreedingAPI/BrAPI-Genotyping/2.1#/Allele%20Matrix/post_search_allelematrix
-  # 
-  # auth_code <- paste0("Bearer ", qbms_globals$state$token)
-  # headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
-  # 
-  # variantSetDbIds <- qbms_globals$state$variant_set_db_id
-  # 
-  # referenceName  <- "Sb01"
-  # referenceStart <- 100000
-  # referenceEnd   <- 500000
-  # positionRanges <- paste0(referenceName, ":", format(referenceStart, scientific = FALSE), "-", format(referenceEnd, scientific = FALSE))
-  # 
-  # germplasmNames <- c("ind1", "ind3", "ind7")
-  # germplasmDbIds <- paste(paste0(qbms_globals$config$db, "\u00A7", germplasmNames), collapse = '","')
-  # 
-  # variantNames <- unlist(geno_map[1:20, 'rs#'])
-  # variantDbIds <- paste(paste0(qbms_globals$config$db, "\u00A7", variantNames), collapse = '","')
-  # 
-  # variants_page <- 0
-  # callsets_page <- 0
-  # 
-  # variants_pageSize <- 10000
-  # callsets_pageSize <- 100
-  # 
-  # call_url    <- "https://gigwa-dev.southgreen.fr/gigwaV2/rest/brapi/v2/search/allelematrix"
-  # post_schema <- paste0('{
-  #                  "dataMatrixAbbreviations": ["GT"],
-  #                  "variantSetDbIds": ["', variantSetDbIds, '"],
-  #                  "positionRanges":  ["', positionRanges, '"],
-  #                  "germplasmDbIds":  ["', germplasmDbIds, '"],
-  #                  "variantDbIds":    ["', variantDbIds, '"],
-  #                  "pagination": [
-  #                     {"dimension": "variants", "page": {variants_page}, "pageSize": ', variants_pageSize, '}, 
-  #                     {"dimension": "callsets", "page": {callsets_page}, "pageSize": ', callsets_pageSize, '}
-  #                  ]
-  #               }')
-  # 
-  # call_body <- sub("\\{callsets_page\\}", callsets_page, sub("\\{variants_page\\}", variants_page, post_schema))
-  # 
-  # response <- httr::POST(url = utils::URLencode(call_url), body = call_body,
-  #                        encode = "raw", httr::accept_json(), httr::content_type_json(),
-  #                        httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
-  # 
-  # # if (response$status_code == 202) then get the searchResultsDbId from the results
-  # # then use GET /search/allelematrix/{searchResultsDbId} to retrieve the results of the search
-  # # if this GET call (response$status_code == 202) keep looping until response$status_code == 200
-  # 
-  # results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
-  # 
-  # # pagination info:
-  # pagination <- results$result$pagination
-  # 
-  # geno_data <- as.data.frame(matrix(nrow = pagination$totalCount[1], ncol = pagination$totalCount[2]))
-  # 
-  # range_start <- (pagination$page * pagination$pageSize) + 1
-  # range_end   <- ifelse(pagination$totalPages == (pagination$page + 1), 
-  #                       pagination$totalCount, 
-  #                       (pagination$page + 1) * pagination$pageSize)
-  # 
-  # page_data <- as.data.frame(results$result$dataMatrices$dataMatrix)
-  # 
-  # geno_data[range_start[1]:range_end[1], range_start[2]:range_end[2]] <- page_data
-  # 
-  # # looping over all pages in 2 dimensions
-  # total_pages <- pagination$totalPages[1] * pagination$totalPages[2] - 1
-  # pb <- txtProgressBar(min = 1, max = total_pages, initial = 0, style = 3) 
-  # 
-  # for (i in 0:(pagination$totalPages[1] - 1)) {
-  #   for (j in 0:(pagination$totalPages[2] - 1)) {
-  #     if (i == 0 & j == 0) next
-  #     
-  #     call_body <- sub("\\{callsets_page\\}", j, sub("\\{variants_page\\}", i, post_schema))
-  #     
-  #     response <- httr::POST(url = utils::URLencode(call_url), body = call_body,
-  #                            encode = "raw", httr::accept_json(), httr::content_type_json(),
-  #                            httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
-  #     
-  #     results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
-  #     pagination <- results$result$pagination
-  #     
-  #     range_start <- (pagination$page * pagination$pageSize) + 1
-  #     range_end   <- ifelse(pagination$totalPages == (pagination$page + 1),
-  #                           pagination$totalCount,
-  #                           (pagination$page + 1) * pagination$pageSize)
-  #     
-  #     page_data <- as.data.frame(results$result$dataMatrices$dataMatrix)
-  #     
-  #     geno_data[range_start[1]:range_end[1], range_start[2]:range_end[2]] <- page_data
-  #     
-  #     setTxtProgressBar(pb, i * pagination$totalPages[2] + j)
-  #   }
-  # }
-  # 
-  # close(pb)
-  # 
-  # geno_data[geno_data == "."] <- NA
-  # geno_data[geno_data == "1"] <- 2
-  # 
-  # # results$result$sepPhased
-  # # results$result$sepUnphased
-  # geno_data[geno_data == "1/0"] <- 1
-  # geno_data[geno_data == "0/1"] <- 1
-  # 
-  # geno_data <- as.data.frame(sapply(geno_data, as.numeric))
-  # 
-  # colnames(geno_data) <- germplasmNames
-  # rownames(geno_data) <- variantNames
-  # 
-  ############################################################################## 
-  
+
   call_url <- paste0(qbms_globals$config$base_url, "/ga4gh/variants/search")
   
   auth_code <- paste0("Bearer ", qbms_globals$state$token)
@@ -3059,6 +2898,10 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
 }
 
 
+#' BrAPI Get Allele Matrix
+#' 
+#' @export
+
 brapi_get_allelematrix <- function(samples = NULL, start = 0, end = '', chrom = NULL, 
                                    snps = NULL, snps_pageSize = 10000, samples_pageSize = 100) {
   germplasmNames <- samples
@@ -3111,33 +2954,38 @@ brapi_get_allelematrix <- function(samples = NULL, start = 0, end = '', chrom = 
   
   geno_data[range_start[1]:range_end[1], range_start[2]:range_end[2]] <- page_data
   
-  total_pages <- pagination$totalPages[1] * pagination$totalPages[2] - 1
-  pb <- txtProgressBar(min = 0, max = total_pages, initial = 0, style = 3) 
+  remaining_pages <- pagination$totalPages[1] * pagination$totalPages[2] - 1
   
-  for (i in 0:(pagination$totalPages[1] - 1)) {
-    for (j in 0:(pagination$totalPages[2] - 1)) {
-      if (i == 0 & j == 0) next
-      
-      call_body <- sub("\\{callsets_page\\}", j, sub("\\{variants_page\\}", i, post_schema))
-      
-      results <- brapi_post_call(call_url, call_body, FALSE)
-      
-      pagination <- results$result$pagination
-      
-      range_start <- (pagination$page * pagination$pageSize) + 1
-      range_end   <- ifelse(pagination$totalPages == (pagination$page + 1),
-                            pagination$totalCount,
-                            (pagination$page + 1) * pagination$pageSize)
-      
-      page_data <- as.data.frame(results$result$dataMatrices$dataMatrix)
-      
-      geno_data[range_start[1]:range_end[1], range_start[2]:range_end[2]] <- page_data
-      
-      setTxtProgressBar(pb, i * pagination$totalPages[2] + j)
+  if (remaining_pages > 0) {
+    pb <- txtProgressBar(min = 0, max = remaining_pages, initial = 0, style = 3) 
+    
+    for (i in 0:(pagination$totalPages[1] - 1)) {
+      for (j in 0:(pagination$totalPages[2] - 1)) {
+        if (i == 0 & j == 0) next
+        
+        call_body <- sub("\\{callsets_page\\}", j, sub("\\{variants_page\\}", i, post_schema))
+        
+        results <- brapi_post_call(call_url, call_body, FALSE)
+        
+        pagination <- results$result$pagination
+        
+        range_start <- (pagination$page * pagination$pageSize) + 1
+        range_end   <- ifelse(pagination$totalPages == (pagination$page + 1),
+                              pagination$totalCount,
+                              (pagination$page + 1) * pagination$pageSize)
+        
+        page_data <- as.data.frame(results$result$dataMatrices$dataMatrix)
+        
+        geno_data[range_start[1]:range_end[1], range_start[2]:range_end[2]] <- page_data
+        
+        setTxtProgressBar(pb, i * pagination$totalPages[2] + j)
+      }
     }
+    
+    close(pb)
   }
   
-  close(pb)
+  geno_data <- as.matrix(geno_data)
   
   geno_data[geno_data == "."] <- NA
   geno_data[geno_data == "1"] <- 2
@@ -3151,8 +2999,10 @@ brapi_get_allelematrix <- function(samples = NULL, start = 0, end = '', chrom = 
   
   geno_data[geno_data %in% heterozygous] <- 1
   
-  geno_data <- as.data.frame(sapply(geno_data, as.numeric))
-  
+  geno_data <- as.data.frame(matrix(as.numeric(unlist(geno_data)), 
+                                    nrow = pagination$totalCount[1], 
+                                    ncol = pagination$totalCount[2]))
+
   colnames(geno_data) <- germplasmNames
   rownames(geno_data) <- variantNames
   
