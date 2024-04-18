@@ -3078,27 +3078,40 @@ brapi_get_variants <- function(start = NULL, end = NULL, chrom = NULL) {
   call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/variants")
   page     <- 0
   
-  call_body <- paste0('{', startParam, endParam,
-                         '"referenceDbIds": [', referenceDbIds,'],
-                          "page": {page}, 
-                          "pageToken": {page},
-                          "pageSize": ', qbms_globals$config$page_size, ',
-                          "variantSetDbIds": ["', qbms_globals$state$variant_set_db_id, '"]
-                       }')
+  post_schema <- paste0('{', startParam, endParam,
+                           '"referenceDbIds": [', referenceDbIds,'],
+                            "page": {page}, 
+                            "pageToken": {page},
+                            "pageSize": ', qbms_globals$config$page_size, ',
+                            "variantSetDbIds": ["', qbms_globals$state$variant_set_db_id, '"]
+                         }')
   
-  call_body <- gsub("\\{page\\}", page, call_body)
+  call_body <- gsub("\\{page\\}", page, post_schema)
 
   results <- brapi_post_call(call_url, call_body, FALSE)
   
-  # pagination info:
-  # results$metadata$pagination
-  
-  # pagination GIGWA issues:
-  # - not responding to the page parameter!
-  # - can't increase pageSize > 10000
-  
+  remaining_pages <- with(results$metadata$pagination, ceiling(totalCount/pageSize)) - 1
+
   geno_map <- as.data.frame(results$result$data)
-  
+
+  if (remaining_pages > 0) {
+    pb <- txtProgressBar(min = 0, max = remaining_pages, initial = 0, style = 3) 
+    
+    for (i in 1:remaining_pages) {
+      call_body <- gsub("\\{page\\}", i, post_schema)
+      
+      results <- brapi_post_call(call_url, call_body, FALSE)
+      
+      page_data <- as.data.frame(results$result$data)
+      
+      geno_map <- rbind(geno_map, page_data)
+      
+      setTxtProgressBar(pb, i)
+    }
+    
+    close(pb)
+  }
+
   geno_map$alleles <- paste0(geno_map$referenceBases, "/", geno_map$alternateBases)
   
   geno_map <- geno_map[, c("variantNames", "alleles", "referenceName", "start")]
