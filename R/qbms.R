@@ -2918,6 +2918,9 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
 #'   # Select a specific run by name
 #'   gigwa_set_run("run1")
 #'   
+#'   # Get a list of all samples in the selected run
+#'   samples <- gigwa_get_samples()
+#'   
 #'   chk <- Sys.time()
 #'   marker_matrix <- gigwa_get_variants(start = 0, end = 9999999, referenceName = "Sb01", samples = samples)
 #'   round(Sys.time()-chk, 2)
@@ -3058,28 +3061,33 @@ brapi_get_allelematrix <- function(samples = NULL, start = 0, end = '', chrom = 
 #'   # Select a specific run by name
 #'   gigwa_set_run("run1")
 #'   
-#'   geno_map <- brapi_get_variants(start = 0, end = 999999, chrom = c("Sb01", "Sb03"))
+#'   geno_map <- brapi_get_variants(start = 0, end = 12345678, chrom = c("Sb07"))
 #' }
 #' @export
 
-brapi_get_variants <- function(start = 0, end = 999999, chrom = NULL) {
-  referenceName  <- chrom
-  referenceDbIds <- paste(paste0(qbms_globals$state$study_db_id, "\u00A7\u00A7", referenceName), collapse = '","')
+brapi_get_variants <- function(start = NULL, end = NULL, chrom = NULL) {
+  startParam <- ifelse(is.null(start), "", paste('"start":', format(start, scientific = FALSE), ","))
+  endParam   <- ifelse(is.null(end), "", paste('"end":', format(end, scientific = FALSE), ","))
   
+  if (is.null(chrom)) {
+    referenceDbIds <- ""
+  } else {
+    referenceDbIds <- paste0('"', paste0(paste0(qbms_globals$state$study_db_id, "\u00A7\u00A7", chrom), collapse = '","'), '"')
+  }
+
   call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/variants")
-  page <- 0
+  page     <- 0
   
-  post_schema <- paste0('{
-                            "start": ', start,', 
-                            "end": ', end,',
-                            "referenceDbIds": ["', referenceDbIds,'"],
-                            "page": {page}, 
-                            "pageSize": ', qbms_globals$config$page_size, ',
-                            "variantSetDbIds": ["', qbms_globals$state$variant_set_db_id, '"]
-                        }')
+  call_body <- paste0('{', startParam, endParam,
+                         '"referenceDbIds": [', referenceDbIds,'],
+                          "page": {page}, 
+                          "pageToken": {page},
+                          "pageSize": ', qbms_globals$config$page_size, ',
+                          "variantSetDbIds": ["', qbms_globals$state$variant_set_db_id, '"]
+                       }')
   
-  call_body <- sub("\\{page\\}", page, post_schema)
-  
+  call_body <- gsub("\\{page\\}", page, call_body)
+
   results <- brapi_post_call(call_url, call_body, FALSE)
   
   # pagination info:
