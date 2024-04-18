@@ -4,7 +4,16 @@
 \alias{brapi_get_variants}
 \title{BrAPI Get Geno Map}
 \usage{
-brapi_get_variants(start = 0, end = 999999, chrom = NULL)
+brapi_get_variants(start = NULL, end = NULL, chrom = NULL, simplify = TRUE)
+}
+\arguments{
+\item{start}{start}
+
+\item{end}{end}
+
+\item{chrom}{chrom}
+
+\item{simplify}{simplify}
 }
 \description{
 BrAPI Get Geno Map
@@ -24,7 +33,7 @@ if (interactive()) {
   # Select a specific run by name
   gigwa_set_run("run1")
   
-  geno_map <- brapi_get_variants(start = 0, end = 999999, chrom = c("Sb01", "Sb03"))
+  geno_map <- brapi_get_variants(start = 0, end = 12345678, chrom = c("Sb07"))
 }
 }
 \author{

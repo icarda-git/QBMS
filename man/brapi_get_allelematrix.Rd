@@ -11,8 +11,26 @@ brapi_get_allelematrix(
   chrom = NULL,
   snps = NULL,
   snps_pageSize = 10000,
-  samples_pageSize = 100
+  samples_pageSize = 100,
+  simplify = TRUE
 )
+}
+\arguments{
+\item{samples}{samples}
+
+\item{start}{start}
+
+\item{end}{end}
+
+\item{chrom}{chrom}
+
+\item{snps}{snps}
+
+\item{snps_pageSize}{snps_pageSize}
+
+\item{samples_pageSize}{samples_pageSize}
+
+\item{simplify}{simplify}
 }
 \description{
 BrAPI Get Allele Matrix
@@ -32,12 +50,22 @@ if (interactive()) {
   # Select a specific run by name
   gigwa_set_run("run1")
   
+  # Get a list of all samples in the selected run
+  samples <- gigwa_get_samples()
+  
   chk <- Sys.time()
-  marker_matrix <- gigwa_get_variants(start = 0, end = 9999999, referenceName = "Sb01", samples = samples)
+  marker_matrix <- gigwa_get_variants(start = 0, 
+                                      end = 012345678, 
+                                      referenceName = "Sb01", 
+                                      samples = samples)
   round(Sys.time()-chk, 2)
   
   chk <- Sys.time()
-  geno_data <- brapi_get_allelematrix(samples, 0, 9999999, "Sb01", marker_matrix$`rs#`) 
+  geno_data <- brapi_get_allelematrix(samples = samples, 
+                                      start = 0, 
+                                      end = 012345678, 
+                                      chrom = "Sb01", 
+                                      snps = marker_matrix$`rs#`) 
   round(Sys.time()-chk, 2)
   
   all.equal(geno_data, marker_matrix[,5:12], check.attributes = FALSE)

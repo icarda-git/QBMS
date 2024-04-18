@@ -2900,6 +2900,15 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
 
 #' BrAPI Get Allele Matrix
 #' 
+#' @param samples samples
+#' @param start start
+#' @param end end
+#' @param chrom chrom
+#' @param snps snps 
+#' @param snps_pageSize snps_pageSize
+#' @param samples_pageSize samples_pageSize
+#' @param simplify simplify
+#' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
@@ -2922,19 +2931,26 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
 #'   samples <- gigwa_get_samples()
 #'   
 #'   chk <- Sys.time()
-#'   marker_matrix <- gigwa_get_variants(start = 0, end = 012345678, referenceName = "Sb01", samples = samples)
+#'   marker_matrix <- gigwa_get_variants(start = 0, 
+#'                                       end = 012345678, 
+#'                                       referenceName = "Sb01", 
+#'                                       samples = samples)
 #'   round(Sys.time()-chk, 2)
 #'   
 #'   chk <- Sys.time()
-#'   geno_data <- brapi_get_allelematrix(samples, 0, 012345678, "Sb01", marker_matrix$`rs#`) 
+#'   geno_data <- brapi_get_allelematrix(samples = samples, 
+#'                                       start = 0, 
+#'                                       end = 012345678, 
+#'                                       chrom = "Sb01", 
+#'                                       snps = marker_matrix$`rs#`) 
 #'   round(Sys.time()-chk, 2)
 #'   
 #'   all.equal(geno_data, marker_matrix[,5:12], check.attributes = FALSE)
 #' }
 #' @export
 
-brapi_get_allelematrix <- function(samples = NULL, start = 0, end = '', chrom = NULL, 
-                                   snps = NULL, snps_pageSize = 10000, samples_pageSize = 100) {
+brapi_get_allelematrix <- function(samples = NULL, start = 0, end = '', chrom = NULL, snps = NULL, 
+                                   snps_pageSize = 10000, samples_pageSize = 100, simplify = TRUE) {
   germplasmDbIds  <- ""
   variantDbIds    <- ""
   positionRanges  <- ""
@@ -3003,7 +3019,7 @@ brapi_get_allelematrix <- function(samples = NULL, start = 0, end = '', chrom = 
   remaining_pages <- pagination$totalPages[1] * pagination$totalPages[2] - 1
   
   if (remaining_pages > 0) {
-    pb <- txtProgressBar(min = 0, max = remaining_pages, initial = 0, style = 3) 
+    pb <- utils::txtProgressBar(min = 0, max = remaining_pages, initial = 0, style = 3) 
     
     for (i in 0:(pagination$totalPages[1] - 1)) {
       for (j in 0:(pagination$totalPages[2] - 1)) {
@@ -3028,28 +3044,27 @@ brapi_get_allelematrix <- function(samples = NULL, start = 0, end = '', chrom = 
           resultVariantNames <- c(resultVariantNames, results$result$variantDbIds)
         }
         
-        setTxtProgressBar(pb, i * pagination$totalPages[2] + j)
+        utils::setTxtProgressBar(pb, i * pagination$totalPages[2] + j)
       }
     }
     
     close(pb)
   }
   
-  geno_data <- as.matrix(geno_data)
-  
-  geno_data[geno_data == "."] <- NA
-  geno_data[geno_data == "1"] <- 2
-  
-  heterozygous <- c(paste(0, 1, sep = results$result$sepPhased),
-                    paste(1, 0, sep = results$result$sepPhased),
-                    paste(0, 1, sep = results$result$sepUnphased),
-                    paste(1, 0, sep = results$result$sepUnphased))
-  
-  geno_data[geno_data %in% heterozygous] <- 1
-  
-  geno_data <- as.data.frame(matrix(as.numeric(unlist(geno_data)), 
-                                    nrow = pagination$totalCount[1], 
-                                    ncol = pagination$totalCount[2]))
+  if (simplify) {
+    geno_data <- as.matrix(geno_data)
+    
+    geno_data[geno_data == "."] <- NA
+    geno_data[geno_data == "0"] <- -1
+    geno_data[geno_data == "1"] <- 1
+    
+    geno_data[!geno_data %in% c(NA, -1, 1)] <- 0
+    
+    geno_data <- as.data.frame(matrix(as.numeric(unlist(geno_data)), 
+                                      nrow = pagination$totalCount[1], 
+                                      ncol = pagination$totalCount[2]))
+    geno_data <- geno_data + 1
+  }
 
   colnames(geno_data) <- germplasmNames
   rownames(geno_data) <- sub(paste0(qbms_globals$config$db, "\u00A7"), "", resultVariantNames)
@@ -3059,6 +3074,11 @@ brapi_get_allelematrix <- function(samples = NULL, start = 0, end = '', chrom = 
 
 
 #' BrAPI Get Geno Map
+#' 
+#' @param start start
+#' @param end end
+#' @param chrom chrom
+#' @param simplify simplify 
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -3082,7 +3102,7 @@ brapi_get_allelematrix <- function(samples = NULL, start = 0, end = '', chrom = 
 #' }
 #' @export
 
-brapi_get_variants <- function(start = NULL, end = NULL, chrom = NULL) {
+brapi_get_variants <- function(start = NULL, end = NULL, chrom = NULL, simplify = TRUE) {
   startParam <- ifelse(is.null(start), "", paste('"start":', format(start, scientific = FALSE), ","))
   endParam   <- ifelse(is.null(end), "", paste('"end":', format(end, scientific = FALSE), ","))
   
@@ -3113,7 +3133,7 @@ brapi_get_variants <- function(start = NULL, end = NULL, chrom = NULL) {
   geno_map <- as.data.frame(results$result$data)
 
   if (remaining_pages > 0) {
-    pb <- txtProgressBar(min = 0, max = remaining_pages, initial = 0, style = 3) 
+    pb <- utils::txtProgressBar(min = 0, max = remaining_pages, initial = 0, style = 3) 
     
     for (i in 1:remaining_pages) {
       call_body <- gsub("\\{page\\}", i, post_schema)
@@ -3124,19 +3144,21 @@ brapi_get_variants <- function(start = NULL, end = NULL, chrom = NULL) {
       
       geno_map <- rbind(geno_map, page_data)
       
-      setTxtProgressBar(pb, i)
+      utils::setTxtProgressBar(pb, i)
     }
     
     close(pb)
   }
 
-  geno_map$alleles <- paste0(geno_map$referenceBases, "/", geno_map$alternateBases)
-  
-  geno_map <- geno_map[, c("variantNames", "alleles", "referenceName", "start")]
-  geno_map <- geno_map[with(geno_map, order(referenceName, start)),]
-  
-  colnames(geno_map) <- c("rs#", "alleles", "chrom", "pos")
-  rownames(geno_map) <- NULL
+  if (simplify) {
+    geno_map$alleles <- paste0(geno_map$referenceBases, "/", geno_map$alternateBases)
+    
+    geno_map <- geno_map[, c("variantNames", "alleles", "referenceName", "start")]
+    geno_map <- geno_map[with(geno_map, order(referenceName, start)),]
+    
+    colnames(geno_map) <- c("rs#", "alleles", "chrom", "pos")
+    rownames(geno_map) <- NULL
+  }
   
   return(geno_map)
 }
