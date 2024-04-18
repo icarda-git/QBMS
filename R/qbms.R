@@ -2956,10 +2956,12 @@ brapi_get_allelematrix <- function(samples = NULL, start = 0, end = '', chrom = 
   positionRanges  <- ""
   variantSetDbIds <- paste0('"', qbms_globals$state$variant_set_db_id, '"')
   
-  if (!is.null(samples)) {
-    germplasmNames <- samples
-    germplasmDbIds <- paste0('"', paste0(paste0(qbms_globals$config$db, "\u00A7", germplasmNames), collapse = '","'), '"')
+  if (is.null(samples)) {
+    samples <- gigwa_get_samples()
   }
+  
+  germplasmNames <- samples
+  germplasmDbIds <- paste0('"', paste0(paste0(qbms_globals$config$db, "\u00A7", germplasmNames), collapse = '","'), '"')
 
   if (!is.null(snps)) {
     variantNames <- snps
