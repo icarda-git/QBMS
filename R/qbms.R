@@ -2579,18 +2579,11 @@ gigwa_list_runs <- function() {
   if (!is.null(qbms_globals$state$gigwa_runs)) {
     gigwa_runs <- qbms_globals$state$gigwa_runs
   } else {
-    call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/variantsets")
-    
-    auth_code <- paste0("Bearer ", qbms_globals$state$token)
-    headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
+    call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/variantsets")
     call_body <- paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}')
     
-    response <- httr::POST(url = utils::URLencode(call_url), body = call_body, 
-                           encode = "raw", httr::accept_json(), httr::content_type_json(), 
-                           httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
-    
-    results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
-    
+    results <- brapi_post_search_call(call_url, call_body, FALSE)
+
     gigwa_runs <- as.data.frame(results$result$data[, c("variantSetName", "variantSetDbId")])
     
     #colnames(gigwa_runs) <- c("variantSetName")
