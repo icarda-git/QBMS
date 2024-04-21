@@ -3195,17 +3195,10 @@ gigwa_get_metadata <- function() {
   gigwa_get_samples()
   germplasmDbIds <- paste(qbms_globals$state$gigwa_samples$germplasmDbId, collapse = '","')
 
-  auth_code <- paste0("Bearer ", qbms_globals$state$token)
-  headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
-  
-  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/attributevalues")
+  call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/attributevalues")
   call_body <- paste0('{"germplasmDbIds": ["', germplasmDbIds, '"]}')
   
-  response <- httr::POST(url = utils::URLencode(call_url), body = call_body, 
-                         encode = "raw", httr::accept_json(), httr::content_type_json(), 
-                         httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
-  
-  results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
+  results <- brapi_post_search_call(call_url, call_body, FALSE)
   
   metadata <- stats::reshape(results$result$data[,-1], idvar = "germplasmName", timevar = "attributeValueDbId", direction = "wide")
   colnames(metadata) <- gsub("value\\.", "", colnames(metadata))
