@@ -566,7 +566,7 @@ if (requireNamespace("async", quietly = TRUE)) {
 }
 
 
-brapi_post_call <- function(call_url, call_body, nested = TRUE) {
+brapi_post_search_call <- function(call_url, call_body, nested = TRUE) {
   headers  <- brapi_headers()
   call_url <- utils::URLencode(call_url)
   
@@ -2949,7 +2949,7 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
 #' }
 #' @export
 
-brapi_get_allelematrix <- function(samples = NULL, start = 0, end = '', chrom = NULL, snps = NULL, 
+brapi_get_allelematrix <- function(samples = NULL, start = 0, end = "", chrom = NULL, snps = NULL, 
                                    snps_pageSize = 10000, samples_pageSize = 100, simplify = TRUE) {
   germplasmDbIds  <- ""
   variantDbIds    <- ""
@@ -3001,7 +3001,7 @@ brapi_get_allelematrix <- function(samples = NULL, start = 0, end = '', chrom = 
   
   call_body <- sub("\\{callsets_page\\}", callsets_page, sub("\\{variants_page\\}", variants_page, post_schema))
   
-  results <- brapi_post_call(call_url, call_body, FALSE)
+  results <- brapi_post_search_call(call_url, call_body, FALSE)
   
   pagination <- results$result$pagination
   
@@ -3029,7 +3029,7 @@ brapi_get_allelematrix <- function(samples = NULL, start = 0, end = '', chrom = 
         
         call_body <- sub("\\{callsets_page\\}", j, sub("\\{variants_page\\}", i, post_schema))
         
-        results <- brapi_post_call(call_url, call_body, FALSE)
+        results <- brapi_post_search_call(call_url, call_body, FALSE)
         
         pagination <- results$result$pagination
         
@@ -3128,7 +3128,7 @@ brapi_get_variants <- function(start = NULL, end = NULL, chrom = NULL, simplify 
   
   call_body <- gsub("\\{page\\}", page, post_schema)
 
-  results <- brapi_post_call(call_url, call_body, FALSE)
+  results <- brapi_post_search_call(call_url, call_body, FALSE)
   
   remaining_pages <- with(results$metadata$pagination, ceiling(totalCount/pageSize)) - 1
 
@@ -3140,7 +3140,7 @@ brapi_get_variants <- function(start = NULL, end = NULL, chrom = NULL, simplify 
     for (i in 1:remaining_pages) {
       call_body <- gsub("\\{page\\}", i, post_schema)
       
-      results <- brapi_post_call(call_url, call_body, FALSE)
+      results <- brapi_post_search_call(call_url, call_body, FALSE)
       
       page_data <- as.data.frame(results$result$data)
       
