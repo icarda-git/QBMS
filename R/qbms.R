@@ -2694,17 +2694,10 @@ gigwa_get_samples <- function() {
   if (!is.null(qbms_globals$state$gigwa_samples)) {
     gigwa_samples <- qbms_globals$state$gigwa_samples
   } else {
-    call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/germplasm")
-    
-    auth_code <- paste0("Bearer ", qbms_globals$state$token)
-    headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
+    call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/germplasm")
     call_body <- paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}')
     
-    response <- httr::POST(url = utils::URLencode(call_url), body = call_body, 
-                           encode = "raw", httr::accept_json(), httr::content_type_json(), 
-                           httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
-    
-    results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
+    results <- brapi_post_search_call(call_url, call_body, FALSE)
     
     gigwa_samples <- results$result$data[, c("germplasmName", "germplasmDbId")]
     
