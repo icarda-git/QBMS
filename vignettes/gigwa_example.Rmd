@@ -47,13 +47,13 @@ gigwa_list_projects()
 gigwa_set_project("Nelson_et_al_2011")
 
 # list all runs in the selected project
-gigwa_list_runs()
+genotyping_list_runs()
 
 # select a specific run by name
-gigwa_set_run("run1")
+genotyping_set_run("run1")
 
 # get a list of all samples in the selected run
-samples <- gigwa_get_samples()
+samples <- genotyping_list_samples()
 
 # show the first 6 individuals on the list of samples
 head(samples)
@@ -84,10 +84,11 @@ head(marker_matrix)
 # get the metadata associated with the samples in the current active run
 gigwa_set_db("DIVRICE_NB")
 gigwa_set_project("refNB")
-gigwa_set_run("03052022")
+
+genotyping_set_run("03052022")
 
 # get a list of all samples in the selected run
-metadata <- gigwa_get_metadata()
+metadata <- genotyping_get_metadata()
 
 View(metadata)
 
