@@ -6,32 +6,6 @@
 \usage{
 gigwa_list_runs()
 }
-\value{
-A list of run names.
-}
 \description{
-This function retrieves the runs list from the currently active project as configured 
-in the internal configuration object using the `gigwa_set_project()` function.
-}
-\examples{
-if (interactive()) {
-  # Configure your GIGWA connection
-  set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
-                  time_out = 300, engine = "gigwa", no_auth = TRUE)
-
-  # Select a database by name
-  gigwa_set_db("Sorghum-JGI_v1")
-
-  # Select a project by name
-  gigwa_set_project("Nelson_et_al_2011")
-  
-  # List all runs in the selected project
-  gigwa_list_runs()
-}
-}
-\seealso{
-\code{\link{set_qbms_config}}, \code{\link{gigwa_set_project}}
-}
-\author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+This function is deprecated and will be removed in v2.0, use \code{\link{genotyping_list_runs}} instead.
 }

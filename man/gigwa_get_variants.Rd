@@ -49,7 +49,7 @@ if (interactive()) {
   gigwa_set_project("Nelson_et_al_2011")
   
   # Select a specific run by name
-  gigwa_set_run("run1")
+  genotyping_set_run("run1")
   
   marker_matrix <- gigwa_get_variants(max_missing = 0.2, 
                                       min_maf = 0.35, 
