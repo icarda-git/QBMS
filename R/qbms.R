@@ -2535,7 +2535,9 @@ gigwa_set_project <- function(project_name) {
   
   qbms_globals$state$study_db_id <- gigwa_projects[project_row, "studyDbId"]
   
-  qbms_globals$state$gigwa_runs <- NULL
+  qbms_globals$state$gigwa_runs      <- NULL
+  qbms_globals$state$gigwa_samples   <- NULL
+  qbms_globals$state$gigwa_sequences <- NULL
 }
 
 
@@ -2585,9 +2587,7 @@ gigwa_list_runs <- function() {
     results <- brapi_post_search_call(call_url, call_body, FALSE)
 
     gigwa_runs <- as.data.frame(results$result$data[, c("variantSetName", "variantSetDbId")])
-    
-    #colnames(gigwa_runs) <- c("variantSetName")
-    
+
     qbms_globals$state$gigwa_runs <- gigwa_runs
   }
   
@@ -2639,25 +2639,23 @@ gigwa_set_run <- function(run_name) {
   gigwa_runs <- qbms_globals$state$gigwa_runs
   
   qbms_globals$state$variant_set_db_id <- gigwa_runs[gigwa_runs$variantSetName == run_name, "variantSetDbId"]
-  
-  qbms_globals$state$gigwa_samples <- NULL
 }
 
 
-#' Get the Samples List of the Current Active GIGWA Run
+#' Get the Samples List of the Current Active GIGWA Project
 #'
 #' @description
-#' This function retrieves the samples list of the current active run
-#' as configured in the internal state object using the `gigwa_set_run()` function.
+#' This function retrieves the samples list of the current active project
+#' as configured in the internal state object using the `gigwa_set_project()` function.
 #'
 #' @return 
-#' A vector of all samples in the selected run.
+#' A vector of all samples in the selected project.
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso 
-#' \code{\link{set_qbms_config}}, \code{\link{gigwa_set_run}}
+#' \code{\link{set_qbms_config}}, \code{\link{gigwa_set_project}}
 #' 
 #' @examples
 #' if (interactive()) {
@@ -2671,10 +2669,7 @@ gigwa_set_run <- function(run_name) {
 #'   # Select a project by name
 #'   gigwa_set_project("Nelson_et_al_2011")
 #'   
-#'   # Select a specific run by name
-#'   gigwa_set_run("run1")
-#'   
-#'   # Get a list of all samples in the selected run
+#'   # Get a list of all samples in the selected project
 #'   samples <- gigwa_get_samples()
 #' }
 #' @export
@@ -2698,6 +2693,60 @@ gigwa_get_samples <- function() {
   }
 
   return(gigwa_samples$germplasmName)
+}
+
+
+#' Get the Sequences of the Current Active GIGWA Project
+#'
+#' @description
+#' This function retrieves the list sequences of the current active project
+#' as configured in the internal state object using the `gigwa_set_project()` function.
+#'
+#' @return 
+#' A vector of all sequences in the selected project.
+#' 
+#' @author 
+#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' 
+#' @seealso 
+#' \code{\link{set_qbms_config}}, \code{\link{gigwa_set_project}}
+#' 
+#' @examples
+#' if (interactive()) {
+#'   # Configure your GIGWA connection
+#'   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
+#'                   time_out = 300, engine = "gigwa", no_auth = TRUE)
+#'
+#'   # Select a database by name
+#'   gigwa_set_db("Sorghum-JGI_v1")
+#'
+#'   # Select a project by name
+#'   gigwa_set_project("Nelson_et_al_2011")
+#'   
+#'   # Get a list of all samples in the selected project
+#'   chroms <- gigwa_get_sequences()
+#' }
+#' @export
+
+gigwa_get_sequences <- function() {
+  if (is.null(qbms_globals$state$study_db_id)) {
+    stop("No project has been selected yet! You have to set your project first using the `gigwa_set_project()` function")
+  }
+  
+  if (!is.null(qbms_globals$state$gigwa_sequences)) {
+    gigwa_sequences <- qbms_globals$state$gigwa_sequences
+  } else {
+    call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/references")
+    call_body <- paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}')
+    
+    results <- brapi_post_search_call(call_url, call_body, FALSE)
+    
+    gigwa_sequences <- results$result$data$referenceName
+    
+    qbms_globals$state$gigwa_sequences <- gigwa_sequences
+  }
+  
+  return(gigwa_sequences)
 }
 
 
