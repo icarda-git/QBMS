@@ -2787,6 +2787,7 @@ gigwa_get_sequences <- function() {
 #'   # Select a specific run by name
 #'   gigwa_set_run("run1")
 #'   
+#'   # Get the marker matrix 
 #'   marker_matrix <- gigwa_get_variants(max_missing = 0.2, 
 #'                                       min_maf = 0.35, 
 #'                                       samples = c("ind1", "ind3", "ind7"))
@@ -2827,8 +2828,6 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
   
   # https://gigwa-dev.southgreen.fr/gigwaV2/rest/swagger-ui/index.html?urls.primaryName=GA4GH%20API%20v0.6.0a5#/ga-4gh-rest-controller/searchVariantsUsingPOST
   # https://rest.ensembl.org/documentation/info/gavariants
-  # https://app.swaggerhub.com/apis/PlantBreedingAPI/BrAPI-Genotyping/2.1#/Allele%20Matrix/post_search_allelematrix
-  # https://brapigenotyping21.docs.apiary.io/#/reference/allele-matrix
 
   call_url <- paste0(qbms_globals$config$base_url, "/ga4gh/variants/search")
   
@@ -2962,23 +2961,17 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
 #'   # Select a specific run by name
 #'   gigwa_set_run("run1")
 #'   
-#'   # Get a list of all samples in the selected run
+#'   # Get the list of all samples in the selected project
 #'   samples <- gigwa_get_samples()
+#'
+#'   # Get the list of all sequences in the selected project
+#'   chroms <- gigwa_get_sequences()
 #'   
-#'   system.time(
-#'     marker_matrix <- gigwa_get_variants(start = 0, 
-#'                                         end = 012345678, 
-#'                                         referenceName = "Sb01", 
-#'                                         samples = samples))
-#'   
-#'   system.time(
-#'     geno_data <- gigwa_get_allelematrix(samples = samples, 
-#'                                         start = 0, 
-#'                                         end = 012345678, 
-#'                                         chrom = "Sb01", 
-#'                                         snps = marker_matrix$`rs#`))
-#'   
-#'   all.equal(geno_data, marker_matrix[,5:12], check.attributes = FALSE)
+#'   # Get the marker matrix
+#'   geno_data <- gigwa_get_allelematrix(samples = samples[1:5],
+#'                                       start   = 0,
+#'                                       end     = 1234567,
+#'                                       chrom   = chroms[1:3])
 #' }
 #' @export
 
@@ -3132,7 +3125,11 @@ gigwa_get_allelematrix <- function(samples = NULL, start = 0, end = "", chrom = 
 #'   # Select a specific run by name
 #'   gigwa_set_run("run1")
 #'   
-#'   geno_map <- gigwa_get_markers(start = 0, end = 12345678, chrom = c("Sb07"))
+#'   # Get the list of all sequences in the selected project
+#'   chroms <- gigwa_get_sequences()
+#'
+#'   # Get the marker map
+#'   geno_map <- gigwa_get_markers(start = 0, end = 12345678, chrom = chroms[7])
 #' }
 #' @export
 

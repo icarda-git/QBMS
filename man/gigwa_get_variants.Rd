@@ -51,6 +51,7 @@ if (interactive()) {
   # Select a specific run by name
   gigwa_set_run("run1")
   
+  # Get the marker matrix 
   marker_matrix <- gigwa_get_variants(max_missing = 0.2, 
                                       min_maf = 0.35, 
                                       samples = c("ind1", "ind3", "ind7"))

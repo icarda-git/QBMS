@@ -50,23 +50,17 @@ if (interactive()) {
   # Select a specific run by name
   gigwa_set_run("run1")
   
-  # Get a list of all samples in the selected run
+  # Get the list of all samples in the selected project
   samples <- gigwa_get_samples()
+
+  # Get the list of all sequences in the selected project
+  chroms <- gigwa_get_sequences()
   
-  system.time(
-    marker_matrix <- gigwa_get_variants(start = 0, 
-                                        end = 012345678, 
-                                        referenceName = "Sb01", 
-                                        samples = samples))
-  
-  system.time(
-    geno_data <- gigwa_get_allelematrix(samples = samples, 
-                                        start = 0, 
-                                        end = 012345678, 
-                                        chrom = "Sb01", 
-                                        snps = marker_matrix$`rs#`))
-  
-  all.equal(geno_data, marker_matrix[,5:12], check.attributes = FALSE)
+  # Get the marker matrix
+  geno_data <- gigwa_get_allelematrix(samples = samples[1:5],
+                                      start   = 0,
+                                      end     = 1234567,
+                                      chrom   = chroms[1:3])
 }
 }
 \author{

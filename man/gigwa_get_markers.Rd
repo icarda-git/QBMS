@@ -33,7 +33,11 @@ if (interactive()) {
   # Select a specific run by name
   gigwa_set_run("run1")
   
-  geno_map <- gigwa_get_markers(start = 0, end = 12345678, chrom = c("Sb07"))
+  # Get the list of all sequences in the selected project
+  chroms <- gigwa_get_sequences()
+
+  # Get the marker map
+  geno_map <- gigwa_get_markers(start = 0, end = 12345678, chrom = chroms[7])
 }
 }
 \author{
