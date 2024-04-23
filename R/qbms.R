@@ -2933,7 +2933,7 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
 }
 
 
-#' BrAPI Get Allele Matrix
+#' Get GIGWA Marker Matrix
 #' 
 #' @param samples samples
 #' @param start start
@@ -2965,26 +2965,24 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
 #'   # Get a list of all samples in the selected run
 #'   samples <- gigwa_get_samples()
 #'   
-#'   chk <- Sys.time()
-#'   marker_matrix <- gigwa_get_variants(start = 0, 
-#'                                       end = 012345678, 
-#'                                       referenceName = "Sb01", 
-#'                                       samples = samples)
-#'   round(Sys.time()-chk, 2)
+#'   system.time(
+#'     marker_matrix <- gigwa_get_variants(start = 0, 
+#'                                         end = 012345678, 
+#'                                         referenceName = "Sb01", 
+#'                                         samples = samples))
 #'   
-#'   chk <- Sys.time()
-#'   geno_data <- brapi_get_allelematrix(samples = samples, 
-#'                                       start = 0, 
-#'                                       end = 012345678, 
-#'                                       chrom = "Sb01", 
-#'                                       snps = marker_matrix$`rs#`) 
-#'   round(Sys.time()-chk, 2)
+#'   system.time(
+#'     geno_data <- gigwa_get_allelematrix(samples = samples, 
+#'                                         start = 0, 
+#'                                         end = 012345678, 
+#'                                         chrom = "Sb01", 
+#'                                         snps = marker_matrix$`rs#`))
 #'   
 #'   all.equal(geno_data, marker_matrix[,5:12], check.attributes = FALSE)
 #' }
 #' @export
 
-brapi_get_allelematrix <- function(samples = NULL, start = 0, end = "", chrom = NULL, snps = NULL, 
+gigwa_get_allelematrix <- function(samples = NULL, start = 0, end = "", chrom = NULL, snps = NULL, 
                                    snps_pageSize = 10000, samples_pageSize = 100, simplify = TRUE) {
   germplasmDbIds  <- ""
   variantDbIds    <- ""
@@ -3003,10 +3001,9 @@ brapi_get_allelematrix <- function(samples = NULL, start = 0, end = "", chrom = 
     variantDbIds <- paste0('"', paste0(paste0(qbms_globals$config$db, "\u00A7", variantNames), collapse = '","'), '"')
   }
   
-  # if chrom is NULL, then we need to get the list from the following BrAPI endpoint (positionRanges can't be empty)
-  # https://gigwa.southgreen.fr/gigwa/rest/brapi/v2/references?studyDbId=Sorghum-JGI_v1§1
-  # the default start is 0, and the default end is empty string, and the simples positionRanges value is "chrom:0-"
-  # variantDbIds masked by positionRanges (i.e., any snp exists outside defined range will be excluded from the results)
+  if (is.null(chrom)) {
+    chrom <- gigwa_get_sequences()
+  }
   
   referenceStart <- start
   referenceEnd   <- end
@@ -3135,11 +3132,11 @@ brapi_get_allelematrix <- function(samples = NULL, start = 0, end = "", chrom = 
 #'   # Select a specific run by name
 #'   gigwa_set_run("run1")
 #'   
-#'   geno_map <- brapi_get_variants(start = 0, end = 12345678, chrom = c("Sb07"))
+#'   geno_map <- gigwa_get_markers(start = 0, end = 12345678, chrom = c("Sb07"))
 #' }
 #' @export
 
-brapi_get_variants <- function(start = NULL, end = NULL, chrom = NULL, simplify = TRUE) {
+gigwa_get_markers <- function(start = NULL, end = NULL, chrom = NULL, simplify = TRUE) {
   startParam <- ifelse(is.null(start), "", paste('"start":', format(start, scientific = FALSE), ","))
   endParam   <- ifelse(is.null(end), "", paste('"end":', format(end, scientific = FALSE), ","))
   
