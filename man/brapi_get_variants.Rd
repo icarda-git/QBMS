@@ -31,7 +31,7 @@ if (interactive()) {
   gigwa_set_project("Nelson_et_al_2011")
   
   # Select a specific run by name
-  genotyping_set_run("run1")
+  gigwa_set_run("run1")
   
   geno_map <- brapi_get_variants(start = 0, end = 12345678, chrom = c("Sb07"))
 }

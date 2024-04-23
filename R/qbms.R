@@ -2535,7 +2535,7 @@ gigwa_set_project <- function(project_name) {
   
   qbms_globals$state$study_db_id <- gigwa_projects[project_row, "studyDbId"]
   
-  qbms_globals$state$genotyping_runs <- NULL
+  qbms_globals$state$gigwa_runs <- NULL
 }
 
 
@@ -2567,37 +2567,39 @@ gigwa_set_project <- function(project_name) {
 #'   gigwa_set_project("Nelson_et_al_2011")
 #'   
 #'   # List all runs in the selected project
-#'   genotyping_list_runs()
+#'   gigwa_list_runs()
 #' }
 #' @export
 
-genotyping_list_runs <- function() {
+gigwa_list_runs <- function() {
   if (is.null(qbms_globals$state$study_db_id)) {
     stop("No project has been selected yet! You have to set your project first using the `gigwa_set_project()` function")
   }
 
-  if (!is.null(qbms_globals$state$genotyping_runs)) {
-    genotyping_runs <- qbms_globals$state$genotyping_runs
+  if (!is.null(qbms_globals$state$gigwa_runs)) {
+    gigwa_runs <- qbms_globals$state$gigwa_runs
   } else {
     call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/variantsets")
     call_body <- paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}')
     
     results <- brapi_post_search_call(call_url, call_body, FALSE)
 
-    genotyping_runs <- as.data.frame(results$result$data[, c("variantSetName", "variantSetDbId")])
+    gigwa_runs <- as.data.frame(results$result$data[, c("variantSetName", "variantSetDbId")])
     
-    qbms_globals$state$genotyping_runs <- genotyping_runs
+    #colnames(gigwa_runs) <- c("variantSetName")
+    
+    qbms_globals$state$gigwa_runs <- gigwa_runs
   }
   
-  return(genotyping_runs[c("variantSetName")])
+  return(gigwa_runs[c("variantSetName")])
 }
 
 
-#' Set the Current Active Genotyping Run (i.e., variant set)
+#' Set the Current Active GIGWA Run
 #'
 #' @description
 #' This function updates the current active run in the internal state object using the 
-#' `studyDbIds` retrieved from database, which are associated with the given `run_name` parameter.
+#' `studyDbIds` retrieved from GIGWA, which are associated with the given `run_name` parameter.
 #'
 #' @param run_name The name of the run.
 #' 
@@ -2608,7 +2610,7 @@ genotyping_list_runs <- function() {
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso 
-#' \code{\link{set_qbms_config}}, \code{\link{gigwa_set_project}}, \code{\link{genotyping_list_runs}}
+#' \code{\link{set_qbms_config}}, \code{\link{gigwa_set_project}}, \code{\link{gigwa_list_runs}}
 #' 
 #' @examples
 #' if (interactive()) {
@@ -2623,30 +2625,30 @@ genotyping_list_runs <- function() {
 #'   gigwa_set_project("Nelson_et_al_2011")
 #'   
 #'   # Select a specific run by name
-#'   genotyping_set_run("run1")
+#'   gigwa_set_run("run1")
 #' }
 #' @export
 
-genotyping_set_run <- function(run_name) {
-  valid_runs <- genotyping_list_runs()
+gigwa_set_run <- function(run_name) {
+  valid_runs <- gigwa_list_runs()
   
   if (!run_name %in% unlist(valid_runs)) {
-    stop("Your run name is not exists in this project! You may use the `genotyping_list_runs()` function to check the available runs")
+    stop("Your run name is not exists in this project! You may use the `gigwa_list_runs()` function to check the available runs")
   }
 
-  genotyping_runs <- qbms_globals$state$genotyping_runs
+  gigwa_runs <- qbms_globals$state$gigwa_runs
   
-  qbms_globals$state$variant_set_db_id <- genotyping_runs[genotyping_runs$variantSetName == run_name, "variantSetDbId"]
+  qbms_globals$state$variant_set_db_id <- gigwa_runs[gigwa_runs$variantSetName == run_name, "variantSetDbId"]
   
-  qbms_globals$state$genotyping_samples <- NULL
+  qbms_globals$state$gigwa_samples <- NULL
 }
 
 
-#' Get the Samples List of the Current Active Run (i.e., variant set)
+#' Get the Samples List of the Current Active GIGWA Run
 #'
 #' @description
 #' This function retrieves the samples list of the current active run
-#' as configured in the internal state object using the `genotyping_set_run()` function.
+#' as configured in the internal state object using the `gigwa_set_run()` function.
 #'
 #' @return 
 #' A vector of all samples in the selected run.
@@ -2655,7 +2657,7 @@ genotyping_set_run <- function(run_name) {
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso 
-#' \code{\link{set_qbms_config}}, \code{\link{genotyping_set_run}}
+#' \code{\link{set_qbms_config}}, \code{\link{gigwa_set_run}}
 #' 
 #' @examples
 #' if (interactive()) {
@@ -2670,32 +2672,32 @@ genotyping_set_run <- function(run_name) {
 #'   gigwa_set_project("Nelson_et_al_2011")
 #'   
 #'   # Select a specific run by name
-#'   genotyping_set_run("run1")
+#'   gigwa_set_run("run1")
 #'   
 #'   # Get a list of all samples in the selected run
-#'   samples <- genotyping_list_samples()
+#'   samples <- gigwa_get_samples()
 #' }
 #' @export
 
-genotyping_list_samples <- function() {
+gigwa_get_samples <- function() {
   if (is.null(qbms_globals$state$study_db_id)) {
     stop("No project has been selected yet! You have to set your project first using the `gigwa_set_project()` function")
   }
   
-  if (!is.null(qbms_globals$state$genotyping_samples)) {
-    genotyping_samples <- qbms_globals$state$genotyping_samples
+  if (!is.null(qbms_globals$state$gigwa_samples)) {
+    gigwa_samples <- qbms_globals$state$gigwa_samples
   } else {
     call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/germplasm")
     call_body <- paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}')
     
     results <- brapi_post_search_call(call_url, call_body, FALSE)
     
-    genotyping_samples <- results$result$data[, c("germplasmName", "germplasmDbId")]
+    gigwa_samples <- results$result$data[, c("germplasmName", "germplasmDbId")]
     
-    qbms_globals$state$genotyping_samples <- genotyping_samples
+    qbms_globals$state$gigwa_samples <- gigwa_samples
   }
 
-  return(genotyping_samples$germplasmName)
+  return(gigwa_samples$germplasmName)
 }
 
 
@@ -2734,7 +2736,7 @@ genotyping_list_samples <- function() {
 #'   gigwa_set_project("Nelson_et_al_2011")
 #'   
 #'   # Select a specific run by name
-#'   genotyping_set_run("run1")
+#'   gigwa_set_run("run1")
 #'   
 #'   marker_matrix <- gigwa_get_variants(max_missing = 0.2, 
 #'                                       min_maf = 0.35, 
@@ -2756,14 +2758,14 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
   }
 
   if (!is.null(samples)) {
-    available_samples <- genotyping_list_samples()
+    available_samples <- gigwa_get_samples()
     missing_samples <- setdiff(samples, available_samples)
     
     if (length(missing_samples) > 0) {
-      stop("Some samples are not exists in this project! You may use the `genotyping_list_samples()` function to check the available samples")
+      stop("Some samples are not exists in this project! You may use the `gigwa_get_samples()` function to check the available samples")
     }
   } else {
-    samples <- genotyping_list_samples()
+    samples <- gigwa_get_samples()
   }
   
   if (!is.null(start) && !is.numeric(start)){
@@ -2912,7 +2914,7 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
 #'   gigwa_set_run("run1")
 #'   
 #'   # Get a list of all samples in the selected run
-#'   samples <- genotyping_list_samples()
+#'   samples <- gigwa_get_samples()
 #'   
 #'   chk <- Sys.time()
 #'   marker_matrix <- gigwa_get_variants(start = 0, 
@@ -2941,7 +2943,7 @@ brapi_get_allelematrix <- function(samples = NULL, start = 0, end = "", chrom = 
   variantSetDbIds <- paste0('"', qbms_globals$state$variant_set_db_id, '"')
   
   if (is.null(samples)) {
-    samples <- genotyping_list_samples()
+    samples <- gigwa_get_samples()
   }
   
   germplasmNames <- samples
@@ -3082,7 +3084,7 @@ brapi_get_allelematrix <- function(samples = NULL, start = 0, end = "", chrom = 
 #'   gigwa_set_project("Nelson_et_al_2011")
 #'   
 #'   # Select a specific run by name
-#'   genotyping_set_run("run1")
+#'   gigwa_set_run("run1")
 #'   
 #'   geno_map <- brapi_get_variants(start = 0, end = 12345678, chrom = c("Sb07"))
 #' }
@@ -3150,11 +3152,11 @@ brapi_get_variants <- function(start = NULL, end = NULL, chrom = NULL, simplify 
 }
 
 
-#' Get the Metadata of the Current Germplasm List
+#' Get the Metadata of the Current Active GIGWA Run
 #'
 #' @description
 #' This function retrieves the metadata of the current active run
-#' as configured in the internal state object using the `genotyping_set_run()` function.
+#' as configured in the internal state object using the `gigwa_set_run()` function.
 #'
 #' @return 
 #' A data.frame of all metadata associated with the samples in the selected run.
@@ -3163,7 +3165,7 @@ brapi_get_variants <- function(start = NULL, end = NULL, chrom = NULL, simplify 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso 
-#' \code{\link{set_qbms_config}}, \code{\link{genotyping_set_run}}
+#' \code{\link{set_qbms_config}}, \code{\link{gigwa_set_run}}
 #' 
 #' @examples
 #' if (interactive()) {
@@ -3178,20 +3180,20 @@ brapi_get_variants <- function(start = NULL, end = NULL, chrom = NULL, simplify 
 #'   gigwa_set_project("3003_ind")
 #'   
 #'   # Select a specific run by name
-#'   genotyping_set_run("1")
+#'   gigwa_set_run("1")
 #'   
 #'   # Get a list of all samples in the selected run
-#'   metadata <- germplasm_get_metadata()
+#'   metadata <- gigwa_get_metadata()
 #' }
 #' @export
 
-germplasm_get_metadata <- function() {
+gigwa_get_metadata <- function() {
   if (is.null(qbms_globals$state$study_db_id)) {
     stop("No project has been selected yet! You have to set your project first using the `gigwa_set_project()` function")
   }
   
-  genotyping_list_samples()
-  germplasmDbIds <- paste(qbms_globals$state$genotyping_samples$germplasmDbId, collapse = '","')
+  gigwa_get_samples()
+  germplasmDbIds <- paste(qbms_globals$state$gigwa_samples$germplasmDbId, collapse = '","')
 
   call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/attributevalues")
   call_body <- paste0('{"germplasmDbIds": ["', germplasmDbIds, '"]}')
@@ -3843,61 +3845,4 @@ get_hwsd2 <- function(df, con, x = 'longitude', y = 'latitude', sequence = 1, la
   df <- df[with(df, order(seq_id, SEQUENCE, LAYER)), ]
   
   return(df)
-}
-
-
-### Deprecated and will be removed in v2.0 #####################################
-
-
-#' Get the List of the Run Names Available in the Selected GIGWA Project
-#' 
-#' This function is deprecated and will be removed in v2.0, use \code{\link{genotyping_list_runs}} instead.
-#' 
-#' @export
-
-gigwa_list_runs <- function() {
-  .Deprecated(msg = "gigwa_list_runs() is deprecated and will be removed in v2.0, use genotyping_list_runs() instead.")
-  
-  return(genotyping_list_runs())
-}
-
-
-#' Set the Current Active GIGWA Run
-#' 
-#' This function is deprecated and will be removed in v2.0, use \code{\link{genotyping_set_run}} instead.
-#' 
-#' @param run_name run name
-#'
-#' @export
-
-gigwa_set_run <- function(run_name) {
-  .Deprecated(msg = "gigwa_set_run() is deprecated and will be removed in v2.0, use genotyping_set_run() instead.")
-  
-  return(genotyping_set_run(run_name))
-}
-
-
-#' Get the Samples List of the Current Active GIGWA Run
-#' 
-#' This function is deprecated and will be removed in v2.0, use \code{\link{genotyping_list_samples}} instead.
-#' 
-#' @export
-
-gigwa_get_samples <- function() {
-  .Deprecated(msg = "gigwa_get_samples() is deprecated and will be removed in v2.0, use genotyping_list_samples() instead.")
-  
-  return(genotyping_list_samples())
-}
-
-
-#' Get the Metadata of the Current Active GIGWA Run
-#' 
-#' This function is deprecated and will be removed in v2.0, use \code{\link{germplasm_get_metadata}} instead.
-#' 
-#' @export
-
-gigwa_get_metadata <- function() {
-  .Deprecated(msg = "gigwa_get_metadata() is deprecated and will be removed in v2.0, use germplasm_get_metadata() instead.")
-  
-  return(germplasm_get_metadata())
 }

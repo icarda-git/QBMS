@@ -51,7 +51,7 @@ if (interactive()) {
   gigwa_set_run("run1")
   
   # Get a list of all samples in the selected run
-  samples <- genotyping_list_samples()
+  samples <- gigwa_get_samples()
   
   chk <- Sys.time()
   marker_matrix <- gigwa_get_variants(start = 0, 

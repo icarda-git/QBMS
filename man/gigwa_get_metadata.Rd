@@ -6,6 +6,35 @@
 \usage{
 gigwa_get_metadata()
 }
+\value{
+A data.frame of all metadata associated with the samples in the selected run.
+}
 \description{
-This function is deprecated and will be removed in v2.0, use \code{\link{germplasm_get_metadata}} instead.
+This function retrieves the metadata of the current active run
+as configured in the internal state object using the `gigwa_set_run()` function.
+}
+\examples{
+if (interactive()) {
+  # Configure your GIGWA connection
+  set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
+                  time_out = 300, engine = "gigwa", no_auth = TRUE)
+
+  # Select a database by name
+  gigwa_set_db("3kG_10M")
+
+  # Select a project by name
+  gigwa_set_project("3003_ind")
+  
+  # Select a specific run by name
+  gigwa_set_run("1")
+  
+  # Get a list of all samples in the selected run
+  metadata <- gigwa_get_metadata()
+}
+}
+\seealso{
+\code{\link{set_qbms_config}}, \code{\link{gigwa_set_run}}
+}
+\author{
+Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 }
