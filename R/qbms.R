@@ -30,7 +30,7 @@ brapi_map <- rbind(brapi_map, c("list_locations", "v1", "locations"))
 brapi_map <- rbind(brapi_map, c("list_locations", "v2", "locations"))
 
 brapi_map <- rbind(brapi_map, c("get_trial_obs_ontology", "v1", "variables"))
-brapi_map <- rbind(brapi_map, c("get_trial_obs_ontology", "v2", "variables"))
+brapi_map <- rbind(brapi_map, c("get_trial_obs_ontology", "v2", "search/variables"))
 
 brapi_map <- rbind(brapi_map, c("get_germplasm_id", "v1", "germplasm?germplasmName={germplasmName}"))
 brapi_map <- rbind(brapi_map, c("get_germplasm_id", "v2", "germplasm?germplasmName={germplasmName}"))
@@ -41,11 +41,11 @@ brapi_map <- rbind(brapi_map, c("get_germplasm_data", "v1", "phenotypes-search")
 brapi_map <- rbind(brapi_map, c("get_germplasm_attributes", "v1", "germplasm/{germplasmDbId}/attributes"))
 brapi_map <- rbind(brapi_map, c("get_germplasm_attributes", "v2", "attributes?germplasmDbId={germplasmDbId}"))
 
-# brapi_get_call(s)
+# gigwa brapi_get_call(s)
 brapi_map <- rbind(brapi_map, c("gigwa_list_dbs", "v2", "programs"))
 brapi_map <- rbind(brapi_map, c("gigwa_list_projects", "v2", "studies?programDbId={programDbId}"))
 
-# brapi_post_search_call(s)
+# gigwa brapi_post_search_call(s)
 brapi_map <- rbind(brapi_map, c("gigwa_list_runs", "v2", "search/variantsets"))
 brapi_map <- rbind(brapi_map, c("gigwa_get_samples", "v2", "search/germplasm"))
 brapi_map <- rbind(brapi_map, c("gigwa_get_sequences", "v2", "search/references"))
@@ -592,7 +592,7 @@ brapi_post_search_call <- function(call_url, call_body, nested = TRUE) {
   results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
   
   # https://plant-breeding-api.readthedocs.io/en/latest/docs/best_practices/Search_Services.html#post-search-entity
-  if (response$status_code == 202) {
+  if (response$status_code == 202 || !is.null(results$result$searchResultsDbId)) {
     repeat {
       Sys.sleep(qbms_globals$config$sleep)
       
@@ -603,7 +603,7 @@ brapi_post_search_call <- function(call_url, call_body, nested = TRUE) {
       
       results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
       
-      if (response$status_code == 200) {
+      if (response$status_code == 200 && is.null(results$result$searchResultsDbId)) {
         break
       }
     }
@@ -853,7 +853,7 @@ list_crops <- function() {
     bms_crops <- qbms_globals$state$crops
   } else {
     call_url  <- get_brapi_url("list_crops")
-    
+
     bms_crops <- brapi_get_call(call_url)$data
 
     qbms_globals$state$crops <- bms_crops
@@ -1659,12 +1659,24 @@ get_trial_obs_ontology <- function() {
   } else {
     call_url <- get_brapi_url("get_trial_obs_ontology")
     
-    ontology <- brapi_get_call(call_url)$data
-    
-    qbms_globals$state$variables <- ontology
+    if (qbms_globals$config$brapi_ver == "v1") {
+      ontology <- brapi_get_call(call_url)$data
+      
+      ontology <- ontology[ontology$observationVariableDbId %in% qbms_globals$state$observationVariableDbIds, ]
+
+      qbms_globals$state$variables <- ontology
+    } else {
+      call_body <- paste0('{"observationVariableDbIds": [', 
+                          paste0('"', paste0(qbms_globals$state$observationVariableDbIds, collapse = '","'), '"'),
+                          ']}')
+      
+      results <- brapi_post_search_call(call_url, call_body, FALSE)
+      
+      ontology <- as.data.frame(results$result$data)
+
+      qbms_globals$state$variables <- ontology
+    }
   }
-  
-  ontology <- ontology[ontology$observationVariableDbId %in% qbms_globals$state$observationVariableDbIds, ]
 
   return(ontology)
 }

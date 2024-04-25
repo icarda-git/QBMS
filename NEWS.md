@@ -3,7 +3,8 @@
   * Add new `gigwa_get_allelematrix()` function that boosting the marker data retrieval speed by more than 10 times.
   * Add new `gigwa_get_markers()` function to retrieve the marker map that describe the physical positions of the markers on the chromosomes.
   * Add new `gigwa_get_sequences()` function to retrieve the list of sequences in the selected GIGWA project.
-  * Implement an internal central mechanism to handle all [BrAPI POST /search](https://plant-breeding-api.readthedocs.io/en/latest/docs/best_practices/Search_Services.html#post-search-entity) endpoints, including the 202 status code.
+  * Improve `get_trial_obs_ontology()` function performance for systems supports BrAPI v2 /search/variables endpoint.
+  * Implement an internal central mechanism to handle all [BrAPI POST /search](https://plant-breeding-api.readthedocs.io/en/latest/docs/best_practices/Search_Services.html#post-search-entity) endpoints, including the 202 status code or searchResultsDbId response.
 -->
 
 # QBMS 1.0.0 _2024-03-07_
