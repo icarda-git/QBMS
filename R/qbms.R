@@ -43,16 +43,16 @@ brapi_map <- rbind(brapi_map, c("get_germplasm_attributes", "v2", "attributes?ge
 
 ############################### GIGWA calls ####################################
 
+# brapi_get_call(s)
 brapi_map <- rbind(brapi_map, c("gigwa_list_dbs", "v2", "programs"))
 brapi_map <- rbind(brapi_map, c("gigwa_list_projects", "v2", "studies?programDbId={programDbId}"))
 
-# POST: studyDbIds
+# brapi_post_search_call(s)
 brapi_map <- rbind(brapi_map, c("gigwa_list_runs", "v2", "search/variantsets"))
-
-# POST: studyDbIds
 brapi_map <- rbind(brapi_map, c("gigwa_get_samples", "v2", "search/germplasm"))
-
-# POST: germplasmDbIds
+brapi_map <- rbind(brapi_map, c("gigwa_get_sequences", "v2", "search/references"))
+brapi_map <- rbind(brapi_map, c("gigwa_get_allelematrix", "v2", "search/allelematrix"))
+brapi_map <- rbind(brapi_map, c("gigwa_get_markers", "v2", "search/variants"))
 brapi_map <- rbind(brapi_map, c("gigwa_get_metadata", "v2", "search/attributevalues"))
 
 ################################################################################
@@ -363,7 +363,7 @@ set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth
   if (is.null(path)) {
     if (engine == "bms") { path = "bmsapi" }
     if (engine == "breedbase") { path = "" }
-    if (engine == "gigwa") { path = "gigwa/rest"}
+    if (engine == "gigwa") { path = "gigwa/rest"; brapi_ver = "v2"}
     if (engine == "ebs") { path = "" }
   }
   
@@ -2387,8 +2387,11 @@ gigwa_list_dbs <- function() {
     stop("No server has been connected yet! You have to connect a server first using the `login_gigwa()` function")
   }
   
-  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/programs")
-  
+  call_url <- paste0(qbms_globals$config$base_url, 
+                     ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop)), 
+                     "/brapi/", qbms_globals$config$brapi_ver, "/", 
+                     brapi_map[brapi_map$func_name == "gigwa_list_dbs" & brapi_map$brapi_ver == qbms_globals$config$brapi_ver, "brapi_call"])
+
   gigwa_dbs <- brapi_get_call(call_url)$data
   
   return(gigwa_dbs)
@@ -2477,7 +2480,12 @@ gigwa_list_projects <- function() {
   if (!is.null(qbms_globals$state$gigwa_projects)) {
     gigwa_projects <- qbms_globals$state$gigwa_projects
   } else {
-    call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/studies?programDbId=", qbms_globals$config$db)
+    call_url <- paste0(qbms_globals$config$base_url, 
+                       ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop)), 
+                       "/brapi/", qbms_globals$config$brapi_ver, "/", 
+                       brapi_map[brapi_map$func_name == "gigwa_list_projects" & brapi_map$brapi_ver == qbms_globals$config$brapi_ver, "brapi_call"])
+    
+    call_url <- sub("\\{programDbId\\}", qbms_globals$config$db, call_url)
     
     gigwa_projects <- brapi_get_call(call_url)$data
     
@@ -2581,7 +2589,12 @@ gigwa_list_runs <- function() {
   if (!is.null(qbms_globals$state$gigwa_runs)) {
     gigwa_runs <- qbms_globals$state$gigwa_runs
   } else {
-    call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/variantsets")
+    # call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/variantsets")
+    call_url <- paste0(qbms_globals$config$base_url, 
+                       ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop)), 
+                       "/brapi/", qbms_globals$config$brapi_ver, "/", 
+                       brapi_map[brapi_map$func_name == "gigwa_list_runs" & brapi_map$brapi_ver == qbms_globals$config$brapi_ver, "brapi_call"])
+    
     call_body <- paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}')
     
     results <- brapi_post_search_call(call_url, call_body, FALSE)
@@ -2682,7 +2695,12 @@ gigwa_get_samples <- function() {
   if (!is.null(qbms_globals$state$gigwa_samples)) {
     gigwa_samples <- qbms_globals$state$gigwa_samples
   } else {
-    call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/germplasm")
+    # call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/germplasm")
+    call_url <- paste0(qbms_globals$config$base_url, 
+                       ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop)), 
+                       "/brapi/", qbms_globals$config$brapi_ver, "/", 
+                       brapi_map[brapi_map$func_name == "gigwa_get_samples" & brapi_map$brapi_ver == qbms_globals$config$brapi_ver, "brapi_call"])
+
     call_body <- paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}')
     
     results <- brapi_post_search_call(call_url, call_body, FALSE)
@@ -2736,7 +2754,12 @@ gigwa_get_sequences <- function() {
   if (!is.null(qbms_globals$state$gigwa_sequences)) {
     gigwa_sequences <- qbms_globals$state$gigwa_sequences
   } else {
-    call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/references")
+    # call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/references")
+    call_url <- paste0(qbms_globals$config$base_url, 
+                       ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop)), 
+                       "/brapi/", qbms_globals$config$brapi_ver, "/", 
+                       brapi_map[brapi_map$func_name == "gigwa_get_sequences" & brapi_map$brapi_ver == qbms_globals$config$brapi_ver, "brapi_call"])
+    
     call_body <- paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}')
     
     results <- brapi_post_search_call(call_url, call_body, FALSE)
@@ -3010,7 +3033,12 @@ gigwa_get_allelematrix <- function(samples = NULL, start = 0, end = "", chrom = 
   variants_page <- 0
   callsets_page <- 0
   
-  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/allelematrix")
+  # call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/allelematrix")
+  call_url <- paste0(qbms_globals$config$base_url, 
+                     ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop)), 
+                     "/brapi/", qbms_globals$config$brapi_ver, "/", 
+                     brapi_map[brapi_map$func_name == "gigwa_get_allelematrix" & brapi_map$brapi_ver == qbms_globals$config$brapi_ver, "brapi_call"])
+  
   
   post_schema <- paste0('{
                    "dataMatrixAbbreviations": ["GT"],
@@ -3144,7 +3172,12 @@ gigwa_get_markers <- function(start = NULL, end = NULL, chrom = NULL, simplify =
     referenceDbIds <- paste0('"', paste0(paste0(qbms_globals$state$study_db_id, "\u00A7\u00A7", referenceNames), collapse = '","'), '"')
   }
 
-  call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/variants")
+  # call_url <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/variants")
+  call_url <- paste0(qbms_globals$config$base_url, 
+                     ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop)), 
+                     "/brapi/", qbms_globals$config$brapi_ver, "/", 
+                     brapi_map[brapi_map$func_name == "gigwa_get_markers" & brapi_map$brapi_ver == qbms_globals$config$brapi_ver, "brapi_call"])
+  
   page     <- 0
   
   post_schema <- paste0('{', startParam, endParam,
@@ -3238,7 +3271,12 @@ gigwa_get_metadata <- function() {
   gigwa_get_samples()
   germplasmDbIds <- paste(qbms_globals$state$gigwa_samples$germplasmDbId, collapse = '","')
 
-  call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/attributevalues")
+  # call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v2/search/attributevalues")
+  call_url <- paste0(qbms_globals$config$base_url, 
+                     ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop)), 
+                     "/brapi/", qbms_globals$config$brapi_ver, "/", 
+                     brapi_map[brapi_map$func_name == "gigwa_get_metadata" & brapi_map$brapi_ver == qbms_globals$config$brapi_ver, "brapi_call"])
+  
   call_body <- paste0('{"germplasmDbIds": ["', germplasmDbIds, '"]}')
   
   results <- brapi_post_search_call(call_url, call_body, FALSE)
