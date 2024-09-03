@@ -92,3 +92,51 @@ metadata <- gigwa_get_metadata()
 View(metadata)
 
 ```
+
+## Enhanced Allele Matrix Retrieval
+The following functions now utilize the new efficient BrAPI v2.1 /allelematrix 
+calls, requiring version 2.6 of GIGWA or higher. This update significantly 
+improves the QBMS allele matrix retrieval speed, increasing it by more than 10 
+times, as demonstrated by benchmark tests.
+
+```r
+# Configure your GIGWA connection
+set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
+                time_out = 300, engine = "gigwa", no_auth = TRUE)
+
+# Select a database by name
+gigwa_set_db("Sorghum-JGI_v1")
+
+# Select a project by name
+gigwa_set_project("Nelson_et_al_2011")
+
+# Select a specific run by name
+gigwa_set_run("run1")
+
+# Get the list of all samples in the selected project
+germplasmNames <- gigwa_get_samples()
+
+# Get the list of all sequences in the selected project
+chroms <- gigwa_get_sequences()
+
+### Get Variants Info (Geno Map) ###############################################
+
+?gigwa_get_markers
+geno_map <- gigwa_get_markers(start = 0,
+                              end = 1234567,
+                              # chrom = c("Sb01", "Sb02"),      # chroms[1:3]
+                              )
+
+### Get Marker Matrix ##########################################################
+
+?gigwa_get_allelematrix
+geno_data <- gigwa_get_allelematrix(start = 0,                  # default is 0
+                                    end = 1234567,              # default is "" -> "ref:0-"
+                                    snps = geno_map$`rs#`,      # optional
+                                    # chrom = "Sb01",           # c("Sb01", "Sb07")
+                                    # samples = germplasmNames, # gigwa_get_samples()
+                                    # snps_pageSize = 10000,
+                                    # samples_pageSize = 100,
+                                    )
+
+```
