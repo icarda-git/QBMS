@@ -294,15 +294,20 @@ list_trials <- function(year = NULL) {
 
   bms_trials <- get_program_trials()
 
-  # startDate format in bms_trials is "yyyy-mm-dd"
-  if (!is.null(year)) {
-    bms_trials <- bms_trials[gsub("-\\d{2}-\\d{2}", "", bms_trials$startDate) == year, ]
-  }
-
-  trials <- unique(bms_trials[c("trialName")])
-
-  if (length(trials$trialName) == 0) {
-    warning("No single trial fit your query parameters!")
+  if (nrow(bms_trials) > 0) {
+    # startDate format in bms_trials is "yyyy-mm-dd"
+    if (!is.null(year)) {
+      bms_trials <- bms_trials[gsub("-\\d{2}-\\d{2}", "", bms_trials$startDate) == year, ]
+    }
+    
+    trials <- unique(bms_trials[c("trialName")])
+    
+    if (length(trials$trialName) == 0) {
+      warning("No single trial fit your query parameters!")
+      trials <- NA
+    }
+  } else {
+    warning("No trials in this program!")
     trials <- NA
   }
 
