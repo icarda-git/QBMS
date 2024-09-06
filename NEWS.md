@@ -1,5 +1,5 @@
 <!--
-# QBMS 1.2.0 _2024-06-##_
+# QBMS 1.2.0 _2024-09-##_
   * Add new `gigwa_get_allelematrix()` function that boosting the marker data retrieval speed by more than 10 times.
   * Add new `gigwa_get_markers()` function to retrieve the marker map that describe the physical positions of the markers on the chromosomes.
   * Add new `gigwa_get_sequences()` function to retrieve the list of sequences in the selected GIGWA project.

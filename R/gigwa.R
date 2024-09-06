@@ -387,12 +387,14 @@ gigwa_get_samples <- function() {
     
     results <- brapi_post_search_call(call_url, call_body, FALSE)
     
-    gigwa_samples <- results$result$data[, c("germplasmName", "germplasmDbId")]
+    gigwa_samples <- results$result$data[, c("sampleDbId", "germplasmDbId")]
     
     qbms_globals$state$gigwa_samples <- gigwa_samples
   }
+
+  germplasmName <- sub(".*\u00A7", "", gigwa_samples$germplasmDbId)
   
-  return(gigwa_samples$germplasmName)
+  return(germplasmName)
 }
 
 
@@ -742,6 +744,7 @@ gigwa_get_allelematrix <- function(samples = NULL, start = 0, end = "", chrom = 
   geno_data[range_start[1]:range_end[1], range_start[2]:range_end[2]] <- page_data
   
   resultVariantNames <- results$result$variantDbIds
+  resultCallSetDbIds <- results$result$callSetDbIds
   
   remaining_pages <- pagination$totalPages[1] * pagination$totalPages[2] - 1
   
@@ -771,6 +774,10 @@ gigwa_get_allelematrix <- function(samples = NULL, start = 0, end = "", chrom = 
           resultVariantNames <- c(resultVariantNames, results$result$variantDbIds)
         }
         
+        if (i == 0) {
+          resultCallSetDbIds <- c(resultCallSetDbIds, results$result$callSetDbIds)
+        }
+        
         utils::setTxtProgressBar(pb, i * pagination$totalPages[2] + j)
       }
     }
@@ -793,7 +800,9 @@ gigwa_get_allelematrix <- function(samples = NULL, start = 0, end = "", chrom = 
     geno_data <- geno_data + 1
   }
   
-  colnames(geno_data) <- germplasmNames
+  temp <- merge(resultCallSetDbIds, qbms_globals$state$gigwa_samples, by.x = 1, by.y = "sampleDbId", sort = FALSE)
+
+  colnames(geno_data) <- sub(".*\u00A7", "", temp$germplasmDbId)
   rownames(geno_data) <- sub(paste0(qbms_globals$config$db, "\u00A7"), "", resultVariantNames)
   
   return(geno_data)

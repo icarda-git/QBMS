@@ -47,7 +47,7 @@ brapi_map <- rbind(brapi_map, c("gigwa_list_projects", "v2", "studies?programDbI
 
 # gigwa brapi_post_search_call(s)
 brapi_map <- rbind(brapi_map, c("gigwa_list_runs", "v2", "search/variantsets"))
-brapi_map <- rbind(brapi_map, c("gigwa_get_samples", "v2", "search/germplasm"))
+brapi_map <- rbind(brapi_map, c("gigwa_get_samples", "v2", "search/samples"))
 brapi_map <- rbind(brapi_map, c("gigwa_get_sequences", "v2", "search/references"))
 brapi_map <- rbind(brapi_map, c("gigwa_get_allelematrix", "v2", "search/allelematrix"))
 brapi_map <- rbind(brapi_map, c("gigwa_get_markers", "v2", "search/variants"))
