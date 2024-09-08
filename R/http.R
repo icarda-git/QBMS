@@ -217,10 +217,10 @@ if (requireNamespace("async", quietly = TRUE)) {
 }
 
 
-brapi_post_search_call <- function(call_url, call_body, nested = TRUE) {
+brapi_post_search_allelematrix <- function(call_url, call_body, nested = TRUE) {
   headers  <- brapi_headers()
   call_url <- utils::URLencode(call_url)
-  
+
   response <- httr::POST(url = call_url, body = call_body,
                          encode = "raw", httr::accept_json(), httr::content_type_json(),
                          httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
@@ -245,5 +245,72 @@ brapi_post_search_call <- function(call_url, call_body, nested = TRUE) {
     }
   }
   
+  return(results)
+}
+
+
+brapi_post_search_call <- function(call_url, call_body, nested = TRUE) {
+  headers  <- brapi_headers()
+  call_url <- utils::URLencode(call_url)
+  
+  page_info <- paste0('{"page": {page}, "pageToken": {page}, "pageSize": ', qbms_globals$config$page_size)
+  call_body <- paste0(page_info, ", ", substr(call_body, 2, nchar(call_body)))
+  
+  current_page <- 0
+  
+  repeat {
+    page_body <- gsub("\\{page\\}", current_page, call_body)
+
+    response <- httr::POST(url = call_url, body = page_body,
+                           encode = "raw", httr::accept_json(), httr::content_type_json(),
+                           httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
+    
+    results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
+    
+    # https://plant-breeding-api.readthedocs.io/en/latest/docs/best_practices/Search_Services.html#post-search-entity
+    if (response$status_code == 202 || !is.null(results$result$searchResultsDbId)) {
+      repeat {
+        Sys.sleep(qbms_globals$config$sleep)
+        
+        searchResultsDbId <- results$result$searchResultsDbId
+        
+        response <- httr::GET(url = paste(call_url, searchResultsDbId, sep = "/"), 
+                              httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
+        
+        results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
+        
+        if (response$status_code == 200 && is.null(results$result$searchResultsDbId)) {
+          break
+        }
+      }
+    }
+    
+    if (is.null(results$metadata$pagination$totalPages)) {
+      # GIGWA /search/variants case!
+      results$metadata$pagination$totalPages <- with(results$metadata$pagination, ceiling(totalCount/pageSize))
+    }
+    
+    if (results$metadata$pagination$totalPages == 1) {
+      break
+    } else {
+      if (results$metadata$pagination$currentPage == 0) {
+        remaining_pages <- results$metadata$pagination$totalPages - 1
+        pb <- utils::txtProgressBar(min = 0, max = remaining_pages, initial = 0, style = 3) 
+        full_data <- results$result$data
+      } else {
+        full_data <- rbind(full_data, results$result$data)
+      }
+      
+      if (current_page == results$metadata$pagination$totalPages - 1) {
+        results$result$data <- full_data
+        close(pb)
+        break
+      } else {
+        current_page <- results$metadata$pagination$currentPage + 1
+        utils::setTxtProgressBar(pb, current_page)
+      }
+    }
+  }
+
   return(results)
 }

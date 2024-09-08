@@ -728,7 +728,7 @@ gigwa_get_allelematrix <- function(samples = NULL, start = 0, end = "", chrom = 
   
   call_body <- sub("\\{callsets_page\\}", callsets_page, sub("\\{variants_page\\}", variants_page, post_schema))
   
-  results <- brapi_post_search_call(call_url, call_body, FALSE)
+  results <- brapi_post_search_allelematrix(call_url, call_body, FALSE)
   
   pagination <- results$result$pagination
   
@@ -757,7 +757,7 @@ gigwa_get_allelematrix <- function(samples = NULL, start = 0, end = "", chrom = 
         
         call_body <- sub("\\{callsets_page\\}", j, sub("\\{variants_page\\}", i, post_schema))
         
-        results <- brapi_post_search_call(call_url, call_body, FALSE)
+        results <- brapi_post_search_allelematrix(call_url, call_body, FALSE)
         
         pagination <- results$result$pagination
         
@@ -856,40 +856,15 @@ gigwa_get_markers <- function(start = NULL, end = NULL, chrom = NULL, simplify =
   call_url <- get_brapi_url("gigwa_get_markers")
   page     <- 0
   
-  post_schema <- paste0('{', startParam, endParam,
+  call_body <- paste0('{', startParam, endParam,
                         '"referenceDbIds": [', referenceDbIds,'],
-                            "page": {page}, 
-                            "pageToken": {page},
-                            "pageSize": ', qbms_globals$config$page_size, ',
                             "variantSetDbIds": ["', qbms_globals$state$variant_set_db_id, '"]
                          }')
-  
-  call_body <- gsub("\\{page\\}", page, post_schema)
-  
+
   results <- brapi_post_search_call(call_url, call_body, FALSE)
-  
-  remaining_pages <- with(results$metadata$pagination, ceiling(totalCount/pageSize)) - 1
-  
+
   geno_map <- as.data.frame(results$result$data)
-  
-  if (remaining_pages > 0) {
-    pb <- utils::txtProgressBar(min = 0, max = remaining_pages, initial = 0, style = 3) 
-    
-    for (i in 1:remaining_pages) {
-      call_body <- gsub("\\{page\\}", i, post_schema)
-      
-      results <- brapi_post_search_call(call_url, call_body, FALSE)
-      
-      page_data <- as.data.frame(results$result$data)
-      
-      geno_map <- rbind(geno_map, page_data)
-      
-      utils::setTxtProgressBar(pb, i)
-    }
-    
-    close(pb)
-  }
-  
+
   if (simplify) {
     geno_map$alleles <- paste0(geno_map$referenceBases, "/", geno_map$alternateBases)
     
