@@ -103,7 +103,11 @@ get_async_page <- function(full_url, nested) {
   future::future({
     req  <- httr2::request(full_url)
     req  <- httr2::req_headers(req, .headers = brapi_headers())
-    req  <- httr2::req_auth_bearer_token(req, qbms_globals$state$token)
+    
+    if (!is.na(qbms_globals$state$token)) { 
+      req <- httr2::req_auth_bearer_token(req, qbms_globals$state$token) 
+    }
+    
     resp <- httr2::req_perform(req)
     httr2::resp_check_status(resp)
     httr2::resp_body_json(resp, simplifyVector = TRUE, flatten = !nested)
@@ -131,7 +135,11 @@ get_async_pages <- function(pages, nested) {
   future.apply::future_lapply(pages, function(full_url) {
     req  <- httr2::request(full_url)
     req  <- httr2::req_headers(req, .headers = brapi_headers())
-    req  <- httr2::req_auth_bearer_token(req, qbms_globals$state$token)
+
+    if (!is.na(qbms_globals$state$token)) { 
+      req <- httr2::req_auth_bearer_token(req, qbms_globals$state$token) 
+    }
+    
     resp <- httr2::req_perform(req)
     httr2::resp_check_status(resp)
     httr2::resp_body_json(resp, simplifyVector = TRUE, flatten = !nested)
@@ -223,28 +231,53 @@ brapi_get_call <- function(call_url, nested = TRUE) {
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 
 brapi_post_search_allelematrix <- function(call_url, call_body, nested = TRUE) {
-  headers  <- brapi_headers()
+  # Prepare headers without the 'Authorization' header
+  headers <- brapi_headers()
   call_url <- utils::URLencode(call_url)
-
-  response <- httr::POST(url = call_url, body = call_body,
-                         encode = "raw", httr::accept_json(), httr::content_type_json(),
-                         httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
   
-  results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
+  # Build the POST request
+  req <- httr2::request(call_url)
+  req <- httr2::req_headers(req, .headers = headers)
+  req <- httr2::req_timeout(req, seconds = qbms_globals$config$time_out)
+  req <- httr2::req_body_raw(req, call_body, type = "application/json")
   
-  # https://plant-breeding-api.readthedocs.io/en/latest/docs/best_practices/Search_Services.html#post-search-entity
-  if (response$status_code == 202 || !is.null(results$result$searchResultsDbId)) {
+  if (!is.na(qbms_globals$state$token)) { 
+    req <- httr2::req_auth_bearer_token(req, qbms_globals$state$token) 
+  }
+  
+  # Perform the POST request
+  resp <- httr2::req_perform(req)
+  httr2::resp_check_status(resp)
+  
+  # Parse the response
+  results <- httr2::resp_body_json(resp, simplifyVector = TRUE, flatten = !nested)
+  
+  # Handle asynchronous search results if status code is 202 or 'searchResultsDbId' is provided
+  if (httr2::resp_status(resp) == 202 || !is.null(results$result$searchResultsDbId)) {
     repeat {
       Sys.sleep(qbms_globals$config$sleep)
       
       searchResultsDbId <- results$result$searchResultsDbId
       
-      response <- httr::GET(url = paste(call_url, searchResultsDbId, sep = "/"), 
-                            httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
+      # Build the GET request to retrieve the results
+      get_url <- paste(call_url, searchResultsDbId, sep = "/")
+      get_req <- httr2::request(get_url)
+      get_req <- httr2::req_headers(get_req, .headers = headers)
+      get_req <- httr2::req_timeout(get_req, seconds = qbms_globals$config$time_out)
       
-      results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
+      if (!is.na(qbms_globals$state$token)) { 
+        get_req <- httr2::req_auth_bearer_token(get_req, qbms_globals$state$token) 
+      }
       
-      if (response$status_code == 200 && is.null(results$result$searchResultsDbId)) {
+      # Perform the GET request
+      resp <- httr2::req_perform(get_req)
+      httr2::resp_check_status(resp)
+      
+      # Parse the response
+      results <- httr2::resp_body_json(resp, simplifyVector = TRUE, flatten = !nested)
+      
+      # Check if the results are ready
+      if (httr2::resp_status(resp) == 200 && is.null(results$result$searchResultsDbId)) {
         break
       }
     }
@@ -252,7 +285,6 @@ brapi_post_search_allelematrix <- function(call_url, call_body, nested = TRUE) {
   
   return(results)
 }
-
 
 #' Internal Function Used for Core BrAPI POST Calls
 #'
@@ -281,26 +313,50 @@ brapi_post_search_call <- function(call_url, call_body, nested = TRUE) {
   
   repeat {
     page_body <- gsub("\\{page\\}", current_page, call_body)
-
-    response <- httr::POST(url = call_url, body = page_body,
-                           encode = "raw", httr::accept_json(), httr::content_type_json(),
-                           httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
     
-    results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
+    # Build the POST request using httr2
+    req <- httr2::request(call_url)
+    req <- httr2::req_headers(req, .headers = headers)
+    req <- httr2::req_timeout(req, seconds = qbms_globals$config$time_out)
+    req <- httr2::req_body_raw(req, page_body, type = "application/json")
     
-    # https://plant-breeding-api.readthedocs.io/en/latest/docs/best_practices/Search_Services.html#post-search-entity
-    if (response$status_code == 202 || !is.null(results$result$searchResultsDbId)) {
+    if (!is.na(qbms_globals$state$token)) { 
+      req <- httr2::req_auth_bearer_token(req, qbms_globals$state$token) 
+    }
+    
+    # Perform the POST request
+    resp <- httr2::req_perform(req)
+    httr2::resp_check_status(resp)
+    
+    # Parse the response
+    results <- httr2::resp_body_json(resp, simplifyVector = TRUE, flatten = !nested)
+    
+    # Handle asynchronous processing if needed
+    if (httr2::resp_status(resp) == 202 || !is.null(results$result$searchResultsDbId)) {
       repeat {
         Sys.sleep(qbms_globals$config$sleep)
         
         searchResultsDbId <- results$result$searchResultsDbId
         
-        response <- httr::GET(url = paste(call_url, searchResultsDbId, sep = "/"), 
-                              httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
+        get_url <- paste(call_url, searchResultsDbId, sep = "/")
+        # Build the GET request using httr2
+        get_req <- httr2::request(get_url)
+        get_req <- httr2::req_headers(get_req, .headers = headers)
+        get_req <- httr2::req_timeout(get_req, seconds = qbms_globals$config$time_out)
         
-        results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
+        if (!is.na(qbms_globals$state$token)) { 
+          get_req <- httr2::req_auth_bearer_token(get_req, qbms_globals$state$token) 
+        }
         
-        if (response$status_code == 200 && is.null(results$result$searchResultsDbId)) {
+        # Perform the GET request
+        resp <- httr2::req_perform(get_req)
+        httr2::resp_check_status(resp)
+        
+        # Parse the response
+        results <- httr2::resp_body_json(resp, simplifyVector = TRUE, flatten = !nested)
+        
+        # Check if results are ready
+        if (httr2::resp_status(resp) == 200 && is.null(results$result$searchResultsDbId)) {
           break
         }
       }
@@ -308,7 +364,7 @@ brapi_post_search_call <- function(call_url, call_body, nested = TRUE) {
     
     if (is.null(results$metadata$pagination$totalPages)) {
       # GIGWA /search/variants case!
-      results$metadata$pagination$totalPages <- with(results$metadata$pagination, ceiling(totalCount/pageSize))
+      results$metadata$pagination$totalPages <- with(results$metadata$pagination, ceiling(totalCount / pageSize))
     }
     
     if (results$metadata$pagination$totalPages == 1) {
@@ -332,6 +388,6 @@ brapi_post_search_call <- function(call_url, call_body, nested = TRUE) {
       }
     }
   }
-
+  
   return(results)
 }
