@@ -41,14 +41,19 @@ login_gigwa <- function(username = NULL, password = NULL) {
   call_url  <- paste0(qbms_globals$config$base_url, "/gigwa/generateToken")
   call_body <- list(username = credentials["usr"], password = credentials["pwd"])
   
-  response <- httr::POST(url = utils::URLencode(call_url), body = call_body, encode = "json",
-                         httr::timeout(qbms_globals$config$time_out))
+  req <- httr2::request(utils::URLencode(call_url))
+  req <- httr2::req_body_json(req, call_body)
+  req <- httr2::req_timeout(req, qbms_globals$config$time_out)
   
-  if (response$status_code == 403 || credentials["usr"] == "" || credentials["pwd"] == "") {
+  resp <- httr2::req_perform(req)
+  
+  if (httr2::resp_status(resp) == 403 || credentials["usr"] == "" || credentials["pwd"] == "") {
     stop("403 Forbidden")
   }
   
-  set_token(httr::content(response)$token)
+  content <- httr2::resp_body_json(resp)
+  
+  set_token(content$token)
 }
 
 
