@@ -100,14 +100,21 @@ set_token <- function(token, user = '', expires_in = 3600) {
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @export
 
-login_oauth2 <- function(authorize_url, access_url, client_id, client_secret = NULL, redirect_uri = "http://localhost:1410", oauth2_cache = FALSE) {
-  app <- httr::oauth_app(appname = "QBMS", key = client_id, secret = client_secret, redirect_uri = redirect_uri)
+login_oauth2 <- function(authorize_url, access_url, client_id, client_secret = NULL, redirect_uri = "http://localhost:1410") {
+  client <- httr2::oauth_client(
+    id = client_id,
+    secret = client_secret,
+    token_url = access_url,
+    name = "QBMS"
+  )
   
-  endpoint <- httr::oauth_endpoint(authorize = authorize_url, access = access_url)
+  token <- httr2::oauth_flow_auth_code(
+    client = client,
+    auth_url = authorize_url,
+    redirect_uri = redirect_uri
+  )
   
-  token <- httr::oauth2.0_token(endpoint, app, cache = oauth2_cache)
-  
-  set_token(token$credentials$id_token, '', token$credentials$expires_in)
+  set_token(token$id_token, '', token$expires_in)
 }
 
 
