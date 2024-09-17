@@ -75,15 +75,6 @@ login_bms("username", "password")
 
 > _You should be careful when sharing your batch mode code to avoid leaking your credential in public or not authorized spaces._
 
-## Boosting Big Queries Performance
-You can get benefit from an external suggested R package (not on CRAN yet) named [async](https://github.com/gaborcsardi/async) to improve the performance of multi-page API calls by optionally enabling asynchronous calls to prevent blocking behavior by fetching all requested pages simultaneously (this helps to reduce the waiting time for the user).
-
-All that you need to do to activate this option is to install the async package manually using the following line of code, and QBMS will take care of the rest ;-)
-
-```r
-remotes::install_github("r-lib/async")
-```
-
 ## Supporting Multiple Provider Connectors
 You can switch between an ongoing QBMS connection and another server/database connection by using `get_qbms_connection()` and `set_qbms_connection()` functions, as shown in the following example (i.e., if there is a need to switch forth and back during the same session):
 
@@ -168,16 +159,7 @@ remotes::install_github("icarda-git/QBMS", upgrade = "always")
 Sys.setlocale("LC_ALL", "English_United States.utf8")
 ```
 
-4. If you get the following error message: `'synchronise' is not an exported object from 'namespace:async'`, then double-check that you have installed the correct `async` package we [recommended](#boosting-big-queries-performance). Users may encounter this error because they installed a [different `async` package](https://cran.r-project.org/package=async) from the **CRAN** repository! Please uninstall it before installing the required R package from Github (for more details, please refer to this [GitHub issue](https://github.com/icarda-git/QBMS/issues/15)):
-
-```r
-remove.packages("async")
-if("package:async" %in% search()) detach("package:async", unload = TRUE)
-
-remotes::install_github("r-lib/async")
-```
-
-5. If the `get_terraclimate()` function takes a long time to run and the progress bar stays at 0%, it might be due to using an outdated version of the R language. Make sure you're using the latest version. For more details, please refer to this [GitHub issue](https://github.com/mjwoods/RNetCDF/issues/140).
+4. If the `get_terraclimate()` function takes a long time to run and the progress bar stays at 0%, it might be due to using an outdated version of the R language. Make sure you're using the latest version. For more details, please refer to this [GitHub issue](https://github.com/mjwoods/RNetCDF/issues/140).
 
 ## References
 * Peter Selby et al., BrAPI-an application programming interface for plant breeding applications, _Bioinformatics_, Volume 35, Issue 20, 15 October 2019, Pages 4147–4155, [https://doi.org/10.1093/bioinformatics/btz190](https://doi.org/10.1093/bioinformatics/btz190)
