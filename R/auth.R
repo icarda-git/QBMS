@@ -90,8 +90,6 @@ set_token <- function(token, user = '', expires_in = 3600) {
 #' @param client_id The client ID (consumer key) provided by the authorization server.
 #' @param client_secret The client secret provided by the authorization server (optional).
 #' @param redirect_uri The URL where the user will be redirected after authorization (default is http://localhost:1410).
-#' @param oauth2_cache Logical or string, specifying whether to cache the token. If TRUE, the token is cached in the default 
-#'                     file `.httr-oauth`. A string can specify a custom cache file path.
 #' 
 #' @return
 #' No return value. Updates the internal state with the access token and additional details.

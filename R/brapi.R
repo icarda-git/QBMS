@@ -134,28 +134,54 @@ scan_brapi_endpoints <- function(programDbId = 0, trialDbId = 0, studyDbId = 0) 
   if (is.null(qbms_globals$config$base_url)) {
     stop("No server has been defined yet! You have to set your server configurations first using the `set_qbms_config()` function")
   }
-  
-  call_url <- paste0(qbms_globals$config$base_url, 
-                     ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop)), 
-                     "/brapi/", brapi_map$brapi_ver, "/", 
-                     brapi_map$brapi_call)
-  
+
+  call_url <- paste0(
+    qbms_globals$config$base_url,
+    ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop)),
+    "/brapi/", brapi_map$brapi_ver, "/",
+    brapi_map$brapi_call
+  )
+
   call_url <- sub("\\{programDbId\\}", programDbId, call_url)
   call_url <- sub("\\{trialDbId\\}", trialDbId, call_url)
   call_url <- sub("\\{studyDbId\\}", studyDbId, call_url)
   call_url <- sub("\\{.*\\}", "1", call_url)
-  
-  # ensure getting the minimum data while scanning BrAPI endpoints
-  call_url <- ifelse(grepl("\\?", call_url),
-                     paste0(call_url, "&pageSize=1"),
-                     paste0(call_url, "?pageSize=1"))
-  
-  scan_result <- !sapply(call_url, function (url) httr::http_error(httr::GET(url, httr::add_headers(brapi_headers()))))
+
+  # Ensure getting the minimum data while scanning BrAPI endpoints
+  call_url <- ifelse(
+    grepl("\\?", call_url),
+    paste0(call_url, "&pageSize=1"),
+    paste0(call_url, "?pageSize=1")
+  )
+
+  scan_result <- sapply(call_url, function(url) {
+    # Create the request
+    req <- httr2::request(url)
+    req <- httr2::req_headers(req, .headers = brapi_headers())
+
+    if (!is.na(qbms_globals$state$token)) {
+      req <- httr2::req_auth_bearer_token(req, qbms_globals$state$token)
+    }
+
+    # Perform the request
+    resp <- tryCatch(
+      httr2::req_perform(req),
+      error = function(e) NULL
+    )
+
+    # Check if the response indicates an error
+    if (is.null(resp)) {
+      FALSE  # Endpoint is not available
+    } else {
+      !httr2::resp_is_error(resp)  # TRUE if available, FALSE otherwise
+    }
+  })
+
   scan_result <- as.data.frame(cbind(brapi_map$func_name, call_url, scan_result))
-  
+
   rownames(scan_result) <- NULL
   colnames(scan_result) <- c("QBMS Function", "BrAPI endpoint", "Available")
-  
+
   return(scan_result)
 }
 
