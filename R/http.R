@@ -1,3 +1,5 @@
+# Set the future plan to enable parallel execution
+future::plan(future::multisession)
 
 #' Combine Data Frames by Row, Filling in Missing Columns
 #'
@@ -71,98 +73,63 @@ rbindlistx <- function(x) {
 
 brapi_headers <- function() {
   auth_code <- paste0("Bearer ", qbms_globals$state$token)
-  headers   <- c("Authorization" = auth_code, 
-                 "Accept-Encoding" = "gzip, deflate",
-                 "accept" = "application/json")
+  headers   <- c(
+    "Authorization" = auth_code, 
+    "Accept-Encoding" = "gzip, deflate",
+    "accept" = "application/json"
+  )
   headers
 }
 
 
-#' Asynchronous HTTP GET Request
+#' Asynchronously Fetch a Single API Page
 #'
 #' @description
-#' This helper function performs an HTTP GET request asynchronously, allowing the 
-#' retrieval of data from a given URL without blocking the execution of other tasks. 
-#' The function leverages the `async` package to make the GET request and parse the 
-#' response. It supports handling JSON responses and optionally flattens nested 
-#' data frames for easier manipulation.
+#' Sends an asynchronous HTTP GET request to fetch data from a single API page.
 #'
-#' @param full_url A string containing the complete URL to retrieve data from. 
-#'                 The URL should point to an API or resource that returns a JSON response.
-#' @param nested Logical flag indicating whether nested data frames in the returned 
-#'               JSON response should be flattened. Default is FALSE, meaning the data 
-#'               will retain its nested structure; set to TRUE to simplify the response 
-#'               by flattening nested structures.
-#' 
-#' @return
-#' A deferred object representing the asynchronous HTTP GET request. When resolved, 
-#' the object contains the parsed JSON response, either as a nested or flattened 
-#' structure depending on the `nested` parameter.
-#' 
-#' @note
-#' The function relies on the `async` package for asynchronous execution. Ensure that 
-#' `async` is installed and loaded in your environment. Also, the response from the 
-#' URL is expected to be in JSON format, as this function parses the content accordingly.
-#' 
-#' @return 
-#' A deferred object that resolves to the parsed JSON response, with optional 
-#' flattening of nested data structures.
+#' @param full_url Character string specifying the full URL of the API endpoint to request.
+#' @param nested Logical value indicating whether to flatten nested lists in the JSON response.
+#'
+#' @return A future representing the asynchronous operation, which will resolve to a list containing the parsed JSON response.
+#'
+#' @details
+#' This function uses \code{future::future()} to perform the HTTP GET request asynchronously.
+#' It retrieves the content from the specified URL, checks for HTTP errors, and parses the JSON response.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 
 get_async_page <- function(full_url, nested) {
-}
-
-if (requireNamespace("async", quietly = TRUE)) {
-  get_async_page <- async::async(function(full_url, nested) {
-    async::http_get(full_url, headers = brapi_headers())$
-      then(async::http_stop_for_status)$
-      then(function(resp) {
-        jsonlite::fromJSON(rawToChar(resp$content), flatten = !nested)
-      })
+  future::future({
+    resp <- httr::GET(full_url, httr::add_headers(.headers = brapi_headers()))
+    httr::stop_for_status(resp)
+    jsonlite::fromJSON(rawToChar(resp$content), flatten = !nested)
   })
 }
 
 
-#' Run All Supplied Pages Asynchronously
+#' Asynchronously Fetch Multiple API Pages
 #'
 #' @description
-#' This helper function is designed to asynchronously retrieve data from multiple 
-#' API pages (URLs) and consolidate the results once all pages have been fetched. 
-#' The function creates a deferred object that is resolved when all the provided 
-#' URLs are successfully retrieved. It leverages asynchronous programming to 
-#' enhance performance, especially when dealing with multiple API requests.
+#' Sends asynchronous HTTP GET requests to fetch data from multiple API pages concurrently.
 #'
-#' @param pages A list of URLs representing the individual API pages to be fetched.
-#'              Each URL corresponds to a specific page of results in a paginated API.
-#' @param nested Logical flag indicating whether nested data structures in the 
-#'               returned JSON responses should be flattened. If set to FALSE 
-#'               (default), the data will retain its nested structure; if set to TRUE, 
-#'               nested data frames will be flattened into a simpler format.
-#' 
-#' @return
-#' An asynchronous deferred object that, when resolved, provides the combined 
-#' results of all pages as a list or data frame, depending on the structure of the response.
-#' 
-#' @note
-#' The function requires the `async` package for handling the asynchronous 
-#' retrieval of pages. Ensure that `async` is installed and loaded in your R environment.
-#' 
-#' @return 
-#' A deferred object that resolves once all pages have been fetched and processed.
+#' @param pages Character vector of full URLs specifying the API endpoints to request.
+#' @param nested Logical value indicating whether to flatten nested lists in the JSON responses.
+#'
+#' @return A list of parsed JSON responses from each page.
+#'
+#' @details
+#' This function uses \code{future.apply::future_lapply()} to perform concurrent HTTP GET requests for multiple pages.
+#' It retrieves and parses the JSON responses from each URL provided.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 
 get_async_pages <- function(pages, nested) {
-}
-
-if (requireNamespace("async", quietly = TRUE)) {
-  get_async_pages <- async::async(function(pages, nested) {
-    reqs <- lapply(pages, get_async_page, nested)
-    async::when_all(.list = reqs)$
-      then(function(x) x)
+  future.apply::future_lapply(pages, function(full_url) {
+    resp <- httr::GET(full_url, httr::add_headers(.headers = brapi_headers()))
+    httr::stop_for_status(resp)
+    jsonlite::fromJSON(rawToChar(resp$content), flatten = !nested)
   })
 }
 
@@ -170,24 +137,22 @@ if (requireNamespace("async", quietly = TRUE)) {
 #' Internal Function for Core BrAPI GET Calls
 #'
 #' @description
-#' This is an internal utility function designed to handle BrAPI GET requests. 
-#' It efficiently manages the process of making API calls to BrAPI endpoints, handling 
-#' aspects such as authentication, pagination, and JSON response parsing. Additionally, 
-#' it supports optional data flattening for nested structures, handles encoding, and 
-#' deals with compression for performance optimization.
+#' Fetches data from an API endpoint, handles pagination by retrieving all pages, and consolidates the results into a single data frame.
 #'
-#' The function ensures the correct retrieval of paginated data by iteratively requesting 
-#' additional pages if required, and combines the results into a single response object.
-#' Progress is tracked and displayed if verbosity is enabled in the global configuration.
+#' @param call_url Character string specifying the base URL of the API endpoint to request.
+#' @param nested Logical value indicating whether to flatten nested lists in the JSON responses. Defaults to \code{TRUE}.
 #'
-#' @param call_url A string representing the full BrAPI URL for the GET request.
-#' @param nested Logical flag indicating whether to flatten nested JSON data structures 
-#'               into a more straightforward format. The default is TRUE, meaning nested 
-#'               data will be flattened.
-#' 
-#' @return
-#' A data frame or list containing the results from the BrAPI GET request. If the response 
-#' includes multiple pages, the results from all pages are concatenated into a single object.
+#' @return A list containing the consolidated data and associated metadata from the API response.
+#'
+#' @details
+#' This function performs the following steps:
+#' \enumerate{
+#'   \item Fetches the first page synchronously to determine the total number of pages.
+#'   \item If multiple pages exist, it asynchronously fetches the remaining pages using \code{get_async_pages()}.
+#'   \item Consolidates the data from all pages into a single data frame.
+#'   \item Updates global state variables with pagination information.
+#' }
+#' It relies on global variables from \code{qbms_globals} to manage state and configuration.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -196,50 +161,36 @@ brapi_get_call <- function(call_url, nested = TRUE) {
   separator <- if (grepl("\\?", call_url)) "&" else "?"
   full_url  <- paste0(call_url, separator, "page=0&pageSize=", qbms_globals$config$page_size)
   
-  headers  <- brapi_headers()
-  response <- httr::GET(url = utils::URLencode(full_url),
-                        httr::add_headers(headers),
-                        httr::timeout(qbms_globals$config$time_out))
-  
-  result_object <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
+  # Fetch the first page synchronously to get total number of pages
+  result_future <- get_async_page(full_url, nested)
+  result_object <- future::value(result_future)
   result_data   <- as.data.frame(result_object$result$data)
+  total_pages   <- result_object$metadata$pagination$totalPages
   
-  if (result_object$metadata$pagination$totalPages > 1 && is.null(result_object$errors)) {
-    last_page <- result_object$metadata$pagination$totalPages - 1
+  if (total_pages > 1) {
+    pages <- seq(1, total_pages - 1)
+    full_urls <- paste0(call_url, separator, "page=", pages, "&pageSize=", qbms_globals$config$page_size)
     
-    if (qbms_globals$config$verbose) {
-      pb      <- utils::txtProgressBar(min = 0, max = last_page + 1, initial = 0, style = 3)
-      pb_step <- 1
-      utils::setTxtProgressBar(pb, 1)
-    }
+    # Fetch remaining pages asynchronously
+    all_pages <- get_async_pages(full_urls, nested)
     
-    for (n in 1:last_page) {
-      full_url <- paste0(call_url, separator, "page=", n, "&pageSize=", qbms_globals$config$page_size)
-      response <- httr::GET(url = utils::URLencode(full_url),
-                            httr::add_headers(headers),
-                            httr::timeout(qbms_globals$config$time_out))
-      
-      result_object <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = !nested)
-      result_data   <- rbindx(result_data, as.data.frame(result_object$result$data))
-      
-      # update the progress bar
-      if (qbms_globals$config$verbose) { utils::setTxtProgressBar(pb, n + 1) }
-    }
-    
-    if (qbms_globals$config$verbose) {
-      utils::setTxtProgressBar(pb, last_page + 1)
-      close(pb)
+    # Combine data from all pages
+    for (n in seq_along(all_pages)) {
+      page_data <- as.data.frame(all_pages[[n]]$result$data)
+      result_data <- rbindx(result_data, page_data)
     }
   }
   
+  # Finalize the result data
   if (ncol(result_data) == 1) {
-    result_object$result$data <- result_data[,1]
+    result_object$result$data <- result_data[, 1]
   } else {
     result_object$result$data <- result_data
   }
   
   result_data <- result_object$result
   
+  # Update global state with pagination info
   qbms_globals$state$current_page <- result_object$metadata$pagination$currentPage
   qbms_globals$state$page_size    <- result_object$metadata$pagination$pageSize
   qbms_globals$state$total_count  <- result_object$metadata$pagination$totalCount
@@ -247,42 +198,6 @@ brapi_get_call <- function(call_url, nested = TRUE) {
   qbms_globals$state$errors       <- result_object$errors
   
   return(result_data)
-}
-
-if (requireNamespace("async", quietly = TRUE)) {
-  brapi_get_call <- function(call_url, nested = TRUE) {
-    separator <- if (grepl("\\?", call_url)) "&" else "?"
-    full_url  <- paste0(call_url, separator, "page=0&pageSize=", qbms_globals$config$page_size)
-    
-    result_object <- async::synchronise(get_async_page(full_url, nested))
-    result_data   <- as.data.frame(result_object$result$data)
-    total_pages   <- result_object$metadata$pagination$totalPages
-    if (total_pages > 1) {
-      pages <- c(seq(1, total_pages - 1))
-      full_urls <- paste0(call_url, separator, "page=", pages, "&pageSize=", qbms_globals$config$page_size)
-      all_pages <- async::synchronise(get_async_pages(full_urls, nested))
-      
-      for (n in 1:(total_pages - 1)) {
-        result_data <- rbindx(result_data, as.data.frame(all_pages[[n]]$result$data))
-      }
-    }
-    
-    if (ncol(result_data) == 1) {
-      result_object$result$data <- result_data[,1]
-    } else {
-      result_object$result$data <- result_data
-    }
-    
-    result_data <- result_object$result
-    
-    qbms_globals$state$current_page <- result_object$metadata$pagination$currentPage
-    qbms_globals$state$page_size    <- result_object$metadata$pagination$pageSize
-    qbms_globals$state$total_count  <- result_object$metadata$pagination$totalCount
-    qbms_globals$state$total_pages  <- result_object$metadata$pagination$totalPages
-    qbms_globals$state$errors       <- result_object$errors
-    
-    return(result_data)
-  }
 }
 
 

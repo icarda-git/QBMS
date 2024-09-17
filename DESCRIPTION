@@ -35,12 +35,13 @@ Imports:
     stats,
     terra,
     RSQLite,
-    DBI
+    DBI,
+    future,
+    future.apply
 Suggests: 
     knitr,
     rmarkdown,
-    remotes,
-    async
+    remotes
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
