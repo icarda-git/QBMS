@@ -9,8 +9,7 @@ login_oauth2(
   access_url,
   client_id,
   client_secret = NULL,
-  redirect_uri = "http://localhost:1410",
-  oauth2_cache = FALSE
+  redirect_uri = "http://localhost:1410"
 )
 }
 \arguments{
@@ -23,9 +22,6 @@ login_oauth2(
 \item{client_secret}{The client secret provided by the authorization server (optional).}
 
 \item{redirect_uri}{The URL where the user will be redirected after authorization (default is http://localhost:1410).}
-
-\item{oauth2_cache}{Logical or string, specifying whether to cache the token. If TRUE, the token is cached in the default 
-file `.httr-oauth`. A string can specify a custom cache file path.}
 }
 \value{
 No return value. Updates the internal state with the access token and additional details.

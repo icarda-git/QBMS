@@ -2,38 +2,24 @@
 % Please edit documentation in R/http.R
 \name{get_async_page}
 \alias{get_async_page}
-\title{Asynchronous HTTP GET Request}
+\title{Asynchronously Fetch a Single API Page}
 \usage{
 get_async_page(full_url, nested)
 }
 \arguments{
-\item{full_url}{A string containing the complete URL to retrieve data from. 
-The URL should point to an API or resource that returns a JSON response.}
+\item{full_url}{Character string specifying the full URL of the API endpoint to request.}
 
-\item{nested}{Logical flag indicating whether nested data frames in the returned 
-JSON response should be flattened. Default is FALSE, meaning the data 
-will retain its nested structure; set to TRUE to simplify the response 
-by flattening nested structures.}
+\item{nested}{Logical value indicating whether to flatten nested lists in the JSON response.}
 }
 \value{
-A deferred object representing the asynchronous HTTP GET request. When resolved, 
-the object contains the parsed JSON response, either as a nested or flattened 
-structure depending on the `nested` parameter.
-
-A deferred object that resolves to the parsed JSON response, with optional 
-flattening of nested data structures.
+A future representing the asynchronous operation, which will resolve to a list containing the parsed JSON response.
 }
 \description{
-This helper function performs an HTTP GET request asynchronously, allowing the 
-retrieval of data from a given URL without blocking the execution of other tasks. 
-The function leverages the `async` package to make the GET request and parse the 
-response. It supports handling JSON responses and optionally flattens nested 
-data frames for easier manipulation.
+Sends an asynchronous HTTP GET request to fetch data from a single API page.
 }
-\note{
-The function relies on the `async` package for asynchronous execution. Ensure that 
-`async` is installed and loaded in your environment. Also, the response from the 
-URL is expected to be in JSON format, as this function parses the content accordingly.
+\details{
+This function uses \code{future::future()} to perform the HTTP GET request asynchronously.
+It retrieves the content from the specified URL, checks for HTTP errors, and parses the JSON response.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

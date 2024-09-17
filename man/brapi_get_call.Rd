@@ -7,26 +7,25 @@
 brapi_get_call(call_url, nested = TRUE)
 }
 \arguments{
-\item{call_url}{A string representing the full BrAPI URL for the GET request.}
+\item{call_url}{Character string specifying the base URL of the API endpoint to request.}
 
-\item{nested}{Logical flag indicating whether to flatten nested JSON data structures 
-into a more straightforward format. The default is TRUE, meaning nested 
-data will be flattened.}
+\item{nested}{Logical value indicating whether to flatten nested lists in the JSON responses. Defaults to \code{TRUE}.}
 }
 \value{
-A data frame or list containing the results from the BrAPI GET request. If the response 
-includes multiple pages, the results from all pages are concatenated into a single object.
+A list containing the consolidated data and associated metadata from the API response.
 }
 \description{
-This is an internal utility function designed to handle BrAPI GET requests. 
-It efficiently manages the process of making API calls to BrAPI endpoints, handling 
-aspects such as authentication, pagination, and JSON response parsing. Additionally, 
-it supports optional data flattening for nested structures, handles encoding, and 
-deals with compression for performance optimization.
-
-The function ensures the correct retrieval of paginated data by iteratively requesting 
-additional pages if required, and combines the results into a single response object.
-Progress is tracked and displayed if verbosity is enabled in the global configuration.
+Fetches data from an API endpoint, handles pagination by retrieving all pages, and consolidates the results into a single data frame.
+}
+\details{
+This function performs the following steps:
+\enumerate{
+  \item Fetches the first page synchronously to determine the total number of pages.
+  \item If multiple pages exist, it asynchronously fetches the remaining pages using \code{get_async_pages()}.
+  \item Consolidates the data from all pages into a single data frame.
+  \item Updates global state variables with pagination information.
+}
+It relies on global variables from \code{qbms_globals} to manage state and configuration.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
