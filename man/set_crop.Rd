@@ -7,31 +7,25 @@
 set_crop(crop_name)
 }
 \arguments{
-\item{crop_name}{The name of the crop.}
+\item{crop_name}{A string specifying the name of the crop to set as active.}
 }
 \value{
-No return value.
+No return value. The function updates the global state with the selected crop.
 }
 \description{
-Updates the current active crop in the internal configuration object (including 
-the BrAPI connection object).
+Updates the internal configuration to set the selected crop as the active one. This 
+must be called before performing crop-specific operations such as retrieving breeding programs.
 }
 \examples{
-if(interactive()) {
-  # Configure your server connection
+if (interactive()) {
   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-
-  # Login using your account (interactive mode)
-  # You can pass your username and password as parameters (batch mode)
-  login_bms()
-
-  # Select a crop by name
-  set_crop("wheat")
+  login_bms()  # Log in to the server
+  set_crop("wheat")  # Set "wheat" as the active crop
 }
 
 }
 \seealso{
-\code{\link{login_bms}}, \code{\link{list_crops}}
+\code{\link{login_bms}}, \code{\link{list_crops}} to validate and retrieve the list of supported crops.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

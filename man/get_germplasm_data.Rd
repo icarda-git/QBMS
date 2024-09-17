@@ -10,30 +10,21 @@ get_germplasm_data(germplasm_name = "")
 \item{germplasm_name}{The name of the germplasm.}
 }
 \value{
-A data frame containing the aggregated observations data for the germplasm from all trials.
+A data frame containing all available observations data for the specified germplasm.
 }
 \description{
-Retrieves all available observations data for a given germplasm in the current 
-crop database, regardless of the nested structure of programs/trials.
+Retrieves all available observations data for the given germplasm in the current active crop.
+This data is aggregated across all trials in the crop database.
 }
 \examples{
 if (interactive()) {
-  # Configure server connection
   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-  
-  # Log in using your account (interactive mode)
-  # You can pass your username and password as parameters (batch mode)
   login_bms()
-  
-  # Select a crop
   set_crop("wheat")
-  
-  # Select a breeding program by name
-  set_program("Wheat International Nurseries")
-  
-  # Retrieve observations data for a specified germplasm aggregated from all trials
   germplasm_observations <- get_germplasm_data("Jabal")
+  head(germplasm_observations)
 }
+
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{get_germplasm_attributes}}

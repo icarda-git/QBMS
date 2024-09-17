@@ -1,29 +1,25 @@
 
-#' Get the List of Supported Crops
+#' Retrieve Supported Crops from the Server
 #'
 #' @description
-#' Retrieves the list of supported crops.
+#' Retrieves the list of crops supported by the connected server. If the crop 
+#' list is cached in the internal state, it returns the cached data; otherwise, it 
+#' sends a BrAPI GET request to fetch the crop list.
 #'
 #' @return
-#' A list of supported crops.
+#' A character vector containing the names of supported crops.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso
-#' \code{\link{login_bms}}
-#' 
+#' \code{\link{login_bms}}, \code{\link{set_crop}} to configure and set the current active crop.
+#'
 #' @examples
-#' if(interactive()) {
-#'   # Configure your BMS connection
+#' if (interactive()) {
 #'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-#'
-#'   # Login using your BMS account (interactive mode)
-#'   # You can pass the BMS username and password as parameters (batch mode)
-#'   login_bms()
-#'
-#'   # List supported crops in the BMS server
-#'   list_crops()
+#'   login_bms()  # Log in to the server
+#'   list_crops()  # Retrieve list of supported crops
 #' }
 #' 
 #' @export
@@ -50,31 +46,25 @@ list_crops <- function() {
 #' Set the Current Active Crop
 #'
 #' @description
-#' Updates the current active crop in the internal configuration object (including 
-#' the BrAPI connection object).
+#' Updates the internal configuration to set the selected crop as the active one. This 
+#' must be called before performing crop-specific operations such as retrieving breeding programs.
 #'
-#' @param crop_name The name of the crop.
-#' 
+#' @param crop_name A string specifying the name of the crop to set as active.
+#'
 #' @return
-#' No return value.
+#' No return value. The function updates the global state with the selected crop.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{list_crops}}
-#' 
+#' \code{\link{login_bms}}, \code{\link{list_crops}} to validate and retrieve the list of supported crops.
+#'
 #' @examples
-#' if(interactive()) {
-#'   # Configure your server connection
+#' if (interactive()) {
 #'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-#'
-#'   # Login using your account (interactive mode)
-#'   # You can pass your username and password as parameters (batch mode)
-#'   login_bms()
-#'
-#'   # Select a crop by name
-#'   set_crop("wheat")
+#'   login_bms()  # Log in to the server
+#'   set_crop("wheat")  # Set "wheat" as the active crop
 #' }
 #' 
 #' @export
@@ -94,35 +84,27 @@ set_crop <- function(crop_name) {
 }
 
 
-#' Get the List of Breeding Programs Names
+#' Retrieve Breeding Programs for the Active Crop
 #'
 #' @description
-#' Retrieves the breeding programs list from the current active crop as configured 
-#' in the internal configuration object using `set_crop()` function.
+#' Retrieves the list of breeding programs available for the currently selected crop. 
+#' The crop must be set using the \code{\link{set_crop}} function prior to calling this.
 #'
 #' @return
-#' A list of breeding programs names.
+#' A data frame containing the names of breeding programs available for the active crop.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}
-#' 
+#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{list_crops}} for managing server connection and crop selection.
+#'
 #' @examples
-#' if(interactive()) {
-#'   # Configure your server connection
+#' if (interactive()) {
 #'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-#'
-#'   # Login using your account (interactive mode)
-#'   # You can pass your username and password as parameters (batch mode)
-#'   login_bms()
-#'
-#'   # Select a crop by name
-#'   set_crop("wheat")
-#'
-#'   # List existing breeding programs
-#'   list_programs()
+#'   login_bms()  # Log in to the server
+#'   set_crop("wheat")  # Set "wheat" as the active crop
+#'   list_programs()  # Retrieve breeding programs for the active crop
 #' }
 #' 
 #' @export
@@ -158,34 +140,27 @@ list_programs <- function() {
 #' Set the Current Active Breeding Program
 #'
 #' @description
-#' Updates the current active breeding program in the internal state object 
-#' using the programDbId which is associated with the given program_name parameter.
+#' Updates the internal state to set the selected breeding program as active using the 
+#' associated programDbId. This allows subsequent operations to be carried out 
+#' within the context of this program.
 #'
-#' @param program_name The name of the breeding program.
-#' 
+#' @param program_name A string specifying the name of the breeding program to set as active.
+#'
 #' @return
-#' No return value.
+#' No return value. The internal state is updated with the selected program.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{list_programs}}
-#' 
+#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{list_programs}} for related operations in the crop and program selection process.
+#'
 #' @examples
-#' if(interactive()) {
-#'   # Configure your server connection
+#' if (interactive()) {
 #'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-#'
-#'   # Login using your account (interactive mode)
-#'   # You can pass your username and password as parameters (batch mode)
-#'   login_bms()
-#'
-#'   # Select a crop by name
-#'   set_crop("wheat")
-#'
-#'   # Select a breeding program by name
-#'   set_program("Wheat International Nurseries")
+#'   login_bms()  # Log in to the server
+#'   set_crop("wheat")  # Set crop
+#'   set_program("Wheat International Nurseries")  # Set breeding program
 #' }
 #' 
 #' @export
@@ -205,16 +180,15 @@ set_program <- function(program_name) {
 }
 
 
-#' Internal Function Used to Retrieve the Rough List of Trials
+#' Retrieve the List of Trials for the Active Breeding Program
 #'
 #' @description
-#' This function is created for *internal use only* to retrieve the raw list of trials
-#' from the pre-selected (i.e., currently active) crop and breeding program combination
-#' as already configured in the internal state object using `set_crop()` and `set_program()`
-#' functions, respectively.
+#' This internal function retrieves the list of trials for the currently active breeding program 
+#' and crop combination. The crop and program must be set using \code{\link{set_crop}} and 
+#' \code{\link{set_program}} prior to calling this function.
 #'
 #' @return
-#' A list of trials information.
+#' A data frame containing information on trials for the active breeding program.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -238,43 +212,36 @@ get_program_trials <- function() {
 }
 
 
-#' Get the List of Trials in the Current Active Breeding Program
+#' List Trials in the Current Active Breeding Program
 #'
 #' @description
-#' Retrieves the trials list from the current active breeding program as configured 
-#' in the internal state object using `set_program()` function.
+#' Retrieves the list of trials for the current active breeding program. Optionally, 
+#' filters trials by their starting year if specified.
 #'
-#' @param year The starting year to filter the list of trials (optional, default is NULL).
-#' 
+#' @param year Numeric. An optional parameter to filter trials by their starting year. 
+#'             If not provided, all trials for the active program are returned.
+#'
 #' @return
-#' A list of trials names.
+#' A data frame containing the names of trials for the active breeding program. If no 
+#' trials match the query, a warning is issued, and NA is returned.
+#'
+#' @note
+#' The year filter is only supported for BMS databases.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}
-#' 
+#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}} for related operations involving crop and program selection.
+#'
 #' @examples
-#' if(interactive()) {
-#'   # Configure your server connection
+#' if (interactive()) {
 #'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-#'
-#'   # Login using your account (interactive mode)
-#'   # You can pass your username and password as parameters (batch mode)
-#'   login_bms()
-#'
-#'   # Select a crop by name
-#'   set_crop("wheat")
-#'
-#'   # Select a breeding program by name
-#'   set_program("Wheat International Nurseries")
-#'
-#'   # List all studies/trials in the selected program
-#'   list_trials()
-#'
-#'   # Filter listed studies/trials by year
-#'   list_trials(2022)
+#'   login_bms()  # Log in to the server
+#'   set_crop("wheat")  # Set crop
+#'   set_program("Wheat International Nurseries")  # Set breeding program
+#'   list_trials()  # List trials
+#'   list_trials(2022)  # List trials starting in 2022
 #' }
 #' 
 #' @export
@@ -318,37 +285,27 @@ list_trials <- function(year = NULL) {
 #' Set the Current Active Trial
 #'
 #' @description
-#' Updates the current active trial in the internal state object using the 
-#' trialDbId which is associated with the given trial_name parameter.
+#' Updates the internal state to set the selected trial as the current active trial using the 
+#' associated trialDbId. This enables operations to be carried out within the context of the selected trial.
 #'
-#' @param trial_name The name of the trial.
-#' 
+#' @param trial_name A string specifying the name of the trial to set as active.
+#'
 #' @return
-#' No return value.
+#' No return value. The internal state is updated with the selected trial.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}}
-#' 
+#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}} for operations involving crops, programs, and trials.
+#'
 #' @examples
-#' if(interactive()) {
-#'   # Configure your server connection
+#' if (interactive()) {
 #'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-#'
-#'   # Login using your account (interactive mode)
-#'   # You can pass your username and password as parameters (batch mode)
-#'   login_bms()
-#'
-#'   # Select a crop by name
-#'   set_crop("wheat")
-#'
-#'   # Select a breeding program by name
-#'   set_program("Wheat International Nurseries")
-#'
-#'   # Select a specific study/trial by name
-#'   set_trial("IDYT39")
+#'   login_bms()  # Log in to the server
+#'   set_crop("wheat")  # Set crop
+#'   set_program("Wheat International Nurseries")  # Set breeding program
+#'   set_trial("IDYT39")  # Set trial
 #' }
 #' 
 #' @export
@@ -374,38 +331,29 @@ set_trial <- function(trial_name) {
 #' Get the List of Studies in the Current Active Trial
 #'
 #' @description
-#' Retrieves the studies list from the current active trial as configured in the 
-#' internal state object using `set_trial()` function.
+#' Retrieves a list of studies (and associated locations) for the currently active trial, as configured 
+#' using the \code{\link{set_trial}} function.
 #'
 #' @return
-#' A list of study and location names.
+#' A data frame containing study names and associated location names. If no studies are available, an error is thrown.
+#' 
+#' @note
+#' This function must be called after a trial has been set using \code{\link{set_trial}}.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
-#' 
+#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}} for related operations on crops, programs, and trials.
+#'
 #' @examples
-#' if(interactive()) {
-#'   # Configure your server connection
+#' if (interactive()) {
 #'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-#'
-#'   # Login using your account (interactive mode)
-#'   # You can pass your username and password as parameters (batch mode)
-#'   login_bms()
-#'
-#'   # Select a crop by name
-#'   set_crop("wheat")
-#'
-#'   # Select a breeding program by name
-#'   set_program("Wheat International Nurseries")
-#'
-#'   # Select a specific study/trial by name
-#'   set_trial("IDYT39")
-#'
-#'   # List all environments/locations information in the selected study/trial
-#'   list_studies()
+#'   login_bms()  # Log in to the server
+#'   set_crop("wheat")  # Set crop
+#'   set_program("Wheat International Nurseries")  # Set breeding program
+#'   set_trial("IDYT39")  # Set trial
+#'   list_studies()  # List studies
 #' }
 #' 
 #' @export
@@ -450,43 +398,30 @@ list_studies <- function() {
 #' Set the Current Active Study
 #'
 #' @description
-#' Updates the current active study in the internal state object using the 
-#' studyDbId, which is associated with the given study_name 
-#' parameter.
+#' Updates the internal state to set the selected study as the current active study using the 
+#' associated studyDbId. This allows operations to be performed within the context of the selected study.
 #'
-#' @param study_name The name of the study.
-#' 
+#' @param study_name A string specifying the name of the study to set as active.
+#'
 #' @return
-#' No return value.
-#' 
+#' No return value. The internal state is updated with the selected study.
+#'  
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{list_studies}}
-#' 
+#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{list_studies}} for related operations on crops, programs, trials, and studies.
+#'
 #' @examples
-#' if(interactive()) {
-#'   # Configure your server connection
+#' if (interactive()) {
 #'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-#'
-#'   # Login using your account (interactive mode)
-#'   # You can pass your username and password as parameters (batch mode)
-#'   login_bms()
-#'
-#'   # Select a crop by name
-#'   set_crop("wheat")
-#'
-#'   # Select a breeding program by name
-#'   set_program("Wheat International Nurseries")
-#'
-#'   # Select a specific study/trial by name
-#'   set_trial("IDYT39")
-#'
-#'   # Select a specific environment/location dataset
-#'   set_study("IDYT39 Environment Number 9")
+#'   login_bms()  # Log in to the server
+#'   set_crop("wheat")  # Set crop
+#'   set_program("Wheat International Nurseries")  # Set breeding program
+#'   set_trial("IDYT39")  # Set trial
+#'   set_study("IDYT39 Environment Number 9")  # Set study
 #' }
-#' 
+#'  
 #' @export
 
 set_study <- function(study_name) {
@@ -505,40 +440,29 @@ set_study <- function(study_name) {
 #' Get the Details/Metadata of the Current Active Study
 #'
 #' @description
-#' Retrieves the details/metadata of the current active study as configured in 
-#' the internal state object using `set_study()` function.
+#' Retrieves detailed metadata for the currently active study. The study must be 
+#' set using the \code{\link{set_study}} function, and its details will be fetched 
+#' from the BrAPI server.
 #'
 #' @return
-#' A data frame of the study details/metadata.
+#' A data frame containing the metadata of the active study. Returns \code{NULL} 
+#' if no study metadata is available.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
-#' 
+#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, 
+#' \code{\link{set_trial}}, \code{\link{set_study}} for related crop and study management.
+#'
 #' @examples
-#' if(interactive()) {
-#'   # Configure your server connection
+#' if (interactive()) {
 #'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-#'
-#'   # Login using your account (interactive mode)
-#'   # You can pass your username and password as parameters (batch mode)
 #'   login_bms()
-#'
-#'   # Select a crop by name
 #'   set_crop("wheat")
-#'
-#'   # Select a breeding program by name
 #'   set_program("Wheat International Nurseries")
-#'
-#'   # Select a specific study/trial by name
 #'   set_trial("IDYT39")
-#'
-#'   # Select a specific environment/location dataset
 #'   set_study("IDYT39 Environment Number 9")
-#'
-#'   # Retrieve the general information of the selected environment/location
 #'   info <- get_study_info()
 #' }
 #' 
@@ -567,41 +491,30 @@ get_study_info <- function() {
 #' Get the Observations Data of the Current Active Study
 #'
 #' @description
-#' Retrieves the observations data of the current active study as configured in 
-#' the internal state object using `set_study()` function.
+#' Retrieves the observations data (e.g., measurements, variables) for the active study, 
+#' which must be set using the \code{\link{set_study}} function.
 #'
 #' @return
-#' A data frame of the study observations data.
+#' A data frame containing the observation data for the active study, or \code{NULL} 
+#' if no data is available.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
-#' 
+#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, 
+#' \code{\link{set_trial}}, \code{\link{set_study}} for related study operations.
+#'
 #' @examples
-#' if(interactive()) {
-#'   # Configure your server connection
+#' if (interactive()) {
 #'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-#'
-#'   # Login using your account (interactive mode)
-#'   # You can pass your username and password as parameters (batch mode)
 #'   login_bms()
-#'
-#'   # Select a crop by name
 #'   set_crop("wheat")
-#'
-#'   # Select a breeding program by name
 #'   set_program("Wheat International Nurseries")
-#'
-#'   # Select a specific study/trial by name
 #'   set_trial("IDYT39")
-#'
-#'   # Select a specific environment/location dataset
 #'   set_study("IDYT39 Environment Number 9")
-#'
-#'   # Retrieve the data of the selected environment/location
 #'   data <- get_study_data()
+#'   head(data)
 #' }
 #' 
 #' @export
@@ -650,41 +563,29 @@ get_study_data <- function() {
 #' Get the Germplasm List of the Current Active Study
 #'
 #' @description
-#' Retrieves the germplasm list of the current active study as configured in the 
-#' internal state object using `set_study()` function.
+#' Retrieves the list of germplasm (genetic material) used in the currently active study, 
+#' which must be set using the \code{\link{set_study}} function.
 #'
 #' @return
-#' A data frame of the study germplasm list.
+#' A data frame containing the germplasm list for the active study.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
-#' 
+#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, 
+#' \code{\link{set_trial}}, \code{\link{set_study}} for related operations on crops and studies.
+#'
 #' @examples
-#' if(interactive()) {
-#'   # Configure your server connection
+#' if (interactive()) {
 #'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-#'
-#'   # Login using your account (interactive mode)
-#'   # You can pass your username and password as parameters (batch mode)
 #'   login_bms()
-#'
-#'   # Select a crop by name
 #'   set_crop("wheat")
-#'
-#'   # Select a breeding program by name
 #'   set_program("Wheat International Nurseries")
-#'
-#'   # Select a specific study/trial by name
 #'   set_trial("IDYT39")
-#'
-#'   # Select a specific environment/location dataset
 #'   set_study("IDYT39 Environment Number 9")
-#'
-#'   # Retrieve the germplasm list of the selected environment/location
 #'   germplasm <- get_germplasm_list()
+#'   head(germplasm)
 #' }
 #' 
 #' @export
@@ -744,39 +645,29 @@ get_germplasm_list <- function() {
 #' Get the Observations Data of the Current Active Trial
 #'
 #' @description
-#' Retrieves the observations data of the current active trial (i.e., including 
-#' all studies within) as configured in the internal state object using 
-#' `set_trial()` function.
+#' Retrieves the combined observations data (including all studies) for the current 
+#' active trial, as configured in the internal state object using the \code{\link{set_trial}} function. 
+#' This function iterates over all studies within the active trial and aggregates 
+#' their observation data.
 #'
 #' @return
-#' A data frame of the trial observations data.
+#' A data frame containing the combined observations data from all studies in the active trial.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso
 #' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
-#' 
+#'
 #' @examples
-#' if(interactive()) {
-#'   # Configure your server connection
+#' if (interactive()) {
 #'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-#'
-#'   # Login using your account (interactive mode)
-#'   # You can pass your username and password as parameters (batch mode)
 #'   login_bms()
-#'
-#'   # Select a crop by name
 #'   set_crop("wheat")
-#'
-#'   # Select a breeding program by name
 #'   set_program("Wheat International Nurseries")
-#'
-#'   # Select a specific study/trial by name
 #'   set_trial("IDYT39")
-#'
-#'   # Retrieve multi-environment trial data
 #'   MET <- get_trial_data()
+#'   head(MET)
 #' }
 #' 
 #' @export
@@ -802,37 +693,27 @@ get_trial_data <- function() {
 #' Get the Traits Ontology/Metadata of the Current Active Trial
 #'
 #' @description
-#' Retrieves the traits ontology/metadata of the current active trial as 
-#' configured in the internal state object using the `set_trial()` function.
+#' Retrieves the traits ontology or metadata for the current active trial, which 
+#' includes detailed information about the observation variables used in the trial.
 #'
 #' @return
-#' A data frame of the traits ontology/metadata.
+#' A data frame containing the traits ontology or metadata, filtered by the observation 
+#' variables used in the current trial.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
-#' 
+#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, 
+#' \code{\link{get_study_data}} for retrieving study observations.
+#'
 #' @examples
-#' if(interactive()) {
-#'   # Configure your server connection
+#' if (interactive()) {
 #'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-#'
-#'   # Login using your account (interactive mode)
-#'   # You can pass your username and password as parameters (batch mode)
 #'   login_bms()
-#'
-#'   # Select a crop by name
 #'   set_crop("wheat")
-#'
-#'   # Select a breeding program by name
 #'   set_program("Wheat International Nurseries")
-#'
-#'   # Select a specific study/trial by name
 #'   set_trial("IDYT39")
-#'
-#'   # Get observation variable ontology
 #'   ontology <- get_trial_obs_ontology()
 #' }
 #' 
@@ -874,17 +755,17 @@ get_trial_obs_ontology <- function() {
 #' Get the List of Locations Information of the Current Selected Crop
 #'
 #' @description
-#' Retrieves the locations information of the current active crop as configured 
-#' in the internal state object using the `set_crop()` function.
+#' Retrieves a list of locations associated with the current active crop, as 
+#' configured in the internal state object using the \code{\link{set_crop}} function.
 #'
 #' @return
-#' A data frame of the locations information.
+#' A data frame containing information about locations relevant to the current crop.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}
+#' \code{\link{login_bms}}, \code{\link{set_crop}} for related crop operations.
 
 list_locations <- function() {
   if (is.null(qbms_globals$config$crop)) {
@@ -905,16 +786,17 @@ list_locations <- function() {
 }
 
 
-#' Get the List of Trials/Studies/Locations Information of the Current Selected Program
+#' Get the List of Trials, Studies, and Locations Information for the Current Selected Program
 #'
 #' @description
-#' Retrieves all environments/locations information of the trials studies in the 
-#' current active program as configured in the internal state object using the 
-#' `set_program()` function.
+#' Retrieves comprehensive information about the trials, studies, and environments/locations
+#' within the current active breeding program, as configured in the internal state object using 
+#' the \code{\link{set_program}} function. This includes test and check entry counts for each study.
 #'
 #' @return
-#' A data frame of locations information for each study in the program trials.
-#'
+#' A data frame containing detailed information for each study within the program's trials, 
+#' including trial names, study names, location information, and entry counts.
+#' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #'
@@ -922,22 +804,13 @@ list_locations <- function() {
 #' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}
 #'
 #' @examples
-#' if(interactive()) {
-#'   # config your server connection
+#' if (interactive()) {
 #'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-#'
-#'   # login using your account (interactive mode)
-#'   # you can pass your username and password as parameters (batch mode)
 #'   login_bms()
-#'
-#'   # Select a crop by name
 #'   set_crop("wheat")
-#'
-#'   # select a breeding program by name
 #'   set_program("Wheat International Nurseries")
-#'
-#'   # retrieve all environments/locations information in the selected program studies/trials
 #'   program_studies <- get_program_studies()
+#'   head(program_studies)
 #' }
 #'
 #' @export
@@ -1008,15 +881,15 @@ get_program_studies <- function() {
 }
 
 
-#' Get Germplasm ID
+#' Get Germplasm ID for a Specified Germplasm Name
 #'
 #' @description 
-#' Retrieves the germplasm ID for the given germplasm name in the current crop.
+#' Retrieves the unique germplasm ID associated with the specified germplasm name for the current active crop.
 #'
 #' @param germplasm_name The name of the germplasm.
 #' 
 #' @return 
-#' A string of the germplasm ID.
+#' A string representing the germplasm's unique ID (germplasmDbId).
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -1056,13 +929,13 @@ get_germplasm_id <- function(germplasm_name = "") {
 #' Retrieve Observations Data for a Specified Germplasm.
 #'
 #' @description
-#' Retrieves all available observations data for a given germplasm in the current 
-#' crop database, regardless of the nested structure of programs/trials.
+#' Retrieves all available observations data for the given germplasm in the current active crop.
+#' This data is aggregated across all trials in the crop database.
 #'
 #' @param germplasm_name The name of the germplasm.
 #' 
 #' @return 
-#' A data frame containing the aggregated observations data for the germplasm from all trials.
+#' A data frame containing all available observations data for the specified germplasm.
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -1072,22 +945,13 @@ get_germplasm_id <- function(germplasm_name = "") {
 #' 
 #' @examples
 #' if (interactive()) {
-#'   # Configure server connection
 #'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-#'   
-#'   # Log in using your account (interactive mode)
-#'   # You can pass your username and password as parameters (batch mode)
 #'   login_bms()
-#'   
-#'   # Select a crop
 #'   set_crop("wheat")
-#'   
-#'   # Select a breeding program by name
-#'   set_program("Wheat International Nurseries")
-#'   
-#'   # Retrieve observations data for a specified germplasm aggregated from all trials
 #'   germplasm_observations <- get_germplasm_data("Jabal")
+#'   head(germplasm_observations)
 #' }
+#' 
 #' @export
 
 get_germplasm_data <- function(germplasm_name = "") {
@@ -1158,10 +1022,13 @@ get_germplasm_data <- function(germplasm_name = "") {
 
 #' Retrieve Attributes for a Specified Germplasm
 #'
+#' @description
+#' Retrieves a detailed list of attributes for a given germplasm, such as its origin, donors, and taxonomic information.
+#'
 #' @param germplasm_name The name of the germplasm.
 #' 
 #' @return 
-#' A data frame containing the attributes of the specified germplasm.
+#' A data frame containing the attributes associated with the specified germplasm.
 #' 
 #' @author 
 #' Johan Steven Aparicio, \email{j.aparicio@cgiar.org}
@@ -1171,22 +1038,12 @@ get_germplasm_data <- function(germplasm_name = "") {
 #' 
 #' @examples
 #' if (interactive()) {
-#'   # Configure your server connection
 #'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-#'
-#'   # Log in using your account (interactive mode)
-#'   # You can pass your username and password as parameters (batch mode)
 #'   login_bms()
-#'
-#'   # Select a crop
 #'   set_crop("wheat")
-#'
-#'   # Select a breeding program by name
-#'   set_program("Wheat International Nurseries")
-#'
-#'   # Retrieve attribute data of a specified germplasm in a crop
 #'   germplasm_attributes <- get_germplasm_attributes("Jabal")
 #' }
+#' 
 #' @export
 
 get_germplasm_attributes <- function(germplasm_name = "") {

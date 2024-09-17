@@ -7,35 +7,24 @@
 login_bms(username = NULL, password = NULL, encoding = "json")
 }
 \arguments{
-\item{username}{The username (optional, default is NULL).}
+\item{username}{The username (optional, default is NULL). If not provided, the pop-up window is triggered.}
 
-\item{password}{The password (optional, default is NULL).}
+\item{password}{The password (optional, default is NULL). If not provided, the pop-up window is triggered.}
 
-\item{encoding}{How should the named list body be encoded? Can be one of form 
-(application/x-www-form-urlencoded), multipart (multipart/form-data), 
-or json (application/json).}
+\item{encoding}{Specifies how the request body should be encoded: `form` (application/x-www-form-urlencoded), 
+`multipart` (multipart/form-data), or `json` (application/json). Default is "json".}
 }
 \value{
-No return value.
+No return value. The access token is stored internally for future use.
 }
 \description{
-Connects to the server. If the username or password parameters are missing,
-then a login window will pop up to insert the username and password.
-
-All other connection parameters (i.e., server IP or domain, connection port,
-API path, and connection protocol e.g., http://) will be retrieved from the
-qbms_config list.
-
-This function will update both the qbms_config list (brapi connection
-object in the con key) and the qbms_state list (token value in the token key).
+Connects to the BMS or related server using a username and password. If these are not provided,
+a pop-up window will prompt the user to enter their credentials. The function handles authentication 
+and stores the resulting access token internally for subsequent requests.
 }
 \examples{
 if(interactive()) {
-  # Configure your BMS connection
   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-
-  # Login using your BMS account (interactive mode)
-  # You can pass the BMS username and password as parameters (batch mode)
   login_bms()
 }
 

@@ -7,21 +7,29 @@
 get_hwsd2(df, con, x = "longitude", y = "latitude", sequence = 1, layer = "D1")
 }
 \arguments{
-\item{df}{data.frame that list locations info including the coordinates in decimal degree format.}
+\item{df}{A data frame containing location information, including longitude and latitude in decimal degrees.}
 
-\item{con}{the HWSDv2 object returns from the ini_hwsd2() function.}
+\item{con}{The HWSDv2 object returned by the \code{ini_hwsd2()} function, containing the raster and SQLite connection.}
 
-\item{x}{longitude column name in the df data.frame (default is 'Longitude').}
+\item{x}{The column name in the data frame representing longitude (default is 'Longitude').}
 
-\item{y}{latitude column name in the df data.frame (default is 'Latitude').}
+\item{y}{The column name in the data frame representing latitude (default is 'Latitude').}
 
-\item{sequence}{the sequence in which soil units are presented (in order of percentage share). 
-The dominant soil has sequence 1. The sequence can range between 1 and 12.}
+\item{sequence}{Integer indicating the soil unit's dominance order within the SMU (default is 1 for the dominant soil). 
+Valid values range from 1 to 12.}
 
-\item{layer}{the depth layer range from 'D1' to 'D7'. The depth of the top and bottom of 
-each layer is defined in the TOPDEP and BOTDEP columns, respectively.}
+\item{layer}{String indicating the depth layer for which soil attributes should be retrieved (default is 'D1', with layers ranging from 'D1' to 'D7').}
+}
+\value{
+A data frame with the original location data augmented by soil attributes for the specified sequence and layer. 
+The data frame includes additional columns such as `smu_id`, `SEQUENCE`, `LAYER`, and other soil attributes.
 }
 \description{
+Queries the HWSD v2 database to retrieve soil information for specific locations based on their coordinates.
+For each location, the function extracts the Soil Mapping Unit (SMU) code and retrieves soil attributes based 
+on the specified sequence (soil dominance) and depth layer. The function returns the input data frame augmented 
+with soil data from the HWSDv2 dataset.
+
 The HWSD2_SMU table contains general information for each of the soil units 
 occurring in any given SMU code (dominant soil unit and up to 11 associated soils).
 
@@ -39,30 +47,16 @@ the TOPDEP and BOTDEP columns, respectively.
 }
 \examples{
 if (interactive()) {
-  # create a simple data.frame for a list of locations and their coordinates
   Location  <- c('Tel-Hadya', 'Terbol', 'Marchouch')
   Latitude  <- c(36.016, 33.808, 33.616)
   Longitude <- c(36.943, 35.991, -6.716)
+  sites     <- data.frame(Location, Latitude, Longitude)
   
-  sites <- data.frame(Location, Latitude, Longitude)
-  
-  # initiate, download, and setup the HWSD v2 in a given local directory
   hwsd2 <- ini_hwsd2(data_path = 'C:/Users/Kel-shamaa/Downloads/HWSD v2/')
-  
-  # query soil attributes for given sites using the HWSD v2 connection object
-  #
-  # sequence parameter, range between 1 and 12 (max), 1 is the dominant soil.
-  # returned df has SHARE column refers to share\%
-  #
-  # layer parameter refers to depth layer (D1 to D7).
-  # returned df has TOPDEP/BOTDEP columns represent top/bottom layer depth in cm.
-  sites <- get_hwsd2(df = sites, 
-                     con = hwsd2, 
-                     x = 'Longitude', 
-                     y = 'Latitude', 
-                     sequence = 1, 
-                     layer = 'D1')
+  sites <- get_hwsd2(df = sites, con = hwsd2, x = 'Longitude', y = 'Latitude', 
+                     sequence = 1, layer = 'D1')
 }
+
 }
 \seealso{
 \code{\link{ini_hwsd2}}

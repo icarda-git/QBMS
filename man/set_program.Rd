@@ -7,34 +7,27 @@
 set_program(program_name)
 }
 \arguments{
-\item{program_name}{The name of the breeding program.}
+\item{program_name}{A string specifying the name of the breeding program to set as active.}
 }
 \value{
-No return value.
+No return value. The internal state is updated with the selected program.
 }
 \description{
-Updates the current active breeding program in the internal state object 
-using the programDbId which is associated with the given program_name parameter.
+Updates the internal state to set the selected breeding program as active using the 
+associated programDbId. This allows subsequent operations to be carried out 
+within the context of this program.
 }
 \examples{
-if(interactive()) {
-  # Configure your server connection
+if (interactive()) {
   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-
-  # Login using your account (interactive mode)
-  # You can pass your username and password as parameters (batch mode)
-  login_bms()
-
-  # Select a crop by name
-  set_crop("wheat")
-
-  # Select a breeding program by name
-  set_program("Wheat International Nurseries")
+  login_bms()  # Log in to the server
+  set_crop("wheat")  # Set crop
+  set_program("Wheat International Nurseries")  # Set breeding program
 }
 
 }
 \seealso{
-\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{list_programs}}
+\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{list_programs}} for related operations in the crop and program selection process.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

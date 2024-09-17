@@ -2,18 +2,39 @@
 % Please edit documentation in R/http.R
 \name{get_async_page}
 \alias{get_async_page}
-\title{Async Version of HTTP GET Request}
+\title{Asynchronous HTTP GET Request}
 \usage{
 get_async_page(full_url, nested)
 }
 \arguments{
-\item{full_url}{URL to retrieve.}
+\item{full_url}{A string containing the complete URL to retrieve data from. 
+The URL should point to an API or resource that returns a JSON response.}
 
-\item{nested}{Logical indicating whether to flatten nested data frames. Default is FALSE.}
+\item{nested}{Logical flag indicating whether nested data frames in the returned 
+JSON response should be flattened. Default is FALSE, meaning the data 
+will retain its nested structure; set to TRUE to simplify the response 
+by flattening nested structures.}
 }
 \value{
-Async version of the HTTP GET request.
+A deferred object representing the asynchronous HTTP GET request. When resolved, 
+the object contains the parsed JSON response, either as a nested or flattened 
+structure depending on the `nested` parameter.
+
+A deferred object that resolves to the parsed JSON response, with optional 
+flattening of nested data structures.
 }
 \description{
-A small helper function to create an `async` version of the original HTTP GET request.
+This helper function performs an HTTP GET request asynchronously, allowing the 
+retrieval of data from a given URL without blocking the execution of other tasks. 
+The function leverages the `async` package to make the GET request and parse the 
+response. It supports handling JSON responses and optionally flattens nested 
+data frames for easier manipulation.
+}
+\note{
+The function relies on the `async` package for asynchronous execution. Ensure that 
+`async` is installed and loaded in your environment. Also, the response from the 
+URL is expected to be in JSON format, as this function parses the content accordingly.
+}
+\author{
+Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 }

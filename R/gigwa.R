@@ -3,28 +3,24 @@
 #' Login to the GIGWA Server
 #'
 #' @description
-#' Connect to the GIGWA server. If the username or password parameters are missing,
-#' a login window will pop up to insert the username and password.
+#' Connect to the GIGWA server. If the `username` or `password` parameters are missing,
+#' a login window will be triggered to capture these details.
 #'
-#' All other connection parameters (i.e., server IP or domain, connection port,
-#' API path, and connection protocol e.g., http://) will be retrieved from the
-#' `qbms_config` list.
-#'
-#' This function will update both the qbms_config list (brapi connection
-#' object in the con key) and qbms_state list (token value in the token key).
+#' All connection settings (server URL, port, API path, and protocol) are read from the
+#' `qbms_config` list. The function will request an authentication token from the server
+#' and update the `qbms_state` list with the token.
 #'
 #' @param username The GIGWA username (optional, default is NULL).
 #' @param password The GIGWA password (optional, default is NULL).
 #' 
 #' @return 
-#' No return value.
+#' No return value. The authentication token will be stored internally.
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @examples
 #' if (interactive()) {
-#'   # Configure your GIGWA connection
 #'   set_qbms_config("http://localhost:59395/gigwa/index.jsp", time_out = 300, engine = "gigwa")
 #'
 #'   # Login using your GIGWA account (interactive mode)
@@ -59,10 +55,11 @@ login_gigwa <- function(username = NULL, password = NULL) {
 #' List GIGWA Databases
 #' 
 #' @description
-#' Get the list of existing databases in the current GIGWA server.
-#'
+#' Retrieve the list of available databases from the connected GIGWA server.
+#' An active connection is required. If not connected, the function will throw an error.
+#' 
 #' @return 
-#' A list of existing databases.
+#' A list of databases available on the connected GIGWA server.
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -72,11 +69,8 @@ login_gigwa <- function(username = NULL, password = NULL) {
 #' 
 #' @examples
 #' if (interactive()) {
-#'   # Configure your GIGWA connection
 #'   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
 #'                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-#'
-#'   # List existing databases in the GIGWA server
 #'   gigwa_list_dbs()
 #' }
 #' @export
@@ -97,13 +91,13 @@ gigwa_list_dbs <- function() {
 #' Set the Current Active GIGWA Database by Name
 #'
 #' @description
-#' This function updates the current active database in the internal
-#' configuration object (including the brapi connection object).
+#' Select a GIGWA database as the active database for subsequent operations. This updates
+#' the internal configuration object and resets any previously selected projects or runs.
 #'
-#' @param db_name The name of the database.
+#' @param db_name The name of the database to set as active.
 #' 
 #' @return 
-#' No return value.
+#' No return value. Updates the internal configuration with the selected database.
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -113,11 +107,8 @@ gigwa_list_dbs <- function() {
 #' 
 #' @examples
 #' if (interactive()) {
-#'   # Configure your GIGWA connection
 #'   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
 #'                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-#'
-#'   # Select a database by name
 #'   gigwa_set_db("Sorghum-JGI_v1")
 #' }
 #' @export
@@ -138,11 +129,11 @@ gigwa_set_db <- function(db_name) {
 #' Get the List of All Projects in the Selected GIGWA Database
 #'
 #' @description
-#' Retrieves the projects list from the currently active database as configured 
-#' in the internal configuration object using the `gigwa_set_db()` function.
+#' Retrieve the list of projects available in the currently active GIGWA database, set
+#' using `gigwa_set_db()`. If no database is selected, the function will throw an error.
 #'
 #' @return 
-#' A list of project names.
+#' A list of project names in the selected database.
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -152,14 +143,9 @@ gigwa_set_db <- function(db_name) {
 #' 
 #' @examples
 #' if (interactive()) {
-#'   # Configure your GIGWA connection
 #'   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
 #'                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-#'
-#'   # Select a database by name
 #'   gigwa_set_db("Sorghum-JGI_v1")
-#'
-#'   # List existing projects
 #'   gigwa_list_projects()
 #' }
 #' @export
@@ -193,14 +179,13 @@ gigwa_list_projects <- function() {
 #' Set the Current Active GIGWA Project
 #'
 #' @description
-#' This function updates the current active project in the internal state object 
-#' using the programDbId retrieved from GIGWA which is associated with the given 
-#' `project_name` parameter.
+#' Select a project from the active GIGWA database and set it as the current active project
+#' in the internal state. This selection is used for retrieving related data, such as runs or samples.
 #'
-#' @param project_name The name of the project.
+#' @param project_name The name of the project to set as active.
 #' 
 #' @return 
-#' No return value.
+#' No return value. Updates the internal state with the selected project.
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -210,14 +195,9 @@ gigwa_list_projects <- function() {
 #' 
 #' @examples
 #' if (interactive()) {
-#'   # Configure your GIGWA connection
 #'   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
 #'                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-#'
-#'   # Select a database by name
 #'   gigwa_set_db("Sorghum-JGI_v1")
-#'
-#'   # Select a project by name
 #'   gigwa_set_project("Nelson_et_al_2011")
 #' }
 #' @export
@@ -244,11 +224,11 @@ gigwa_set_project <- function(project_name) {
 #' Get the List of the Run Names Available in the Selected GIGWA Project
 #'
 #' @description
-#' This function retrieves the runs list from the currently active project as configured 
-#' in the internal configuration object using the `gigwa_set_project()` function.
+#' Retrieve the list of available runs in the currently active GIGWA project, set using
+#' `gigwa_set_project()`. If no project is selected, an error will be raised.
 #'
 #' @return 
-#' A list of run names.
+#' A list of run names associated with the selected project.
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -258,17 +238,10 @@ gigwa_set_project <- function(project_name) {
 #' 
 #' @examples
 #' if (interactive()) {
-#'   # Configure your GIGWA connection
 #'   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
 #'                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-#'
-#'   # Select a database by name
 #'   gigwa_set_db("Sorghum-JGI_v1")
-#'
-#'   # Select a project by name
 #'   gigwa_set_project("Nelson_et_al_2011")
-#'   
-#'   # List all runs in the selected project
 #'   gigwa_list_runs()
 #' }
 #' @export
@@ -298,13 +271,13 @@ gigwa_list_runs <- function() {
 #' Set the Current Active GIGWA Run
 #'
 #' @description
-#' This function updates the current active run in the internal state object using the 
-#' `studyDbIds` retrieved from GIGWA, which are associated with the given `run_name` parameter.
+#' Select a run from the active GIGWA project and set it as the current active run in the
+#' internal state, enabling further data retrieval operations.
 #'
-#' @param run_name The name of the run.
+#' @param run_name The name of the run to set as active.
 #' 
 #' @return 
-#' No return value.
+#' No return value. Updates the internal state with the selected run.
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -314,17 +287,10 @@ gigwa_list_runs <- function() {
 #' 
 #' @examples
 #' if (interactive()) {
-#'   # Configure your GIGWA connection
 #'   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
 #'                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-#'
-#'   # Select a database by name
 #'   gigwa_set_db("Sorghum-JGI_v1")
-#'
-#'   # Select a project by name
 #'   gigwa_set_project("Nelson_et_al_2011")
-#'   
-#'   # Select a specific run by name
 #'   gigwa_set_run("run1")
 #' }
 #' @export
@@ -345,11 +311,11 @@ gigwa_set_run <- function(run_name) {
 #' Get the Samples List of the Current Active GIGWA Project
 #'
 #' @description
-#' This function retrieves the samples list of the current active project
-#' as configured in the internal state object using the `gigwa_set_project()` function.
+#' Retrieve the list of samples associated with the currently active GIGWA project,
+#' set using `gigwa_set_project()`.
 #'
 #' @return 
-#' A vector of all samples in the selected project.
+#' A vector of sample names in the selected project.
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -359,17 +325,10 @@ gigwa_set_run <- function(run_name) {
 #' 
 #' @examples
 #' if (interactive()) {
-#'   # Configure your GIGWA connection
 #'   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
 #'                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-#'
-#'   # Select a database by name
 #'   gigwa_set_db("Sorghum-JGI_v1")
-#'
-#'   # Select a project by name
 #'   gigwa_set_project("Nelson_et_al_2011")
-#'   
-#'   # Get a list of all samples in the selected project
 #'   samples <- gigwa_get_samples()
 #' }
 #' @export
@@ -401,11 +360,11 @@ gigwa_get_samples <- function() {
 #' Get the Sequences of the Current Active GIGWA Project
 #'
 #' @description
-#' This function retrieves the list sequences of the current active project
-#' as configured in the internal state object using the `gigwa_set_project()` function.
+#' Retrieve the list of sequences (e.g., chromosomes) associated with the currently
+#' active project in GIGWA, which has been set using the `gigwa_set_project()` function.
 #'
 #' @return 
-#' A vector of all sequences in the selected project.
+#' A vector of sequence names (e.g., chromosome names) for the selected project.
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -415,17 +374,10 @@ gigwa_get_samples <- function() {
 #' 
 #' @examples
 #' if (interactive()) {
-#'   # Configure your GIGWA connection
 #'   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
 #'                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-#'
-#'   # Select a database by name
 #'   gigwa_set_db("Sorghum-JGI_v1")
-#'
-#'   # Select a project by name
 #'   gigwa_set_project("Nelson_et_al_2011")
-#'   
-#'   # Get a list of all samples in the selected project
 #'   chroms <- gigwa_get_sequences()
 #' }
 #' @export
@@ -455,45 +407,35 @@ gigwa_get_sequences <- function() {
 #' Get Available Variants in the Selected GIGWA Run
 #'
 #' @description
-#' Query the variants (e.g., SNPs markers) in the selected GIGWA run that match a given criteria.
+#' Retrieve variant data (e.g., SNP markers) for the selected GIGWA run based on filtering criteria, 
+#' including minor allele frequency, missing data threshold, and sample subset.
 #' 
-#' @param max_missing Maximum missing ratio (by sample) between 0 and 1 (default is 1 for 100\%).
-#' @param min_maf Minimum Minor Allele Frequency (MAF) between 0 and 1 (default is 0 for 0\%).
-#' @param samples A list of samples subset (default is NULL, which will retrieve for all samples).
-#' @param start Start position of region (zero-based, inclusive) (e.g., 19750802).
-#' @param end End position of region (zero-based, exclusive)	(e.g., 19850125).
-#' @param referenceName Reference sequence name	(e.g., '6H' in the Barley LI-AM).
+#' @param max_missing The maximum allowable missing data ratio, between 0 and 1 (default is 1, meaning up to 100\% missing data).
+#' @param min_maf Minimum Minor Allele Frequency (MAF) between 0 and 0.5 (default is 0).
+#' @param samples A list of sample names to include in the query (optional). If NULL, all samples will be included.
+#' @param start Start position of the query region (zero-based, inclusive).
+#' @param end End position of the query region (zero-based, exclusive).
+#' @param referenceName The reference sequence name (e.g., chromosome).
 #' 
 #' @return 
-#' A data.frame that has the first 4 columns describing attributes of the SNP 
-#' (rs#: variant name, alleles: reference allele / alternative allele, chrom: chromosome name, 
-#' and pos: position in bp), while the following columns describe the SNP value for a 
-#' single sample line using numerical coding 0, 1, and 2 for reference, heterozygous, and 
-#' alternative/minor alleles.
+#' A data frame where the first 4 columns describe the SNP (rs# variant name, alleles, chrom, pos), 
+#' and subsequent columns contain numerical genotyping information (0 for reference allele, 1 for heterozygous, and 2 for minor allele).
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @examples
 #' if (interactive()) {
-#'   # Configure your GIGWA connection
 #'   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
 #'                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-#'
-#'   # Select a database by name
 #'   gigwa_set_db("Sorghum-JGI_v1")
-#'
-#'   # Select a project by name
 #'   gigwa_set_project("Nelson_et_al_2011")
-#'   
-#'   # Select a specific run by name
 #'   gigwa_set_run("run1")
-#'   
-#'   # Get the marker matrix 
 #'   marker_matrix <- gigwa_get_variants(max_missing = 0.2, 
 #'                                       min_maf = 0.35, 
 #'                                       samples = c("ind1", "ind3", "ind7"))
 #' }
+#' 
 #' @export
 
 gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, start = NULL, end = NULL, referenceName = NULL) {
@@ -634,42 +576,38 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
 }
 
 
-#' Get GIGWA Marker Matrix
+#' Get Markers Matrix in the Selected GIGWA Run
 #' 
-#' @param samples samples
-#' @param start start
-#' @param end end
-#' @param chrom chrom
-#' @param snps snps 
-#' @param snps_pageSize snps_pageSize
-#' @param samples_pageSize samples_pageSize
-#' @param simplify simplify
+#' @description
+#' Retrieve a two-dimensional matrix of genotype data from the selected GIGWA run. This matrix is returned
+#' based on filters for regions, samples, or variants. The data can be simplified to use numeric coding for
+#' genotypes, or returned in its raw VCF-like format.
+#' 
+#' @param samples A list of sample names to include (optional). If NULL, all samples will be included.
+#' @param start Start position of the query region (zero-based, inclusive).
+#' @param end End position of the query region (zero-based, exclusive).
+#' @param chrom Reference sequence name (e.g., chromosome or contig).
+#' @param snps A list of variant names to filter (optional).
+#' @param snps_pageSize Number of variants to fetch per page (default is 10,000).
+#' @param samples_pageSize Number of samples to fetch per page (default is 100).
+#' @param simplify Whether to simplify the returned data using numeric coding (default is TRUE).
+#' 
+#' @return 
+#' A data frame with rows representing SNP markers and columns representing samples. 
+#' Values are numeric codings (0: reference allele, 1: heterozygous, 2: alternative allele).
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @examples
 #' if (interactive()) {
-#'   # Configure your GIGWA connection
 #'   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
 #'                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-#'
-#'   # Select a database by name
 #'   gigwa_set_db("Sorghum-JGI_v1")
-#'
-#'   # Select a project by name
 #'   gigwa_set_project("Nelson_et_al_2011")
-#'   
-#'   # Select a specific run by name
 #'   gigwa_set_run("run1")
-#'   
-#'   # Get the list of all samples in the selected project
 #'   samples <- gigwa_get_samples()
-#'
-#'   # Get the list of all sequences in the selected project
 #'   chroms <- gigwa_get_sequences()
-#'   
-#'   # Get the marker matrix
 #'   geno_data <- gigwa_get_allelematrix(samples = samples[1:5],
 #'                                       start   = 0,
 #'                                       end     = 1234567,
@@ -809,35 +747,31 @@ gigwa_get_allelematrix <- function(samples = NULL, start = 0, end = "", chrom = 
 }
 
 
-#' BrAPI Get Geno Map
+#' Get Markers Map in the Selected GIGWA Run
 #' 
-#' @param start start
-#' @param end end
-#' @param chrom chrom
-#' @param simplify simplify 
+#' @description
+#' Retrieve a filtered list of SNP variants from the selected run. This function allows users to query variants
+#' based on chromosomal regions and return results in simplified format.
+#' 
+#' @param start Start position of the query region (zero-based, inclusive).
+#' @param end End position of the query region (zero-based, exclusive).
+#' @param chrom Reference sequence name (e.g., chromosome).
+#' @param simplify Logical, if TRUE (default) returns data in a simplified HapMap-like format with columns for rs#, alleles, chromosome, and position.
+#' 
+#' @return 
+#' A data frame of SNP markers, optionally simplified to include rs#, alleles, chromosome, and position.
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @examples
 #' if (interactive()) {
-#'   # Configure your GIGWA connection
 #'   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
 #'                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-#'
-#'   # Select a database by name
 #'   gigwa_set_db("Sorghum-JGI_v1")
-#'
-#'   # Select a project by name
 #'   gigwa_set_project("Nelson_et_al_2011")
-#'   
-#'   # Select a specific run by name
 #'   gigwa_set_run("run1")
-#'   
-#'   # Get the list of all sequences in the selected project
 #'   chroms <- gigwa_get_sequences()
-#'
-#'   # Get the marker map
 #'   geno_map <- gigwa_get_markers(start = 0, end = 12345678, chrom = chroms[7])
 #' }
 #' @export
@@ -882,12 +816,12 @@ gigwa_get_markers <- function(start = NULL, end = NULL, chrom = NULL, simplify =
 #' Get the Metadata of the Current Active GIGWA Run
 #'
 #' @description
-#' This function retrieves the metadata of the current active run
-#' as configured in the internal state object using the `gigwa_set_run()` function.
+#' Retrieve metadata associated with the samples in the current active run, set using the `gigwa_set_run()` function.
+#' The metadata provides additional information about the samples in the selected run.
 #'
 #' @return 
-#' A data.frame of all metadata associated with the samples in the selected run.
-#' 
+#' A data frame containing metadata attributes for each sample in the active run.
+#'  
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
@@ -896,20 +830,11 @@ gigwa_get_markers <- function(start = NULL, end = NULL, chrom = NULL, simplify =
 #' 
 #' @examples
 #' if (interactive()) {
-#'   # Configure your GIGWA connection
 #'   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
 #'                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-#'
-#'   # Select a database by name
 #'   gigwa_set_db("3kG_10M")
-#'
-#'   # Select a project by name
 #'   gigwa_set_project("3003_ind")
-#'   
-#'   # Select a specific run by name
 #'   gigwa_set_run("1")
-#'   
-#'   # Get a list of all samples in the selected run
 #'   metadata <- gigwa_get_metadata()
 #' }
 #' @export

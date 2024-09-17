@@ -7,53 +7,64 @@
 calc_biovars(data)
 }
 \arguments{
-\item{data}{Data.frame has 4 mandatory columns (year, ppt, tmin, and tmax), 
-and 12 rows (months) for each year sorted from Jan to Dec.}
+\item{data}{A data frame containing monthly climate data. The data frame must include:
+\itemize{
+  \item \strong{year:} The year for each set of monthly data.
+  \item \strong{ppt:} Monthly precipitation values (in mm).
+  \item \strong{tmin:} Monthly minimum temperature values (in degrees Celsius).
+  \item \strong{tmax:} Monthly maximum temperature values (in degrees Celsius).
+}
+The data should contain 12 rows (one for each month from January to December) per year, 
+with the columns sorted in the order of year, ppt, tmin, and tmax.}
 }
 \value{
-Data.frame has 19 columns for "bioclim" variables (bio1-bio19) and 
-        last column for year (you will get one row per year).
+A data frame with 19 columns representing the bioclimatic variables (BIO1 to BIO19) and 
+an additional column for the year. The output data frame provides one row per year, with 
+each column corresponding to one of the bioclimatic variables described above.
 }
 \description{
-Bioclimatic variables are derived from the monthly temperature and rainfall 
-values in order to generate more biologically meaningful variables. These are 
-often used in species distribution modeling and related ecological modeling 
-techniques. The bioclimatic variables represent annual trends (e.g., mean 
-annual temperature, annual precipitation) seasonality (e.g., annual range in 
-temperature and precipitation) and extreme or limiting environmental factors 
-(e.g., temperature of the coldest and warmest month, and precipitation of the 
-wet and dry quarters). A quarter is a period of three months (1/4 of the year).
+This function calculates the 19 standard bioclimatic variables derived from 
+monthly temperature and precipitation data. Bioclimatic variables are often 
+used in ecological modeling and species distribution modeling to capture biologically 
+meaningful patterns in climate data, including annual trends, seasonality, and 
+extreme environmental factors. 
 
-They are coded as follows:
+The bioclimatic variables represent metrics such as the annual mean temperature, 
+temperature seasonality, and precipitation patterns (e.g., wettest or driest quarter).
+These metrics help to model species distributions and analyze ecological dynamics.
+
+The bioclimatic variables are coded as follows:
 \itemize{
-\item BIO1 = Annual Mean Temperature
-\item BIO2 = Mean Diurnal Range (Mean of monthly (max temp - min temp))
-\item BIO3 = Isothermality (BIO2/BIO7) (* 100)
-\item BIO4 = Temperature Seasonality (standard deviation *100)
-\item BIO5 = Max Temperature of Warmest Month
-\item BIO6 = Min Temperature of Coldest Month
-\item BIO7 = Temperature Annual Range (BIO5-BIO6)
-\item BIO8 = Mean Temperature of Wettest Quarter
-\item BIO9 = Mean Temperature of Driest Quarter
-\item BIO10 = Mean Temperature of Warmest Quarter
-\item BIO11 = Mean Temperature of Coldest Quarter
-\item BIO12 = Annual Precipitation
-\item BIO13 = Precipitation of Wettest Month
-\item BIO14 = Precipitation of Driest Month
-\item BIO15 = Precipitation Seasonality (Coefficient of Variation)
-\item BIO16 = Precipitation of Wettest Quarter
-\item BIO17 = Precipitation of Driest Quarter
-\item BIO18 = Precipitation of Warmest Quarter
-\item BIO19 = Precipitation of Coldest Quarter
+  \item \strong{BIO1} = Annual Mean Temperature
+  \item \strong{BIO2} = Mean Diurnal Range (Mean of monthly (max temp - min temp))
+  \item \strong{BIO3} = Isothermality (BIO2/BIO7) (* 100)
+  \item \strong{BIO4} = Temperature Seasonality (standard deviation * 100)
+  \item \strong{BIO5} = Max Temperature of Warmest Month
+  \item \strong{BIO6} = Min Temperature of Coldest Month
+  \item \strong{BIO7} = Temperature Annual Range (BIO5 - BIO6)
+  \item \strong{BIO8} = Mean Temperature of Wettest Quarter
+  \item \strong{BIO9} = Mean Temperature of Driest Quarter
+  \item \strong{BIO10} = Mean Temperature of Warmest Quarter
+  \item \strong{BIO11} = Mean Temperature of Coldest Quarter
+  \item \strong{BIO12} = Annual Precipitation
+  \item \strong{BIO13} = Precipitation of Wettest Month
+  \item \strong{BIO14} = Precipitation of Driest Month
+  \item \strong{BIO15} = Precipitation Seasonality (Coefficient of Variation)
+  \item \strong{BIO16} = Precipitation of Wettest Quarter
+  \item \strong{BIO17} = Precipitation of Driest Quarter
+  \item \strong{BIO18} = Precipitation of Warmest Quarter
+  \item \strong{BIO19} = Precipitation of Coldest Quarter
 }
-     
-This work is derivative from the \href{https://github.com/rspatial/dismo/blob/master/R/biovars.R}{dismo R package}
+
+These variables are computed using temperature and precipitation data in a standard format, 
+and are critical for understanding species habitats and the effects of climate on ecosystems.
+
+This work is derived from the \href{https://github.com/rspatial/dismo/blob/master/R/biovars.R}{dismo R package}.
 }
 \references{
-Nix, 1986. A biogeographic analysis of Australian elapid snakes. 
-            In: R. Longmore (ed.). Atlas of elapid snakes of Australia. 
-            Australian Flora and Fauna Series 7. Australian Government Publishing 
-            Service, Canberra.
+Nix, 1986. A biogeographic analysis of Australian elapid snakes. In: R. Longmore (ed.). 
+Atlas of elapid snakes of Australia. Australian Flora and Fauna Series 7. 
+Australian Government Publishing Service, Canberra.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

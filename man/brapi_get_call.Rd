@@ -2,22 +2,31 @@
 % Please edit documentation in R/http.R
 \name{brapi_get_call}
 \alias{brapi_get_call}
-\title{Internal Function Used for Core BrAPI GET Calls}
+\title{Internal Function for Core BrAPI GET Calls}
 \usage{
 brapi_get_call(call_url, nested = TRUE)
 }
 \arguments{
-\item{call_url}{BrAPI URL to call in GET method.}
+\item{call_url}{A string representing the full BrAPI URL for the GET request.}
 
-\item{nested}{Logical indicating whether retrieved JSON data will be flattened. Default is TRUE.}
+\item{nested}{Logical flag indicating whether to flatten nested JSON data structures 
+into a more straightforward format. The default is TRUE, meaning nested 
+data will be flattened.}
 }
 \value{
-Result object returned by the JSON API response.
+A data frame or list containing the results from the BrAPI GET request. If the response 
+includes multiple pages, the results from all pages are concatenated into a single object.
 }
 \description{
-This function is created for *internal use only* to call BrAPI in the GET method and
-retrieve the raw response data and send back the results. This function takes
-care of pagination, authentication, encoding, compression, decoding JSON response, etc.
+This is an internal utility function designed to handle BrAPI GET requests. 
+It efficiently manages the process of making API calls to BrAPI endpoints, handling 
+aspects such as authentication, pagination, and JSON response parsing. Additionally, 
+it supports optional data flattening for nested structures, handles encoding, and 
+deals with compression for performance optimization.
+
+The function ensures the correct retrieval of paginated data by iteratively requesting 
+additional pages if required, and combines the results into a single response object.
+Progress is tracked and displayed if verbosity is enabled in the global configuration.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

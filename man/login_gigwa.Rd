@@ -12,22 +12,18 @@ login_gigwa(username = NULL, password = NULL)
 \item{password}{The GIGWA password (optional, default is NULL).}
 }
 \value{
-No return value.
+No return value. The authentication token will be stored internally.
 }
 \description{
-Connect to the GIGWA server. If the username or password parameters are missing,
-a login window will pop up to insert the username and password.
+Connect to the GIGWA server. If the `username` or `password` parameters are missing,
+a login window will be triggered to capture these details.
 
-All other connection parameters (i.e., server IP or domain, connection port,
-API path, and connection protocol e.g., http://) will be retrieved from the
-`qbms_config` list.
-
-This function will update both the qbms_config list (brapi connection
-object in the con key) and qbms_state list (token value in the token key).
+All connection settings (server URL, port, API path, and protocol) are read from the
+`qbms_config` list. The function will request an authentication token from the server
+and update the `qbms_state` list with the token.
 }
 \examples{
 if (interactive()) {
-  # Configure your GIGWA connection
   set_qbms_config("http://localhost:59395/gigwa/index.jsp", time_out = 300, engine = "gigwa")
 
   # Login using your GIGWA account (interactive mode)

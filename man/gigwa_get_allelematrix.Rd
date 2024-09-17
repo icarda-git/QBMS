@@ -2,7 +2,7 @@
 % Please edit documentation in R/gigwa.R
 \name{gigwa_get_allelematrix}
 \alias{gigwa_get_allelematrix}
-\title{Get GIGWA Marker Matrix}
+\title{Get Markers Matrix in the Selected GIGWA Run}
 \usage{
 gigwa_get_allelematrix(
   samples = NULL,
@@ -16,47 +16,40 @@ gigwa_get_allelematrix(
 )
 }
 \arguments{
-\item{samples}{samples}
+\item{samples}{A list of sample names to include (optional). If NULL, all samples will be included.}
 
-\item{start}{start}
+\item{start}{Start position of the query region (zero-based, inclusive).}
 
-\item{end}{end}
+\item{end}{End position of the query region (zero-based, exclusive).}
 
-\item{chrom}{chrom}
+\item{chrom}{Reference sequence name (e.g., chromosome or contig).}
 
-\item{snps}{snps}
+\item{snps}{A list of variant names to filter (optional).}
 
-\item{snps_pageSize}{snps_pageSize}
+\item{snps_pageSize}{Number of variants to fetch per page (default is 10,000).}
 
-\item{samples_pageSize}{samples_pageSize}
+\item{samples_pageSize}{Number of samples to fetch per page (default is 100).}
 
-\item{simplify}{simplify}
+\item{simplify}{Whether to simplify the returned data using numeric coding (default is TRUE).}
+}
+\value{
+A data frame with rows representing SNP markers and columns representing samples. 
+Values are numeric codings (0: reference allele, 1: heterozygous, 2: alternative allele).
 }
 \description{
-Get GIGWA Marker Matrix
+Retrieve a two-dimensional matrix of genotype data from the selected GIGWA run. This matrix is returned
+based on filters for regions, samples, or variants. The data can be simplified to use numeric coding for
+genotypes, or returned in its raw VCF-like format.
 }
 \examples{
 if (interactive()) {
-  # Configure your GIGWA connection
   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-
-  # Select a database by name
   gigwa_set_db("Sorghum-JGI_v1")
-
-  # Select a project by name
   gigwa_set_project("Nelson_et_al_2011")
-  
-  # Select a specific run by name
   gigwa_set_run("run1")
-  
-  # Get the list of all samples in the selected project
   samples <- gigwa_get_samples()
-
-  # Get the list of all sequences in the selected project
   chroms <- gigwa_get_sequences()
-  
-  # Get the marker matrix
   geno_data <- gigwa_get_allelematrix(samples = samples[1:5],
                                       start   = 0,
                                       end     = 1234567,

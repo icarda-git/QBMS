@@ -4,22 +4,21 @@
 \alias{set_token}
 \title{Set Access Token Response}
 \usage{
-set_token(token, user = "", expires_in = NULL)
+set_token(token, user = "", expires_in = 3600)
 }
 \arguments{
-\item{token}{The access token string as issued by the authorization server.}
+\item{token}{The access token string issued by the authorization server.}
 
-\item{user}{The username (optional).}
+\item{user}{The username associated with the token (optional).}
 
-\item{expires_in}{The lifetime in seconds of the access token (optional).}
+\item{expires_in}{The lifetime of the access token in seconds (optional, default is 3600 seconds).}
 }
 \value{
-No return value.
+No return value. Updates the internal state with the token info.
 }
 \description{
-If the request for an access token is valid, the authorization server needs 
-to generate an access token and return these to the client, typically along 
-with some additional properties about the authorization.
+Stores the access token and associated details (such as username and expiration time) in the internal state.
+The token is typically retrieved from the server during login and used for subsequent API requests.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

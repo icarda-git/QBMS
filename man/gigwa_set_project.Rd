@@ -7,26 +7,20 @@
 gigwa_set_project(project_name)
 }
 \arguments{
-\item{project_name}{The name of the project.}
+\item{project_name}{The name of the project to set as active.}
 }
 \value{
-No return value.
+No return value. Updates the internal state with the selected project.
 }
 \description{
-This function updates the current active project in the internal state object 
-using the programDbId retrieved from GIGWA which is associated with the given 
-`project_name` parameter.
+Select a project from the active GIGWA database and set it as the current active project
+in the internal state. This selection is used for retrieving related data, such as runs or samples.
 }
 \examples{
 if (interactive()) {
-  # Configure your GIGWA connection
   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-
-  # Select a database by name
   gigwa_set_db("Sorghum-JGI_v1")
-
-  # Select a project by name
   gigwa_set_project("Nelson_et_al_2011")
 }
 }

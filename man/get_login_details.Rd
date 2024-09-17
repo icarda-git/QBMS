@@ -7,10 +7,11 @@
 get_login_details()
 }
 \value{
-A vector of inserted username and password.
+A vector containing the inserted username and password, with names `usr` and `pwd` respectively.
 }
 \description{
-Builds a GUI pop-up window using Tcl/Tk to insert the username and password.
+Opens a GUI pop-up window using Tcl/Tk to prompt the user for their username and password.
+The window title and prompt message adapt based on the type of server being used (e.g., BMS, GIGWA).
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

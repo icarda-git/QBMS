@@ -10,29 +10,19 @@ get_germplasm_attributes(germplasm_name = "")
 \item{germplasm_name}{The name of the germplasm.}
 }
 \value{
-A data frame containing the attributes of the specified germplasm.
+A data frame containing the attributes associated with the specified germplasm.
 }
 \description{
-Retrieve Attributes for a Specified Germplasm
+Retrieves a detailed list of attributes for a given germplasm, such as its origin, donors, and taxonomic information.
 }
 \examples{
 if (interactive()) {
-  # Configure your server connection
   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-
-  # Log in using your account (interactive mode)
-  # You can pass your username and password as parameters (batch mode)
   login_bms()
-
-  # Select a crop
   set_crop("wheat")
-
-  # Select a breeding program by name
-  set_program("Wheat International Nurseries")
-
-  # Retrieve attribute data of a specified germplasm in a crop
   germplasm_attributes <- get_germplasm_attributes("Jabal")
 }
+
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{get_germplasm_data}}

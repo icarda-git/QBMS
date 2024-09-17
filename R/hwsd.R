@@ -2,11 +2,19 @@
 
 #' Download and Setup HWSD v2.0 Data Files to Extract their Data Offline
 #'
-#' @param data_path String containing the directory path where downloaded HWSD v2.0 data files exist (default is './data/').
-#' @param timeout Timeout in seconds to download each HWSD v2.0 data file (default is 300).
+#' @description
+#' Downloads and sets up the HWSD v2.0 data files required to extract soil data offline. The function
+#' retrieves the HWSD raster soil unit map and the SQLite database containing soil attributes. If the files 
+#' already exist in the specified directory, they are used directly. The function returns an object with 
+#' the raster and SQLite connection for further queries.
+#'
+#' @param data_path String specifying the directory path where HWSD v2.0 data files are stored or should be downloaded (default is './data/').
+#' @param timeout Timeout in seconds for downloading each HWSD v2.0 data file (default is 300).
 #' 
 #' @return 
-#' HWSDv2 object that has a list of two items: the HWSD2 raster and the HWSD2 SQLite connection.
+#' A list object (`con`) containing two items: 
+#'   - `raster`: HWSDv2 raster object for spatial queries.
+#'   - `sqlite`: Connection to the HWSDv2 SQLite database.
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -14,6 +22,11 @@
 #' @seealso 
 #' \code{\link{get_hwsd2}}
 #' 
+#' @examples
+#' if (interactive()) {
+#'   hwsd2 <- ini_hwsd2(data_path = 'C:/Users/Kel-shamaa/Downloads/HWSD v2/')
+#' }
+#'  
 #' @export
 
 ini_hwsd2 <- function(data_path = './data/', timeout = 300){
@@ -63,6 +76,11 @@ ini_hwsd2 <- function(data_path = './data/', timeout = 300){
 #' Get HWSD v2 Soil Data for a Given Location(s)
 #'
 #' @description
+#' Queries the HWSD v2 database to retrieve soil information for specific locations based on their coordinates.
+#' For each location, the function extracts the Soil Mapping Unit (SMU) code and retrieves soil attributes based 
+#' on the specified sequence (soil dominance) and depth layer. The function returns the input data frame augmented 
+#' with soil data from the HWSDv2 dataset.
+#' 
 #' The HWSD2_SMU table contains general information for each of the soil units 
 #' occurring in any given SMU code (dominant soil unit and up to 11 associated soils).
 #' 
@@ -78,14 +96,17 @@ ini_hwsd2 <- function(data_path = './data/', timeout = 300){
 #' HWSD2_LAYERS table). The depth of the top and bottom of each layer is defined in
 #' the TOPDEP and BOTDEP columns, respectively. 
 #'
-#' @param df data.frame that list locations info including the coordinates in decimal degree format.
-#' @param con the HWSDv2 object returns from the ini_hwsd2() function.
-#' @param x longitude column name in the df data.frame (default is 'Longitude').
-#' @param y latitude column name in the df data.frame (default is 'Latitude').
-#' @param sequence the sequence in which soil units are presented (in order of percentage share). 
-#'                 The dominant soil has sequence 1. The sequence can range between 1 and 12.
-#' @param layer the depth layer range from 'D1' to 'D7'. The depth of the top and bottom of 
-#'              each layer is defined in the TOPDEP and BOTDEP columns, respectively.
+#' @param df A data frame containing location information, including longitude and latitude in decimal degrees.
+#' @param con The HWSDv2 object returned by the \code{ini_hwsd2()} function, containing the raster and SQLite connection.
+#' @param x The column name in the data frame representing longitude (default is 'Longitude').
+#' @param y The column name in the data frame representing latitude (default is 'Latitude').
+#' @param sequence Integer indicating the soil unit's dominance order within the SMU (default is 1 for the dominant soil). 
+#'                 Valid values range from 1 to 12.
+#' @param layer String indicating the depth layer for which soil attributes should be retrieved (default is 'D1', with layers ranging from 'D1' to 'D7').
+#' 
+#' @return 
+#' A data frame with the original location data augmented by soil attributes for the specified sequence and layer. 
+#' The data frame includes additional columns such as `smu_id`, `SEQUENCE`, `LAYER`, and other soil attributes.
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -95,30 +116,16 @@ ini_hwsd2 <- function(data_path = './data/', timeout = 300){
 #' 
 #' @examples
 #' if (interactive()) {
-#'   # create a simple data.frame for a list of locations and their coordinates
 #'   Location  <- c('Tel-Hadya', 'Terbol', 'Marchouch')
 #'   Latitude  <- c(36.016, 33.808, 33.616)
 #'   Longitude <- c(36.943, 35.991, -6.716)
+#'   sites     <- data.frame(Location, Latitude, Longitude)
 #'   
-#'   sites <- data.frame(Location, Latitude, Longitude)
-#'   
-#'   # initiate, download, and setup the HWSD v2 in a given local directory
 #'   hwsd2 <- ini_hwsd2(data_path = 'C:/Users/Kel-shamaa/Downloads/HWSD v2/')
-#'   
-#'   # query soil attributes for given sites using the HWSD v2 connection object
-#'   #
-#'   # sequence parameter, range between 1 and 12 (max), 1 is the dominant soil.
-#'   # returned df has SHARE column refers to share%
-#'   #
-#'   # layer parameter refers to depth layer (D1 to D7).
-#'   # returned df has TOPDEP/BOTDEP columns represent top/bottom layer depth in cm.
-#'   sites <- get_hwsd2(df = sites, 
-#'                      con = hwsd2, 
-#'                      x = 'Longitude', 
-#'                      y = 'Latitude', 
-#'                      sequence = 1, 
-#'                      layer = 'D1')
+#'   sites <- get_hwsd2(df = sites, con = hwsd2, x = 'Longitude', y = 'Latitude', 
+#'                      sequence = 1, layer = 'D1')
 #' }
+#' 
 #' @export
 
 get_hwsd2 <- function(df, con, x = 'longitude', y = 'latitude', sequence = 1, layer = 'D1') {

@@ -7,13 +7,15 @@
 get_brapi_url(func_name)
 }
 \arguments{
-\item{func_name}{(string) Function name}
+\item{func_name}{(string) The name of the QBMS function for which the BrAPI endpoint URL is required.}
 }
 \value{
-The BrAPI endpoint URL to call
+A string representing the BrAPI endpoint URL.
 }
 \description{
-Get the BrAPI Endpoint URL for a given QBMS function
+Constructs the BrAPI endpoint URL for a given QBMS function based on the configured server,
+crop, and BrAPI version. The function name is mapped to the corresponding BrAPI call using
+internal mapping.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

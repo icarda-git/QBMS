@@ -13,37 +13,64 @@ ini_terraclimate(
 )
 }
 \arguments{
-\item{from}{Start date as a string in the 'YYYY-MM-DD' format.}
+\item{from}{Start date as a string in the 'YYYY-MM-DD' format. This defines the beginning 
+of the time period for which you want to download the climate data.}
 
-\item{to}{End date as a string in the 'YYYY-MM-DD' format.}
+\item{to}{End date as a string in the 'YYYY-MM-DD' format. This defines the end of the time 
+period for which you want to download the climate data.}
 
-\item{clim_vars}{List of all climate variables to be imported. Valid list includes: \emph{aet, def, pet,
-ppt, q, soil, srad, swe, tmax, tmin, vap, ws, vpd, and PDSI}. Default is NULL for all.}
+\item{clim_vars}{A list of climate variables to download. Valid options include:
+\emph{aet} (Actual Evapotranspiration), \emph{def} (Climate Water Deficit), \emph{pet} (Potential 
+Evapotranspiration), \emph{ppt} (Precipitation), \emph{q} (Runoff), \emph{soil} (Soil Moisture), 
+\emph{srad} (Solar Radiation), \emph{swe} (Snow Water Equivalent), \emph{tmax} (Maximum Temperature), 
+\emph{tmin} (Minimum Temperature), \emph{vap} (Vapor Pressure), \emph{ws} (Wind Speed), 
+\emph{vpd} (Vapor Pressure Deficit), and \emph{PDSI} (Palmer Drought Severity Index).
+If NULL (default), all available variables will be downloaded.}
 
-\item{data_path}{String containing the directory path where downloaded netCDF files exist (default is './data/')}
+\item{data_path}{A string containing the directory path where the downloaded netCDF files 
+will be stored. The default path is './data/'.}
 
-\item{timeout}{Timeout in seconds to download each netCDF raster file (default is 300).}
+\item{timeout}{Timeout in seconds for downloading each netCDF raster file. The default value is 300 seconds.}
+}
+\value{
+No explicit return value. The downloaded netCDF files are saved to the specified directory for 
+offline use with the \code{\link{get_terraclimate}} function to extract data for a given 
+coordinate or set of coordinates.
 }
 \description{
-Download TerraClimate netCDF Data Files to Extract their Data Offline
+This function facilitates the download of TerraClimate netCDF files for a specified 
+time period and climate variables. TerraClimate data provides monthly climate data 
+for global terrestrial surfaces, and this function allows you to store the data locally 
+for offline extraction and analysis without the need to download the entire dataset.
+
+Users can specify a range of climate variables such as precipitation, temperature, 
+evapotranspiration, soil moisture, and more. The downloaded files are saved in 
+netCDF format, making them accessible for subsequent offline analysis.
 }
 \examples{
 if (interactive()) {
+  # Initialize TerraClimate data download for specific climate variables between two dates
   ini_terraclimate('2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'))
   
+  # Coordinates for the location(s) of interest
   x <- c(-6.716, 35.917, 76.884)
   y <- c(33.616, 33.833, 23.111)
   
+  # Extract TerraClimate data for the specified coordinates (online mode)
   a <- get_terraclimate(y, x, '2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'))
   
-  a$climate[[1]]
-  a$biovars[[1]]
+  # View the extracted climate data and bioclimatic variables
+  View(a$climate[[1]])
+  View(a$biovars[[1]])
   
+  # Extract TerraClimate data for the specified coordinates (offline mode)
   b <- get_terraclimate(y, x, '2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'), offline = TRUE)
   
-  b$climate[[1]]
-  b$biovars[[1]]
+  # View the offline-extracted data
+  View(b$climate[[1]])
+  View(b$biovars[[1]])
 }
+
 }
 \seealso{
 \code{\link{get_terraclimate}}

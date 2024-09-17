@@ -7,15 +7,26 @@
 ini_hwsd2(data_path = "./data/", timeout = 300)
 }
 \arguments{
-\item{data_path}{String containing the directory path where downloaded HWSD v2.0 data files exist (default is './data/').}
+\item{data_path}{String specifying the directory path where HWSD v2.0 data files are stored or should be downloaded (default is './data/').}
 
-\item{timeout}{Timeout in seconds to download each HWSD v2.0 data file (default is 300).}
+\item{timeout}{Timeout in seconds for downloading each HWSD v2.0 data file (default is 300).}
 }
 \value{
-HWSDv2 object that has a list of two items: the HWSD2 raster and the HWSD2 SQLite connection.
+A list object (`con`) containing two items: 
+  - `raster`: HWSDv2 raster object for spatial queries.
+  - `sqlite`: Connection to the HWSDv2 SQLite database.
 }
 \description{
-Download and Setup HWSD v2.0 Data Files to Extract their Data Offline
+Downloads and sets up the HWSD v2.0 data files required to extract soil data offline. The function
+retrieves the HWSD raster soil unit map and the SQLite database containing soil attributes. If the files 
+already exist in the specified directory, they are used directly. The function returns an object with 
+the raster and SQLite connection for further queries.
+}
+\examples{
+if (interactive()) {
+  hwsd2 <- ini_hwsd2(data_path = 'C:/Users/Kel-shamaa/Downloads/HWSD v2/')
+}
+ 
 }
 \seealso{
 \code{\link{get_hwsd2}}

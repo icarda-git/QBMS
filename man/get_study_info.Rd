@@ -7,40 +7,29 @@
 get_study_info()
 }
 \value{
-A data frame of the study details/metadata.
+A data frame containing the metadata of the active study. Returns \code{NULL} 
+if no study metadata is available.
 }
 \description{
-Retrieves the details/metadata of the current active study as configured in 
-the internal state object using `set_study()` function.
+Retrieves detailed metadata for the currently active study. The study must be 
+set using the \code{\link{set_study}} function, and its details will be fetched 
+from the BrAPI server.
 }
 \examples{
-if(interactive()) {
-  # Configure your server connection
+if (interactive()) {
   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-
-  # Login using your account (interactive mode)
-  # You can pass your username and password as parameters (batch mode)
   login_bms()
-
-  # Select a crop by name
   set_crop("wheat")
-
-  # Select a breeding program by name
   set_program("Wheat International Nurseries")
-
-  # Select a specific study/trial by name
   set_trial("IDYT39")
-
-  # Select a specific environment/location dataset
   set_study("IDYT39 Environment Number 9")
-
-  # Retrieve the general information of the selected environment/location
   info <- get_study_info()
 }
 
 }
 \seealso{
-\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{set_study}}
+\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, 
+\code{\link{set_trial}}, \code{\link{set_study}} for related crop and study management.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

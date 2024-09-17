@@ -2,7 +2,7 @@
 % Please edit documentation in R/auth.R
 \name{login_oauth2}
 \alias{login_oauth2}
-\title{Login Using OAuth 2.0 Authentication}
+\title{Login using OAuth 2.0 Authentication}
 \usage{
 login_oauth2(
   authorize_url,
@@ -14,27 +14,25 @@ login_oauth2(
 )
 }
 \arguments{
-\item{authorize_url}{URL to send the client for authorization.}
+\item{authorize_url}{The URL where the client is redirected for user authorization.}
 
-\item{access_url}{URL used to exchange unauthenticated for authenticated token.}
+\item{access_url}{The URL used to exchange an authorization code for an access token.}
 
-\item{client_id}{Consumer key, also sometimes called the client ID.}
+\item{client_id}{The client ID (consumer key) provided by the authorization server.}
 
-\item{client_secret}{Consumer secret, also sometimes called the client secret.}
+\item{client_secret}{The client secret provided by the authorization server (optional).}
 
-\item{redirect_uri}{The URL that the user will be redirected to after authorization is complete (default is http://localhost:1410).}
+\item{redirect_uri}{The URL where the user will be redirected after authorization (default is http://localhost:1410).}
 
-\item{oauth2_cache}{A logical value or a string. TRUE means to cache using the default cache file .httr-oauth, FALSE means don't cache, 
-and NA means to guess using some sensible heuristics. A string means use the specified path as the cache file.
-Default is FALSE (i.e., don't cache).}
+\item{oauth2_cache}{Logical or string, specifying whether to cache the token. If TRUE, the token is cached in the default 
+file `.httr-oauth`. A string can specify a custom cache file path.}
 }
 \value{
-No return value.
+No return value. Updates the internal state with the access token and additional details.
 }
 \description{
-If the request for an access token is valid, the authorization server needs 
-to generate an access token and return these to the client, typically along 
-with some additional properties about the authorization.
+Performs OAuth 2.0 authentication by sending the user to the authorization URL and exchanging the 
+authorization code for an access token. This function supports caching of tokens for subsequent requests.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

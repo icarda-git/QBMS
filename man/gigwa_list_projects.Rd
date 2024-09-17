@@ -7,22 +7,17 @@
 gigwa_list_projects()
 }
 \value{
-A list of project names.
+A list of project names in the selected database.
 }
 \description{
-Retrieves the projects list from the currently active database as configured 
-in the internal configuration object using the `gigwa_set_db()` function.
+Retrieve the list of projects available in the currently active GIGWA database, set
+using `gigwa_set_db()`. If no database is selected, the function will throw an error.
 }
 \examples{
 if (interactive()) {
-  # Configure your GIGWA connection
   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-
-  # Select a database by name
   gigwa_set_db("Sorghum-JGI_v1")
-
-  # List existing projects
   gigwa_list_projects()
 }
 }

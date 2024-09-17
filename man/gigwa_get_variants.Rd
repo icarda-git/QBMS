@@ -14,48 +14,38 @@ gigwa_get_variants(
 )
 }
 \arguments{
-\item{max_missing}{Maximum missing ratio (by sample) between 0 and 1 (default is 1 for 100\%).}
+\item{max_missing}{The maximum allowable missing data ratio, between 0 and 1 (default is 1, meaning up to 100\% missing data).}
 
-\item{min_maf}{Minimum Minor Allele Frequency (MAF) between 0 and 1 (default is 0 for 0\%).}
+\item{min_maf}{Minimum Minor Allele Frequency (MAF) between 0 and 0.5 (default is 0).}
 
-\item{samples}{A list of samples subset (default is NULL, which will retrieve for all samples).}
+\item{samples}{A list of sample names to include in the query (optional). If NULL, all samples will be included.}
 
-\item{start}{Start position of region (zero-based, inclusive) (e.g., 19750802).}
+\item{start}{Start position of the query region (zero-based, inclusive).}
 
-\item{end}{End position of region (zero-based, exclusive)    (e.g., 19850125).}
+\item{end}{End position of the query region (zero-based, exclusive).}
 
-\item{referenceName}{Reference sequence name    (e.g., '6H' in the Barley LI-AM).}
+\item{referenceName}{The reference sequence name (e.g., chromosome).}
 }
 \value{
-A data.frame that has the first 4 columns describing attributes of the SNP 
-(rs#: variant name, alleles: reference allele / alternative allele, chrom: chromosome name, 
-and pos: position in bp), while the following columns describe the SNP value for a 
-single sample line using numerical coding 0, 1, and 2 for reference, heterozygous, and 
-alternative/minor alleles.
+A data frame where the first 4 columns describe the SNP (rs# variant name, alleles, chrom, pos), 
+and subsequent columns contain numerical genotyping information (0 for reference allele, 1 for heterozygous, and 2 for minor allele).
 }
 \description{
-Query the variants (e.g., SNPs markers) in the selected GIGWA run that match a given criteria.
+Retrieve variant data (e.g., SNP markers) for the selected GIGWA run based on filtering criteria, 
+including minor allele frequency, missing data threshold, and sample subset.
 }
 \examples{
 if (interactive()) {
-  # Configure your GIGWA connection
   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-
-  # Select a database by name
   gigwa_set_db("Sorghum-JGI_v1")
-
-  # Select a project by name
   gigwa_set_project("Nelson_et_al_2011")
-  
-  # Select a specific run by name
   gigwa_set_run("run1")
-  
-  # Get the marker matrix 
   marker_matrix <- gigwa_get_variants(max_missing = 0.2, 
                                       min_maf = 0.35, 
                                       samples = c("ind1", "ind3", "ind7"))
 }
+
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

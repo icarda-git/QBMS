@@ -5,7 +5,7 @@
 \title{Configure BMS Server Settings}
 \usage{
 set_qbms_config(
-  url = "http://localhost/ibpworkbench/controller/auth/login",
+  url = "http://localhost",
   path = NULL,
   page_size = 1000,
   time_out = 120,
@@ -16,30 +16,32 @@ set_qbms_config(
 )
 }
 \arguments{
-\item{url}{URL of the BMS login page. Default is "http://localhost/ibpworkbench/".}
+\item{url}{The URL of the BMS login page or API base (default is "http://localhost").}
 
-\item{path}{API path. Default is NULL.}
+\item{path}{The API path to use (default is NULL, which sets a path based on the engine).}
 
-\item{page_size}{Page size. Default is 1000.}
+\item{page_size}{The number of records per page when making API calls (default is 1000).}
 
-\item{time_out}{Number of seconds to wait for a response until giving up. Default is 10.}
+\item{time_out}{The maximum number of seconds to wait for a response (default is 120).}
 
-\item{no_auth}{TRUE if the server doesn't require authentication/login. Default is FALSE.}
+\item{no_auth}{Logical, whether the server requires authentication (default is FALSE).}
 
-\item{engine}{Backend database (bms default, breedbase, gigwa, ebs).}
+\item{engine}{The backend system (default is "bms"). Options include "bms", "gigwa", "breedbase", "ebs".}
 
-\item{brapi_ver}{BrAPI version (v1 or v2).}
+\item{brapi_ver}{The version of BrAPI to use, either "v1" or "v2" (default is "v1").}
 
-\item{verbose}{Logical indicating if progress bar will display on the console when retrieving data from API. TRUE by default.}
+\item{verbose}{Logical, indicating whether to display progress information when making API calls (default is TRUE).}
 }
 \value{
 No return value.
 }
 \description{
-Sets the connection configuration of the BMS server.
+Configures the BMS server connection settings, including URL, API path, page size, and timeout.
+This function allows you to set up the connection for different server backends like BMS, Gigwa, 
+EBS, and Breedbase, and choose the appropriate BrAPI version.
 }
 \examples{
-set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+set_qbms_config("https://bms.icarda.org/ibpworkbench")
 
 }
 \author{

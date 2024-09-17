@@ -11,46 +11,35 @@ get_pedigree_table(
 )
 }
 \arguments{
-\item{data}{Germplasm dataset as a data.frame.}
+\item{data}{A data frame containing genotype/germplasm data, including names and pedigree strings.}
 
-\item{geno_column}{Name of the column that identifies the genotype/germplasm names.}
+\item{geno_column}{The name of the column that identifies the genotype/germplasm names.}
 
-\item{pedigree_column}{Name of the column that identifies the pedigree strings.}
+\item{pedigree_column}{The name of the column that contains the pedigree strings.}
 }
 \value{
-A data.frame with three columns corresponding to the identifiers for the individual,
-female parent, and male parent, respectively. The row giving the pedigree of an
-individual appears before any row where that individual appears as a parent.
-Founders use NA in the parental columns.
+A data frame with three columns:
+  - `Variety`: The identifier for the individual genotype.
+  - `Female`: The identifier for the female parent.
+  - `Male`: The identifier for the male parent.
+The pedigree table is sorted such that individuals appear before any row where they are listed as a parent.
+For founders (i.e., individuals with no parent information), `NA` is used for the parental columns.
 }
 \description{
-Retrieve the pedigree table starting from the current germplasm list and associated
-pedigree string that provides the parentage through which a cultivar was obtained.
+Retrieves a comprehensive pedigree table for the given dataset, which contains genotype names and pedigree strings. 
+The function recursively traces parentage across generations and builds a pedigree table where each row corresponds 
+to an individual, with columns for the female and male parents. It also handles cases of similar genotype names 
+by standardizing them.
 }
 \examples{
 if (interactive()) {
-  # Configure your server connection
   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-
-  # Login using your account (interactive mode)
-  # You can pass your username and password as parameters (batch mode)
   login_bms()
-
-  # Select a crop by name
   set_crop("wheat")
-
-  # Select a breeding program by name
   set_program("Wheat International Nurseries")
-
-  # Select a specific study/trial by name
   set_trial("IDYT39")
-
-  # Select a specific environment/location dataset
   set_study("IDYT39 Environment Number 9")
-
-  # Retrieve the germplasm list of the selected environment/location
   germplasm <- get_germplasm_list()
-
   pedigree_table <- get_pedigree_table(germplasm, "germplasmName", "pedigree")
 
   #############################
@@ -78,6 +67,7 @@ if (interactive()) {
 
   pedigree_table <- get_pedigree_table(test, "genotype", "pedigree")
 }
+
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

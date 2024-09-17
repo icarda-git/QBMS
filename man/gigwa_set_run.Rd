@@ -7,28 +7,21 @@
 gigwa_set_run(run_name)
 }
 \arguments{
-\item{run_name}{The name of the run.}
+\item{run_name}{The name of the run to set as active.}
 }
 \value{
-No return value.
+No return value. Updates the internal state with the selected run.
 }
 \description{
-This function updates the current active run in the internal state object using the 
-`studyDbIds` retrieved from GIGWA, which are associated with the given `run_name` parameter.
+Select a run from the active GIGWA project and set it as the current active run in the
+internal state, enabling further data retrieval operations.
 }
 \examples{
 if (interactive()) {
-  # Configure your GIGWA connection
   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-
-  # Select a database by name
   gigwa_set_db("Sorghum-JGI_v1")
-
-  # Select a project by name
   gigwa_set_project("Nelson_et_al_2011")
-  
-  # Select a specific run by name
   gigwa_set_run("run1")
 }
 }

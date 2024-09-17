@@ -7,37 +7,28 @@
 list_studies()
 }
 \value{
-A list of study and location names.
+A data frame containing study names and associated location names. If no studies are available, an error is thrown.
 }
 \description{
-Retrieves the studies list from the current active trial as configured in the 
-internal state object using `set_trial()` function.
+Retrieves a list of studies (and associated locations) for the currently active trial, as configured 
+using the \code{\link{set_trial}} function.
+}
+\note{
+This function must be called after a trial has been set using \code{\link{set_trial}}.
 }
 \examples{
-if(interactive()) {
-  # Configure your server connection
+if (interactive()) {
   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-
-  # Login using your account (interactive mode)
-  # You can pass your username and password as parameters (batch mode)
-  login_bms()
-
-  # Select a crop by name
-  set_crop("wheat")
-
-  # Select a breeding program by name
-  set_program("Wheat International Nurseries")
-
-  # Select a specific study/trial by name
-  set_trial("IDYT39")
-
-  # List all environments/locations information in the selected study/trial
-  list_studies()
+  login_bms()  # Log in to the server
+  set_crop("wheat")  # Set crop
+  set_program("Wheat International Nurseries")  # Set breeding program
+  set_trial("IDYT39")  # Set trial
+  list_studies()  # List studies
 }
 
 }
 \seealso{
-\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
+\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}} for related operations on crops, programs, and trials.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

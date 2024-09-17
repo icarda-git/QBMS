@@ -2,19 +2,36 @@
 % Please edit documentation in R/http.R
 \name{get_async_pages}
 \alias{get_async_pages}
-\title{Run All Supplied Pages}
+\title{Run All Supplied Pages Asynchronously}
 \usage{
 get_async_pages(pages, nested)
 }
 \arguments{
-\item{pages}{List of URLs to retrieve.}
+\item{pages}{A list of URLs representing the individual API pages to be fetched.
+Each URL corresponds to a specific page of results in a paginated API.}
 
-\item{nested}{Logical indicating whether to flatten nested data frames. Default is FALSE.}
+\item{nested}{Logical flag indicating whether nested data structures in the 
+returned JSON responses should be flattened. If set to FALSE 
+(default), the data will retain its nested structure; if set to TRUE, 
+nested data frames will be flattened into a simpler format.}
 }
 \value{
-Async deferred object.
+An asynchronous deferred object that, when resolved, provides the combined 
+results of all pages as a list or data frame, depending on the structure of the response.
+
+A deferred object that resolves once all pages have been fetched and processed.
 }
 \description{
-A small helper function to create a deferred value that is resolved when all 
-listed pages are resolved.
+This helper function is designed to asynchronously retrieve data from multiple 
+API pages (URLs) and consolidate the results once all pages have been fetched. 
+The function creates a deferred object that is resolved when all the provided 
+URLs are successfully retrieved. It leverages asynchronous programming to 
+enhance performance, especially when dealing with multiple API requests.
+}
+\note{
+The function requires the `async` package for handling the asynchronous 
+retrieval of pages. Ensure that `async` is installed and loaded in your R environment.
+}
+\author{
+Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 }

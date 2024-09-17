@@ -7,15 +7,19 @@
 debug_qbms()
 }
 \value{
-An environment object containing package configuration and status.
+An environment object that holds the current QBMS configuration and state.
 }
 \description{
-Returns the internal QBMS status object for debugging purposes.
+Retrieves the internal QBMS status object for debugging purposes. This object contains
+the current configuration and state of the QBMS session, including connection settings
+and active tokens.
 }
 \examples{
-obj <- debug_qbms()
-obj$config
-obj$state
+if (interactive()) {
+  obj <- debug_qbms()
+  obj$config
+  obj$state
+}
 
 }
 \author{

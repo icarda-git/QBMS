@@ -2,7 +2,7 @@
 % Please edit documentation in R/qbms.R
 \name{get_germplasm_id}
 \alias{get_germplasm_id}
-\title{Get Germplasm ID}
+\title{Get Germplasm ID for a Specified Germplasm Name}
 \usage{
 get_germplasm_id(germplasm_name = "")
 }
@@ -10,10 +10,10 @@ get_germplasm_id(germplasm_name = "")
 \item{germplasm_name}{The name of the germplasm.}
 }
 \value{
-A string of the germplasm ID.
+A string representing the germplasm's unique ID (germplasmDbId).
 }
 \description{
-Retrieves the germplasm ID for the given germplasm name in the current crop.
+Retrieves the unique germplasm ID associated with the specified germplasm name for the current active crop.
 }
 \seealso{
 \code{\link{set_crop}}, \code{\link{get_germplasm_data}}, \code{\link{get_germplasm_attributes}}

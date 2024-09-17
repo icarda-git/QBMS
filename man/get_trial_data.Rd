@@ -7,33 +7,23 @@
 get_trial_data()
 }
 \value{
-A data frame of the trial observations data.
+A data frame containing the combined observations data from all studies in the active trial.
 }
 \description{
-Retrieves the observations data of the current active trial (i.e., including 
-all studies within) as configured in the internal state object using 
-`set_trial()` function.
+Retrieves the combined observations data (including all studies) for the current 
+active trial, as configured in the internal state object using the \code{\link{set_trial}} function. 
+This function iterates over all studies within the active trial and aggregates 
+their observation data.
 }
 \examples{
-if(interactive()) {
-  # Configure your server connection
+if (interactive()) {
   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-
-  # Login using your account (interactive mode)
-  # You can pass your username and password as parameters (batch mode)
   login_bms()
-
-  # Select a crop by name
   set_crop("wheat")
-
-  # Select a breeding program by name
   set_program("Wheat International Nurseries")
-
-  # Select a specific study/trial by name
   set_trial("IDYT39")
-
-  # Retrieve multi-environment trial data
   MET <- get_trial_data()
+  head(MET)
 }
 
 }

@@ -1,3 +1,14 @@
+#' BrAPI Mapping Table
+#'
+#' @description
+#' This internal table maps QBMS function names to corresponding BrAPI calls for different versions 
+#' of the BrAPI standard. It is used internally by the QBMS system to translate function calls into 
+#' BrAPI-compliant API requests.
+#'
+#' @details
+#' This table supports both BrAPI v1 and v2 endpoints. It is regularly updated to reflect changes 
+#' in the BrAPI standard and the inclusion of new API calls.
+
 # /brapi/{brapi_ver}/{brapi_call}
 brapi_map <- data.frame(func_name  = character(), 
                         brapi_ver  = character(),
@@ -56,12 +67,38 @@ brapi_map <- rbind(brapi_map, c("gigwa_get_metadata", "v2", "search/attributeval
 colnames(brapi_map) <- c("func_name", "brapi_ver", "brapi_call")
 
 
+# List of non-BrAPI calls in QBMS functions
+#
+# get_program_studies()
+# /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries/metadata (BMS: get study entries metadata)
+#
+# get_germplasm_list()
+# /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries (BMS: get entry type) (POST: body = "")
+#
+# gigwa_get_variants()
+# /ga4gh/variants/search 
+# 
+# dancing steps: 
+# - searchMode = 0 to get total
+# - then searchMode = 3 to request actual results
+# - keep checking progress status /gigwa/progress
+# - then call the same /ga4gh/variants/search to get the ready results
+# 
+# GA4GH: https://rest.ensembl.org/documentation/info/gavariants
+# BrAPI: https://app.swaggerhub.com/apis/PlantBreedingAPI/BrAPI-Genotyping/2.1#/Allele%20Matrix
+
+
 #' Get the BrAPI Endpoint URL for a given QBMS function
 #'
-#' @param func_name (string) Function name
+#' @description
+#' Constructs the BrAPI endpoint URL for a given QBMS function based on the configured server,
+#' crop, and BrAPI version. The function name is mapped to the corresponding BrAPI call using
+#' internal mapping.
+#'
+#' @param func_name (string) The name of the QBMS function for which the BrAPI endpoint URL is required.
 #'
 #' @return
-#' The BrAPI endpoint URL to call
+#' A string representing the BrAPI endpoint URL.
 #'
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -78,14 +115,15 @@ get_brapi_url <- function(func_name) {
 #' Scan BrAPI Endpoints
 #'
 #' @description
-#' Scan available BrAPI endpoints on the configured source server.
+#' Scans the available BrAPI endpoints on the configured source server and checks their accessibility. 
+#' This function allows users to verify which BrAPI endpoints are available based on the provided IDs.
 #'
-#' @param programDbId (numeric) ProgramDbId used for BrAPI endpoints scanning. Default is 0.
-#' @param trialDbId (numeric) TrialDbId used for BrAPI endpoints scanning. Default is 0.
-#' @param studyDbId (numeric) StudyDbId used for BrAPI endpoints scanning. Default is 0.
+#' @param programDbId (numeric) The programDbId to scan specific program-related endpoints (default is 0).
+#' @param trialDbId (numeric) The trialDbId to scan specific trial-related endpoints (default is 0).
+#' @param studyDbId (numeric) The studyDbId to scan specific study-related endpoints (default is 0).
 #'
 #' @return
-#' A data frame listing the QBMS function, BrAPI endpoint URL, and status.
+#' A data frame listing the QBMS function, BrAPI endpoint URL, and availability status for each endpoint.
 #'
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -122,27 +160,6 @@ scan_brapi_endpoints <- function(programDbId = 0, trialDbId = 0, studyDbId = 0) 
 }
 
 
-# List of non-BrAPI calls in QBMS functions
-#
-# get_program_studies()
-# /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries/metadata (BMS: get study entries metadata)
-#
-# get_germplasm_list()
-# /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries (BMS: get entry type) (POST: body = "")
-#
-# gigwa_get_variants()
-# /ga4gh/variants/search 
-# 
-# dancing steps: 
-# - searchMode = 0 to get total
-# - then searchMode = 3 to request actual results
-# - keep checking progress status /gigwa/progress
-# - then call the same /ga4gh/variants/search to get the ready results
-# 
-# GA4GH: https://rest.ensembl.org/documentation/info/gavariants
-# BrAPI: https://app.swaggerhub.com/apis/PlantBreedingAPI/BrAPI-Genotyping/2.1#/Allele%20Matrix
-
-
 # Internal state variables/lists
 qbms_globals <- new.env()
 qbms_globals$config <- list(crop = NULL)
@@ -152,18 +169,22 @@ qbms_globals$state  <- list(token = NULL)
 #' Debug Internal QBMS Status Object
 #'
 #' @description
-#' Returns the internal QBMS status object for debugging purposes.
+#' Retrieves the internal QBMS status object for debugging purposes. This object contains
+#' the current configuration and state of the QBMS session, including connection settings
+#' and active tokens.
 #'
 #' @return
-#' An environment object containing package configuration and status.
+#' An environment object that holds the current QBMS configuration and state.
 #'
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #'
 #' @examples
-#' obj <- debug_qbms()
-#' obj$config
-#' obj$state
+#' if (interactive()) {
+#'   obj <- debug_qbms()
+#'   obj$config
+#'   obj$state
+#' }
 #'
 #' @export
 
@@ -175,10 +196,12 @@ debug_qbms <- function() {
 #' Get the QBMS Connection
 #'
 #' @description
-#' Retrieves the QBMS connection object from the current environment.
+#' Retrieves the current QBMS connection object, which contains the server's configuration 
+#' and state, including any active sessions and tokens. This can be used to save and restore 
+#' connections between sessions.
 #'
 #' @return
-#' A list containing the current connection configuration and status.
+#' A list containing the current QBMS configuration and state.
 #'
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -187,43 +210,25 @@ debug_qbms <- function() {
 #'
 #' @examples
 #' if(interactive()) {
-#'   # Configure your server connection
 #'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-#'
-#'   # Login using your account (interactive mode)
-#'   # You can pass your username and password as parameters (batch mode)
-#'   login_bms()
-#'
-#'   # Select a crop by name
-#'   set_crop("wheat")
-#'
-#'   # Select a breeding program by name
-#'   set_program("Wheat International Nurseries")
-#'      
-#'   # Get germplasm data
-#'   df1 <- get_germplasm_data("Jabal")
 #'   
-#'   # Save the current connection (phenotypic server)
+#'   login_bms()
+#'   set_crop("wheat")
+#'   set_program("Wheat International Nurseries")
+#'   
+#'   df1  <- get_germplasm_data("Jabal")
 #'   con1 <- get_qbms_connection()
 #'   
-#'   # Configure QBMS to connect to the genotypic server
 #'   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", engine = "gigwa", no_auth = TRUE)
 #'   
-#'   # Set the db, project, and run
 #'   gigwa_set_db("DIVRICE_NB")
 #'   gigwa_set_project("refNB")
 #'   gigwa_set_run("03052022")
 #'   
-#'   # Get associated metadata
-#'   df2 <- gigwa_get_metadata()
-#'   
-#'   # Save the current connection (before switch)
+#'   df2  <- gigwa_get_metadata()
 #'   con2 <- get_qbms_connection()
 #'   
-#'   # Load the saved phenotypic server connection
 #'   set_qbms_connection(con1)
-#'   
-#'   # Continue retrieving germplasm attributes from the phenotypic server
 #'   df3 <- get_germplasm_attributes("Jabal")
 #' }
 #'
@@ -237,10 +242,11 @@ get_qbms_connection <- function() {
 #' Set the QBMS Connection
 #'
 #' @description
-#' Sets the QBMS connection object to the current environment.
+#' Sets the QBMS connection object in the current environment, allowing users to restore
+#' a saved connection, including configuration settings and session tokens.
 #'
-#' @param env A list containing the connection configuration and status to load.
-#'
+#' @param env A list containing the saved connection configuration and state.
+#' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #'
@@ -248,43 +254,25 @@ get_qbms_connection <- function() {
 #'
 #' @examples
 #' if(interactive()) {
-#'   # Configure your server connection
 #'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-#'
-#'   # Login using your account (interactive mode)
-#'   # You can pass your username and password as parameters (batch mode)
-#'   login_bms()
-#'
-#'   # Select a crop by name
-#'   set_crop("wheat")
-#'
-#'   # Select a breeding program by name
-#'   set_program("Wheat International Nurseries")
-#'      
-#'   # Get germplasm data
-#'   df1 <- get_germplasm_data("Jabal")
 #'   
-#'   # Save the current connection (phenotypic server)
+#'   login_bms()
+#'   set_crop("wheat")
+#'   set_program("Wheat International Nurseries")
+#'   
+#'   df1  <- get_germplasm_data("Jabal")
 #'   con1 <- get_qbms_connection()
 #'   
-#'   # Configure QBMS to connect to the genotypic server
 #'   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", engine = "gigwa", no_auth = TRUE)
 #'   
-#'   # Set the db, project, and run
 #'   gigwa_set_db("DIVRICE_NB")
 #'   gigwa_set_project("refNB")
 #'   gigwa_set_run("03052022")
 #'   
-#'   # Get associated metadata
-#'   df2 <- gigwa_get_metadata()
-#'   
-#'   # Save the current connection (before switch)
+#'   df2  <- gigwa_get_metadata()
 #'   con2 <- get_qbms_connection()
 #'   
-#'   # Load the saved phenotypic server connection
 #'   set_qbms_connection(con1)
-#'   
-#'   # Continue retrieving germplasm attributes from the phenotypic server
 #'   df3 <- get_germplasm_attributes("Jabal")
 #' }
 #'
@@ -307,16 +295,18 @@ set_qbms_connection <- function(env) {
 #' Configure BMS Server Settings
 #'
 #' @description
-#' Sets the connection configuration of the BMS server.
+#' Configures the BMS server connection settings, including URL, API path, page size, and timeout.
+#' This function allows you to set up the connection for different server backends like BMS, Gigwa, 
+#' EBS, and Breedbase, and choose the appropriate BrAPI version.
 #'
-#' @param url URL of the BMS login page. Default is "http://localhost/ibpworkbench/".
-#' @param path API path. Default is NULL.
-#' @param page_size Page size. Default is 1000.
-#' @param time_out Number of seconds to wait for a response until giving up. Default is 10.
-#' @param no_auth TRUE if the server doesn't require authentication/login. Default is FALSE.
-#' @param engine Backend database (bms default, breedbase, gigwa, ebs).
-#' @param brapi_ver BrAPI version (v1 or v2).
-#' @param verbose Logical indicating if progress bar will display on the console when retrieving data from API. TRUE by default.
+#' @param url The URL of the BMS login page or API base (default is "http://localhost").
+#' @param path The API path to use (default is NULL, which sets a path based on the engine).
+#' @param page_size The number of records per page when making API calls (default is 1000).
+#' @param time_out The maximum number of seconds to wait for a response (default is 120).
+#' @param no_auth Logical, whether the server requires authentication (default is FALSE).
+#' @param engine The backend system (default is "bms"). Options include "bms", "gigwa", "breedbase", "ebs".
+#' @param brapi_ver The version of BrAPI to use, either "v1" or "v2" (default is "v1").
+#' @param verbose Logical, indicating whether to display progress information when making API calls (default is TRUE).
 #'
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -325,11 +315,11 @@ set_qbms_connection <- function(env) {
 #' No return value.
 #'
 #' @examples
-#' set_qbms_config("https://bmsdev-brapi.ibp.services/ibpworkbench")
+#' set_qbms_config("https://bms.icarda.org/ibpworkbench")
 #'
 #' @export
 
-set_qbms_config <- function(url = "http://localhost/ibpworkbench/controller/auth/login",
+set_qbms_config <- function(url = "http://localhost",
                             path = NULL, page_size = 1000, time_out = 120, no_auth = FALSE, 
                             engine = "bms", brapi_ver = "v1", verbose = TRUE) {
   

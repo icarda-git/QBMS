@@ -7,25 +7,18 @@
 gigwa_get_samples()
 }
 \value{
-A vector of all samples in the selected project.
+A vector of sample names in the selected project.
 }
 \description{
-This function retrieves the samples list of the current active project
-as configured in the internal state object using the `gigwa_set_project()` function.
+Retrieve the list of samples associated with the currently active GIGWA project,
+set using `gigwa_set_project()`.
 }
 \examples{
 if (interactive()) {
-  # Configure your GIGWA connection
   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-
-  # Select a database by name
   gigwa_set_db("Sorghum-JGI_v1")
-
-  # Select a project by name
   gigwa_set_project("Nelson_et_al_2011")
-  
-  # Get a list of all samples in the selected project
   samples <- gigwa_get_samples()
 }
 }

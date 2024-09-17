@@ -7,18 +7,16 @@
 gigwa_list_dbs()
 }
 \value{
-A list of existing databases.
+A list of databases available on the connected GIGWA server.
 }
 \description{
-Get the list of existing databases in the current GIGWA server.
+Retrieve the list of available databases from the connected GIGWA server.
+An active connection is required. If not connected, the function will throw an error.
 }
 \examples{
 if (interactive()) {
-  # Configure your GIGWA connection
   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-
-  # List existing databases in the GIGWA server
   gigwa_list_dbs()
 }
 }

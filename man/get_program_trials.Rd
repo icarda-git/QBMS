@@ -2,18 +2,17 @@
 % Please edit documentation in R/qbms.R
 \name{get_program_trials}
 \alias{get_program_trials}
-\title{Internal Function Used to Retrieve the Rough List of Trials}
+\title{Retrieve the List of Trials for the Active Breeding Program}
 \usage{
 get_program_trials()
 }
 \value{
-A list of trials information.
+A data frame containing information on trials for the active breeding program.
 }
 \description{
-This function is created for *internal use only* to retrieve the raw list of trials
-from the pre-selected (i.e., currently active) crop and breeding program combination
-as already configured in the internal state object using `set_crop()` and `set_program()`
-functions, respectively.
+This internal function retrieves the list of trials for the currently active breeding program 
+and crop combination. The crop and program must be set using \code{\link{set_crop}} and 
+\code{\link{set_program}} prior to calling this function.
 }
 \seealso{
 \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}}

@@ -11,18 +11,22 @@ build_pedigree_table(
 )
 }
 \arguments{
-\item{geno_list}{A list of genotypes/germplasm names.}
+\item{geno_list}{A character vector of genotype/germplasm names.}
 
-\item{pedigree_list}{A list of associated pedigree strings.}
+\item{pedigree_list}{A character vector of associated pedigree strings, corresponding to the genotypes in \code{geno_list}.}
 
-\item{pedigree_df}{Pedigree data.frame as per the previous call/iteration.}
+\item{pedigree_df}{A data frame of pedigrees from a previous iteration, used to accumulate pedigree data. If NULL, a new data frame is created.}
 }
 \value{
-A data.frame with three columns corresponding to the identifiers for the 
-individual, female parent, and male parent, respectively.
+A data frame with three columns: 
+  - `Variety`: The identifier for the individual genotype.
+  - `Female`: The identifier for the female parent.
+  - `Male`: The identifier for the male parent.
+The pedigree is built recursively, with individuals listed before any appearance as a parent.
 }
 \description{
-Internal helper function to build the pedigree table recursively.
+Recursively builds a pedigree table by extracting and tracking parents for each genotype/germplasm in the provided list. 
+The function handles backcross cases and updates the pedigree data frame with parent information for multiple generations.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

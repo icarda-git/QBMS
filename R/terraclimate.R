@@ -3,64 +3,64 @@
 #' Get TerraClimate Data for a Given Coordinate(s)
 #'
 #' @description
-#' \href{https://www.climatologylab.org/terraclimate.html}{TerraClimate} is a monthly climate dataset 
-#' for global terrestrial surfaces from 1958-2021. This function enables you to extract 
-#' \href{https://www.climatologylab.org/terraclimate-variables.html}{climate variables} from the 
-#' \href{http://thredds.northwestknowledge.net:8080/thredds/terraclimate_aggregated.html}{hosting server} 
-#' provided by the \href{https://hpc.uidaho.edu/}{Idaho University} for a given coordinate(s) without 
-#' a need to download the whole raster files in the netCDF format (~100MB per variable for each year) 
-#' and provide them in a standard data frame format ready to use in your code. It also calculates the 
-#' \href{https://www.worldclim.org/data/bioclim.html}{bioclimatic variables} using the \code{\link{calc_biovars}} 
-#' function derivative from the \href{https://github.com/rspatial/dismo/blob/master/R/biovars.R}{dismo R package}.
+#' This function allows you to extract climate variables from the 
+#' \href{https://www.climatologylab.org/terraclimate.html}{TerraClimate} dataset for specific geographic coordinates. 
+#' TerraClimate is a global dataset of monthly climate data covering the years 1958-present. The function retrieves 
+#' \href{https://www.climatologylab.org/terraclimate-variables.html}{climate variables} directly from the hosting server provided by the 
+#' \href{https://hpc.uidaho.edu/}{University of Idaho}, avoiding the need to download large raster files in netCDF format.
+#' Additionally, the function calculates \href{https://www.worldclim.org/data/bioclim.html}{bioclimatic variables} 
+#' using the \code{\link{calc_biovars}} function, derived from the \href{https://github.com/rspatial/dismo/blob/master/R/biovars.R}{dismo R package}.
 #'
-#' TerraClimate vs. \href{https://www.worldclim.org/data/worldclim21.html}{WorldClim}
+#' The TerraClimate dataset is compared with \href{https://www.worldclim.org/data/worldclim21.html}{WorldClim} in several aspects:
 #' \itemize{
-#' \item 1958-2021 vs. 1970-2000
-#' \item 14 vs. 7 climate variables
-#' \item ~4 km vs. ~1 km spatial resolution
-#' \item need to calculate vs. pre-calculated 19 bioclimatic variables
+#'   \item TerraClimate: 1958-present vs. WorldClim: 1970-2000
+#'   \item 14 climate variables vs. 7 climate variables in WorldClim
+#'   \item Spatial resolution: ~4 km (TerraClimate) vs. ~1 km (WorldClim)
+#'   \item Need to calculate bioclimatic variables (TerraClimate) vs. pre-calculated (WorldClim)
 #' }
 #'
-#' @references Abatzoglou, J., Dobrowski, S., Parks, S. \emph{et al.} TerraClimate, a high-resolution 
-#'             global dataset of monthly climate and climatic water balance from 1958-2015. 
-#'             \emph{Sci Data} \strong{5}, 170191 (2018). 
-#'             \doi{10.1038/sdata.2017.191}
+#' @references 
+#' Abatzoglou, J., Dobrowski, S., Parks, S. \emph{et al.} TerraClimate, a high-resolution 
+#' global dataset of monthly climate and climatic water balance from 1958-2015. 
+#' \emph{Sci Data} \strong{5}, 170191 (2018). \doi{10.1038/sdata.2017.191}
 #' 
-#' @param lat  Vector of Latitude(s) in decimal degree format.
-#' @param lon  Vector of Longitude(s) in decimal degree format.
-#' @param from Start date as a string in the 'YYYY-MM-DD' format.
-#' @param to   End date as a string in the 'YYYY-MM-DD' format.
-#' @param clim_vars  List of all climate variables to be imported. Valid list includes: \emph{aet, def, pet,
-#'                   ppt, q, soil, srad, swe, tmax, tmin, vap, ws, vpd, and PDSI}. Default is NULL for all.
-#' @param month_mask A list of all months of interest (e.g., planting season: \code{c(10:12,1:5)}). 
-#'                   Default is NULL for all.
-#' @param offline    Extract TerraClimate data from downloaded netCDF files (default is FALSE)
-#' @param data_path  String contains the directory path where downloaded netCDF files exists (default is './data/')
+#' @param lat Vector of Latitude(s) in decimal degree format. Each entry corresponds to a location of interest.
+#' @param lon Vector of Longitude(s) in decimal degree format. Each entry corresponds to a location of interest.
+#' @param from Start date as a string in 'YYYY-MM-DD' format. Defines the beginning of the time range for data extraction.
+#' @param to End date as a string in 'YYYY-MM-DD' format. Defines the end of the time range for data extraction.
+#' @param clim_vars List of climate variables to extract. Valid options include: \emph{aet, def, pet, ppt, q, soil, 
+#'                  srad, swe, tmax, tmin, vap, ws, vpd, and PDSI}. Default is \code{NULL}, which retrieves all variables.
+#' @param month_mask A vector specifying the months of interest, e.g., for specific seasons (e.g., planting season: 
+#'                   \code{c(10:12, 1:5)}). Default is \code{NULL}, which retrieves data for all months.
+#' @param offline Logical value indicating whether to extract TerraClimate data from pre-downloaded netCDF files. 
+#'                Default is \code{FALSE}, meaning data is fetched from the remote server.
+#' @param data_path String specifying the directory path where downloaded netCDF files are stored when working offline. 
+#'                  Default is './data/'.
 #' 
 #' @return 
-#' A list of two data.frame(s) for each pair of coordinates:
+#' A list of two data frames for each coordinate pair (latitude and longitude):
 #' \itemize{
-#' \item \strong{climate:} includes the climate variables (\href{https://www.climatologylab.org/terraclimate-variables.html}{reference}).
-#' \item \strong{biovars:} includes the calculated bioclimatic variables (\href{https://www.worldclim.org/data/bioclim.html}{reference}).
+#'   \item \strong{climate:} A data frame containing the requested climate variables for each month and location.
+#'   \item \strong{biovars:} A data frame with calculated bioclimatic variables, based on the extracted climate data.
 #' }
+#' Each data frame is in a format ready for further analysis in R.
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso 
-#' \code{\link{ini_terraclimate}}
+#' \code{\link{ini_terraclimate}}, \code{\link{calc_biovars}}
 #' 
 #' @examples
 #' if (interactive()) {
-#'   # data <- get_terraclimate(36.016, 36.943, 
-#'   #                          '1979-09-01', '2012-06-30', 
+#'   # data <- get_terraclimate(36.016, 36.943, '1979-09-01', '2012-06-30', 
 #'   #                          c('ppt', 'tmin', 'tmax'), c(10:12,1:5))
 #'   data <- get_terraclimate(36.016, 36.943, '1979-09-01', '2012-06-30')
 #' 
-#'   View(data$climate[[1]])
-#' 
-#'   View(data$biovars[[1]])
+#'   View(data$climate[[1]])  # View the climate data
+#'   View(data$biovars[[1]])  # View the bioclimatic variables
 #' }
+#' 
 #' @export
 
 get_terraclimate <- function(lat, lon, from = '1958-01-01', to = '2022-12-31', clim_vars = NULL, month_mask = NULL, offline = FALSE, data_path = './data/'){
@@ -233,52 +233,69 @@ get_terraclimate <- function(lat, lon, from = '1958-01-01', to = '2022-12-31', c
 #' Calculate the Bioclimatic Variables
 #' 
 #' @description
-#' Bioclimatic variables are derived from the monthly temperature and rainfall 
-#' values in order to generate more biologically meaningful variables. These are 
-#' often used in species distribution modeling and related ecological modeling 
-#' techniques. The bioclimatic variables represent annual trends (e.g., mean 
-#' annual temperature, annual precipitation) seasonality (e.g., annual range in 
-#' temperature and precipitation) and extreme or limiting environmental factors 
-#' (e.g., temperature of the coldest and warmest month, and precipitation of the 
-#' wet and dry quarters). A quarter is a period of three months (1/4 of the year).
+#' This function calculates the 19 standard bioclimatic variables derived from 
+#' monthly temperature and precipitation data. Bioclimatic variables are often 
+#' used in ecological modeling and species distribution modeling to capture biologically 
+#' meaningful patterns in climate data, including annual trends, seasonality, and 
+#' extreme environmental factors. 
 #' 
-#' They are coded as follows:
-#' \itemize{
-#' \item BIO1 = Annual Mean Temperature
-#' \item BIO2 = Mean Diurnal Range (Mean of monthly (max temp - min temp))
-#' \item BIO3 = Isothermality (BIO2/BIO7) (* 100)
-#' \item BIO4 = Temperature Seasonality (standard deviation *100)
-#' \item BIO5 = Max Temperature of Warmest Month
-#' \item BIO6 = Min Temperature of Coldest Month
-#' \item BIO7 = Temperature Annual Range (BIO5-BIO6)
-#' \item BIO8 = Mean Temperature of Wettest Quarter
-#' \item BIO9 = Mean Temperature of Driest Quarter
-#' \item BIO10 = Mean Temperature of Warmest Quarter
-#' \item BIO11 = Mean Temperature of Coldest Quarter
-#' \item BIO12 = Annual Precipitation
-#' \item BIO13 = Precipitation of Wettest Month
-#' \item BIO14 = Precipitation of Driest Month
-#' \item BIO15 = Precipitation Seasonality (Coefficient of Variation)
-#' \item BIO16 = Precipitation of Wettest Quarter
-#' \item BIO17 = Precipitation of Driest Quarter
-#' \item BIO18 = Precipitation of Warmest Quarter
-#' \item BIO19 = Precipitation of Coldest Quarter
-#' }
-#'      
-#' This work is derivative from the \href{https://github.com/rspatial/dismo/blob/master/R/biovars.R}{dismo R package}
-#' 
-#' @references Nix, 1986. A biogeographic analysis of Australian elapid snakes. 
-#'             In: R. Longmore (ed.). Atlas of elapid snakes of Australia. 
-#'             Australian Flora and Fauna Series 7. Australian Government Publishing 
-#'             Service, Canberra.
+#' The bioclimatic variables represent metrics such as the annual mean temperature, 
+#' temperature seasonality, and precipitation patterns (e.g., wettest or driest quarter).
+#' These metrics help to model species distributions and analyze ecological dynamics.
 #'
-#' @author Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
-#' @author Robert Hijmans, Museum of Vertebrate Zoology, UC Berkeley
+#' The bioclimatic variables are coded as follows:
+#' \itemize{
+#'   \item \strong{BIO1} = Annual Mean Temperature
+#'   \item \strong{BIO2} = Mean Diurnal Range (Mean of monthly (max temp - min temp))
+#'   \item \strong{BIO3} = Isothermality (BIO2/BIO7) (* 100)
+#'   \item \strong{BIO4} = Temperature Seasonality (standard deviation * 100)
+#'   \item \strong{BIO5} = Max Temperature of Warmest Month
+#'   \item \strong{BIO6} = Min Temperature of Coldest Month
+#'   \item \strong{BIO7} = Temperature Annual Range (BIO5 - BIO6)
+#'   \item \strong{BIO8} = Mean Temperature of Wettest Quarter
+#'   \item \strong{BIO9} = Mean Temperature of Driest Quarter
+#'   \item \strong{BIO10} = Mean Temperature of Warmest Quarter
+#'   \item \strong{BIO11} = Mean Temperature of Coldest Quarter
+#'   \item \strong{BIO12} = Annual Precipitation
+#'   \item \strong{BIO13} = Precipitation of Wettest Month
+#'   \item \strong{BIO14} = Precipitation of Driest Month
+#'   \item \strong{BIO15} = Precipitation Seasonality (Coefficient of Variation)
+#'   \item \strong{BIO16} = Precipitation of Wettest Quarter
+#'   \item \strong{BIO17} = Precipitation of Driest Quarter
+#'   \item \strong{BIO18} = Precipitation of Warmest Quarter
+#'   \item \strong{BIO19} = Precipitation of Coldest Quarter
+#' }
 #' 
-#' @param data Data.frame has 4 mandatory columns (year, ppt, tmin, and tmax), 
-#'             and 12 rows (months) for each year sorted from Jan to Dec.
-#' @return Data.frame has 19 columns for "bioclim" variables (bio1-bio19) and 
-#'         last column for year (you will get one row per year).
+#' These variables are computed using temperature and precipitation data in a standard format, 
+#' and are critical for understanding species habitats and the effects of climate on ecosystems.
+#' 
+#' This work is derived from the \href{https://github.com/rspatial/dismo/blob/master/R/biovars.R}{dismo R package}.
+#' 
+#' @references 
+#' Nix, 1986. A biogeographic analysis of Australian elapid snakes. In: R. Longmore (ed.). 
+#' Atlas of elapid snakes of Australia. Australian Flora and Fauna Series 7. 
+#' Australian Government Publishing Service, Canberra.
+#'
+#' @author
+#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' 
+#' @author
+#' Robert Hijmans, Museum of Vertebrate Zoology, UC Berkeley
+#' 
+#' @param data A data frame containing monthly climate data. The data frame must include:
+#' \itemize{
+#'   \item \strong{year:} The year for each set of monthly data.
+#'   \item \strong{ppt:} Monthly precipitation values (in mm).
+#'   \item \strong{tmin:} Monthly minimum temperature values (in degrees Celsius).
+#'   \item \strong{tmax:} Monthly maximum temperature values (in degrees Celsius).
+#' }
+#' The data should contain 12 rows (one for each month from January to December) per year, 
+#' with the columns sorted in the order of year, ppt, tmin, and tmax.
+#' 
+#' @return 
+#' A data frame with 19 columns representing the bioclimatic variables (BIO1 to BIO19) and 
+#' an additional column for the year. The output data frame provides one row per year, with 
+#' each column corresponding to one of the bioclimatic variables described above.
 #' 
 #' @export
 
@@ -414,13 +431,36 @@ calc_biovars <- function(data) {
 
 #' Download TerraClimate netCDF Data Files to Extract their Data Offline
 #'
-#' @param from Start date as a string in the 'YYYY-MM-DD' format.
-#' @param to End date as a string in the 'YYYY-MM-DD' format.
-#' @param clim_vars List of all climate variables to be imported. Valid list includes: \emph{aet, def, pet,
-#'                 ppt, q, soil, srad, swe, tmax, tmin, vap, ws, vpd, and PDSI}. Default is NULL for all.
-#' @param data_path String containing the directory path where downloaded netCDF files exist (default is './data/')
-#' @param timeout Timeout in seconds to download each netCDF raster file (default is 300).
+#' @description
+#' This function facilitates the download of TerraClimate netCDF files for a specified 
+#' time period and climate variables. TerraClimate data provides monthly climate data 
+#' for global terrestrial surfaces, and this function allows you to store the data locally 
+#' for offline extraction and analysis without the need to download the entire dataset.
 #' 
+#' Users can specify a range of climate variables such as precipitation, temperature, 
+#' evapotranspiration, soil moisture, and more. The downloaded files are saved in 
+#' netCDF format, making them accessible for subsequent offline analysis.
+#' 
+#' @param from Start date as a string in the 'YYYY-MM-DD' format. This defines the beginning 
+#'             of the time period for which you want to download the climate data.
+#' @param to End date as a string in the 'YYYY-MM-DD' format. This defines the end of the time 
+#'           period for which you want to download the climate data.
+#' @param clim_vars A list of climate variables to download. Valid options include:
+#' \emph{aet} (Actual Evapotranspiration), \emph{def} (Climate Water Deficit), \emph{pet} (Potential 
+#' Evapotranspiration), \emph{ppt} (Precipitation), \emph{q} (Runoff), \emph{soil} (Soil Moisture), 
+#' \emph{srad} (Solar Radiation), \emph{swe} (Snow Water Equivalent), \emph{tmax} (Maximum Temperature), 
+#' \emph{tmin} (Minimum Temperature), \emph{vap} (Vapor Pressure), \emph{ws} (Wind Speed), 
+#' \emph{vpd} (Vapor Pressure Deficit), and \emph{PDSI} (Palmer Drought Severity Index).
+#' If NULL (default), all available variables will be downloaded.
+#' @param data_path A string containing the directory path where the downloaded netCDF files 
+#'                  will be stored. The default path is './data/'.
+#' @param timeout Timeout in seconds for downloading each netCDF raster file. The default value is 300 seconds.
+#' 
+#' @return 
+#' No explicit return value. The downloaded netCDF files are saved to the specified directory for 
+#' offline use with the \code{\link{get_terraclimate}} function to extract data for a given 
+#' coordinate or set of coordinates.
+#'  
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
@@ -429,21 +469,28 @@ calc_biovars <- function(data) {
 #' 
 #' @examples
 #' if (interactive()) {
+#'   # Initialize TerraClimate data download for specific climate variables between two dates
 #'   ini_terraclimate('2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'))
 #'   
+#'   # Coordinates for the location(s) of interest
 #'   x <- c(-6.716, 35.917, 76.884)
 #'   y <- c(33.616, 33.833, 23.111)
 #'   
+#'   # Extract TerraClimate data for the specified coordinates (online mode)
 #'   a <- get_terraclimate(y, x, '2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'))
 #'   
-#'   a$climate[[1]]
-#'   a$biovars[[1]]
+#'   # View the extracted climate data and bioclimatic variables
+#'   View(a$climate[[1]])
+#'   View(a$biovars[[1]])
 #'   
+#'   # Extract TerraClimate data for the specified coordinates (offline mode)
 #'   b <- get_terraclimate(y, x, '2018-09-01', '2019-06-30', c('ppt', 'tmin', 'tmax'), offline = TRUE)
 #'   
-#'   b$climate[[1]]
-#'   b$biovars[[1]]
+#'   # View the offline-extracted data
+#'   View(b$climate[[1]])
+#'   View(b$biovars[[1]])
 #' }
+#' 
 #' @export
 
 ini_terraclimate <- function(from = '2019-09-01', to = '2022-06-30', clim_vars = c('ppt', 'tmin', 'tmax'), data_path = './data/', timeout = 300) {

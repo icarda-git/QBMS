@@ -7,37 +7,27 @@
 get_trial_obs_ontology()
 }
 \value{
-A data frame of the traits ontology/metadata.
+A data frame containing the traits ontology or metadata, filtered by the observation 
+variables used in the current trial.
 }
 \description{
-Retrieves the traits ontology/metadata of the current active trial as 
-configured in the internal state object using the `set_trial()` function.
+Retrieves the traits ontology or metadata for the current active trial, which 
+includes detailed information about the observation variables used in the trial.
 }
 \examples{
-if(interactive()) {
-  # Configure your server connection
+if (interactive()) {
   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-
-  # Login using your account (interactive mode)
-  # You can pass your username and password as parameters (batch mode)
   login_bms()
-
-  # Select a crop by name
   set_crop("wheat")
-
-  # Select a breeding program by name
   set_program("Wheat International Nurseries")
-
-  # Select a specific study/trial by name
   set_trial("IDYT39")
-
-  # Get observation variable ontology
   ontology <- get_trial_obs_ontology()
 }
 
 }
 \seealso{
-\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
+\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, 
+\code{\link{get_study_data}} for retrieving study observations.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

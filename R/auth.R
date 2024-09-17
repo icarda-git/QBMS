@@ -1,10 +1,11 @@
 #' Login Pop-Up Window
 #'
 #' @description
-#' Builds a GUI pop-up window using Tcl/Tk to insert the username and password.
+#' Opens a GUI pop-up window using Tcl/Tk to prompt the user for their username and password.
+#' The window title and prompt message adapt based on the type of server being used (e.g., BMS, GIGWA).
 #'
 #' @return
-#' A vector of inserted username and password.
+#' A vector containing the inserted username and password, with names `usr` and `pwd` respectively.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -54,51 +55,46 @@ get_login_details <- function() {
 #' Set Access Token Response
 #'
 #' @description
-#' If the request for an access token is valid, the authorization server needs 
-#' to generate an access token and return these to the client, typically along 
-#' with some additional properties about the authorization.
+#' Stores the access token and associated details (such as username and expiration time) in the internal state.
+#' The token is typically retrieved from the server during login and used for subsequent API requests.
 #'
-#' @param token The access token string as issued by the authorization server.
-#' @param user The username (optional).
-#' @param expires_in The lifetime in seconds of the access token (optional).
+#' @param token The access token string issued by the authorization server.
+#' @param user The username associated with the token (optional).
+#' @param expires_in The lifetime of the access token in seconds (optional, default is 3600 seconds).
 #' 
 #' @return
-#' No return value.
+#' No return value. Updates the internal state with the token info.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @export
 
-set_token <- function(token, user = '', expires_in = NULL) {
-  if (is.null(expires_in)) {
-    expires_in <- as.numeric(Sys.time()) + 3600
-  }
-  
+set_token <- function(token, user = '', expires_in = 3600) {
+  expires_in <- as.numeric(Sys.time()) + expires_in
+
   qbms_globals$state$token <- token
   qbms_globals$state$user  <- user
   qbms_globals$state$expires_in <- expires_in
 }
 
 
-#' Login Using OAuth 2.0 Authentication 
+#' Login using OAuth 2.0 Authentication 
 #'
 #' @description
-#' If the request for an access token is valid, the authorization server needs 
-#' to generate an access token and return these to the client, typically along 
-#' with some additional properties about the authorization.
+#' Performs OAuth 2.0 authentication by sending the user to the authorization URL and exchanging the 
+#' authorization code for an access token. This function supports caching of tokens for subsequent requests.
 #'
-#' @param authorize_url URL to send the client for authorization.
-#' @param access_url URL used to exchange unauthenticated for authenticated token.
-#' @param client_id Consumer key, also sometimes called the client ID.
-#' @param client_secret Consumer secret, also sometimes called the client secret.
-#' @param redirect_uri The URL that the user will be redirected to after authorization is complete (default is http://localhost:1410).
-#' @param oauth2_cache A logical value or a string. TRUE means to cache using the default cache file .httr-oauth, FALSE means don't cache, 
-#'                     and NA means to guess using some sensible heuristics. A string means use the specified path as the cache file.
-#'                     Default is FALSE (i.e., don't cache).
+#' @param authorize_url The URL where the client is redirected for user authorization.
+#' @param access_url The URL used to exchange an authorization code for an access token.
+#' @param client_id The client ID (consumer key) provided by the authorization server.
+#' @param client_secret The client secret provided by the authorization server (optional).
+#' @param redirect_uri The URL where the user will be redirected after authorization (default is http://localhost:1410).
+#' @param oauth2_cache Logical or string, specifying whether to cache the token. If TRUE, the token is cached in the default 
+#'                     file `.httr-oauth`. A string can specify a custom cache file path.
 #' 
 #' @return
-#' No return value.
+#' No return value. Updates the internal state with the access token and additional details.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -118,35 +114,24 @@ login_oauth2 <- function(authorize_url, access_url, client_id, client_secret = N
 #' Login to the Server
 #'
 #' @description
-#' Connects to the server. If the username or password parameters are missing,
-#' then a login window will pop up to insert the username and password.
+#' Connects to the BMS or related server using a username and password. If these are not provided,
+#' a pop-up window will prompt the user to enter their credentials. The function handles authentication 
+#' and stores the resulting access token internally for subsequent requests.
 #'
-#' All other connection parameters (i.e., server IP or domain, connection port,
-#' API path, and connection protocol e.g., http://) will be retrieved from the
-#' qbms_config list.
-#'
-#' This function will update both the qbms_config list (brapi connection
-#' object in the con key) and the qbms_state list (token value in the token key).
-#'
-#' @param username The username (optional, default is NULL).
-#' @param password The password (optional, default is NULL).
-#' @param encoding How should the named list body be encoded? Can be one of form 
-#'                 (application/x-www-form-urlencoded), multipart (multipart/form-data), 
-#'                 or json (application/json).
+#' @param username The username (optional, default is NULL). If not provided, the pop-up window is triggered.
+#' @param password The password (optional, default is NULL). If not provided, the pop-up window is triggered.
+#' @param encoding Specifies how the request body should be encoded: `form` (application/x-www-form-urlencoded), 
+#'                 `multipart` (multipart/form-data), or `json` (application/json). Default is "json".
 #' 
 #' @return
-#' No return value.
+#' No return value. The access token is stored internally for future use.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @examples
 #' if(interactive()) {
-#'   # Configure your BMS connection
 #'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-#'
-#'   # Login using your BMS account (interactive mode)
-#'   # You can pass the BMS username and password as parameters (batch mode)
 #'   login_bms()
 #' }
 #' 
@@ -178,13 +163,15 @@ login_bms <- function(username = NULL, password = NULL, encoding = "json") {
 #' Login to the BreedBase Server
 #'
 #' @description
-#' Logs in to the BreedBase server.
+#' Logs in to the BreedBase server using a username and password. If credentials are not provided,
+#' a pop-up window will prompt the user. The function is a wrapper around the `login_bms()` function,
+#' with encoding set to `form`.
 #'
 #' @param username The username (optional, default is NULL).
 #' @param password The password (optional, default is NULL).
 #' 
 #' @return
-#' No return value.
+#' No return value. The access token is stored internally for future use.
 #' 
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

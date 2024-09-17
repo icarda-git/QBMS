@@ -16,70 +16,69 @@ get_terraclimate(
 )
 }
 \arguments{
-\item{lat}{Vector of Latitude(s) in decimal degree format.}
+\item{lat}{Vector of Latitude(s) in decimal degree format. Each entry corresponds to a location of interest.}
 
-\item{lon}{Vector of Longitude(s) in decimal degree format.}
+\item{lon}{Vector of Longitude(s) in decimal degree format. Each entry corresponds to a location of interest.}
 
-\item{from}{Start date as a string in the 'YYYY-MM-DD' format.}
+\item{from}{Start date as a string in 'YYYY-MM-DD' format. Defines the beginning of the time range for data extraction.}
 
-\item{to}{End date as a string in the 'YYYY-MM-DD' format.}
+\item{to}{End date as a string in 'YYYY-MM-DD' format. Defines the end of the time range for data extraction.}
 
-\item{clim_vars}{List of all climate variables to be imported. Valid list includes: \emph{aet, def, pet,
-ppt, q, soil, srad, swe, tmax, tmin, vap, ws, vpd, and PDSI}. Default is NULL for all.}
+\item{clim_vars}{List of climate variables to extract. Valid options include: \emph{aet, def, pet, ppt, q, soil, 
+srad, swe, tmax, tmin, vap, ws, vpd, and PDSI}. Default is \code{NULL}, which retrieves all variables.}
 
-\item{month_mask}{A list of all months of interest (e.g., planting season: \code{c(10:12,1:5)}). 
-Default is NULL for all.}
+\item{month_mask}{A vector specifying the months of interest, e.g., for specific seasons (e.g., planting season: 
+\code{c(10:12, 1:5)}). Default is \code{NULL}, which retrieves data for all months.}
 
-\item{offline}{Extract TerraClimate data from downloaded netCDF files (default is FALSE)}
+\item{offline}{Logical value indicating whether to extract TerraClimate data from pre-downloaded netCDF files. 
+Default is \code{FALSE}, meaning data is fetched from the remote server.}
 
-\item{data_path}{String contains the directory path where downloaded netCDF files exists (default is './data/')}
+\item{data_path}{String specifying the directory path where downloaded netCDF files are stored when working offline. 
+Default is './data/'.}
 }
 \value{
-A list of two data.frame(s) for each pair of coordinates:
+A list of two data frames for each coordinate pair (latitude and longitude):
 \itemize{
-\item \strong{climate:} includes the climate variables (\href{https://www.climatologylab.org/terraclimate-variables.html}{reference}).
-\item \strong{biovars:} includes the calculated bioclimatic variables (\href{https://www.worldclim.org/data/bioclim.html}{reference}).
+  \item \strong{climate:} A data frame containing the requested climate variables for each month and location.
+  \item \strong{biovars:} A data frame with calculated bioclimatic variables, based on the extracted climate data.
 }
+Each data frame is in a format ready for further analysis in R.
 }
 \description{
-\href{https://www.climatologylab.org/terraclimate.html}{TerraClimate} is a monthly climate dataset 
-for global terrestrial surfaces from 1958-2021. This function enables you to extract 
-\href{https://www.climatologylab.org/terraclimate-variables.html}{climate variables} from the 
-\href{http://thredds.northwestknowledge.net:8080/thredds/terraclimate_aggregated.html}{hosting server} 
-provided by the \href{https://hpc.uidaho.edu/}{Idaho University} for a given coordinate(s) without 
-a need to download the whole raster files in the netCDF format (~100MB per variable for each year) 
-and provide them in a standard data frame format ready to use in your code. It also calculates the 
-\href{https://www.worldclim.org/data/bioclim.html}{bioclimatic variables} using the \code{\link{calc_biovars}} 
-function derivative from the \href{https://github.com/rspatial/dismo/blob/master/R/biovars.R}{dismo R package}.
+This function allows you to extract climate variables from the 
+\href{https://www.climatologylab.org/terraclimate.html}{TerraClimate} dataset for specific geographic coordinates. 
+TerraClimate is a global dataset of monthly climate data covering the years 1958-present. The function retrieves 
+\href{https://www.climatologylab.org/terraclimate-variables.html}{climate variables} directly from the hosting server provided by the 
+\href{https://hpc.uidaho.edu/}{University of Idaho}, avoiding the need to download large raster files in netCDF format.
+Additionally, the function calculates \href{https://www.worldclim.org/data/bioclim.html}{bioclimatic variables} 
+using the \code{\link{calc_biovars}} function, derived from the \href{https://github.com/rspatial/dismo/blob/master/R/biovars.R}{dismo R package}.
 
-TerraClimate vs. \href{https://www.worldclim.org/data/worldclim21.html}{WorldClim}
+The TerraClimate dataset is compared with \href{https://www.worldclim.org/data/worldclim21.html}{WorldClim} in several aspects:
 \itemize{
-\item 1958-2021 vs. 1970-2000
-\item 14 vs. 7 climate variables
-\item ~4 km vs. ~1 km spatial resolution
-\item need to calculate vs. pre-calculated 19 bioclimatic variables
+  \item TerraClimate: 1958-present vs. WorldClim: 1970-2000
+  \item 14 climate variables vs. 7 climate variables in WorldClim
+  \item Spatial resolution: ~4 km (TerraClimate) vs. ~1 km (WorldClim)
+  \item Need to calculate bioclimatic variables (TerraClimate) vs. pre-calculated (WorldClim)
 }
 }
 \examples{
 if (interactive()) {
-  # data <- get_terraclimate(36.016, 36.943, 
-  #                          '1979-09-01', '2012-06-30', 
+  # data <- get_terraclimate(36.016, 36.943, '1979-09-01', '2012-06-30', 
   #                          c('ppt', 'tmin', 'tmax'), c(10:12,1:5))
   data <- get_terraclimate(36.016, 36.943, '1979-09-01', '2012-06-30')
 
-  View(data$climate[[1]])
-
-  View(data$biovars[[1]])
+  View(data$climate[[1]])  # View the climate data
+  View(data$biovars[[1]])  # View the bioclimatic variables
 }
+
 }
 \references{
 Abatzoglou, J., Dobrowski, S., Parks, S. \emph{et al.} TerraClimate, a high-resolution 
-            global dataset of monthly climate and climatic water balance from 1958-2015. 
-            \emph{Sci Data} \strong{5}, 170191 (2018). 
-            \doi{10.1038/sdata.2017.191}
+global dataset of monthly climate and climatic water balance from 1958-2015. 
+\emph{Sci Data} \strong{5}, 170191 (2018). \doi{10.1038/sdata.2017.191}
 }
 \seealso{
-\code{\link{ini_terraclimate}}
+\code{\link{ini_terraclimate}}, \code{\link{calc_biovars}}
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

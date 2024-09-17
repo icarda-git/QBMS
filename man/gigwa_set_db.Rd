@@ -7,22 +7,19 @@
 gigwa_set_db(db_name)
 }
 \arguments{
-\item{db_name}{The name of the database.}
+\item{db_name}{The name of the database to set as active.}
 }
 \value{
-No return value.
+No return value. Updates the internal configuration with the selected database.
 }
 \description{
-This function updates the current active database in the internal
-configuration object (including the brapi connection object).
+Select a GIGWA database as the active database for subsequent operations. This updates
+the internal configuration object and resets any previously selected projects or runs.
 }
 \examples{
 if (interactive()) {
-  # Configure your GIGWA connection
   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-
-  # Select a database by name
   gigwa_set_db("Sorghum-JGI_v1")
 }
 }

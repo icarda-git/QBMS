@@ -7,17 +7,18 @@
 scan_brapi_endpoints(programDbId = 0, trialDbId = 0, studyDbId = 0)
 }
 \arguments{
-\item{programDbId}{(numeric) ProgramDbId used for BrAPI endpoints scanning. Default is 0.}
+\item{programDbId}{(numeric) The programDbId to scan specific program-related endpoints (default is 0).}
 
-\item{trialDbId}{(numeric) TrialDbId used for BrAPI endpoints scanning. Default is 0.}
+\item{trialDbId}{(numeric) The trialDbId to scan specific trial-related endpoints (default is 0).}
 
-\item{studyDbId}{(numeric) StudyDbId used for BrAPI endpoints scanning. Default is 0.}
+\item{studyDbId}{(numeric) The studyDbId to scan specific study-related endpoints (default is 0).}
 }
 \value{
-A data frame listing the QBMS function, BrAPI endpoint URL, and status.
+A data frame listing the QBMS function, BrAPI endpoint URL, and availability status for each endpoint.
 }
 \description{
-Scan available BrAPI endpoints on the configured source server.
+Scans the available BrAPI endpoints on the configured source server and checks their accessibility. 
+This function allows users to verify which BrAPI endpoints are available based on the provided IDs.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

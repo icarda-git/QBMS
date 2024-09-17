@@ -7,37 +7,27 @@
 set_trial(trial_name)
 }
 \arguments{
-\item{trial_name}{The name of the trial.}
+\item{trial_name}{A string specifying the name of the trial to set as active.}
 }
 \value{
-No return value.
+No return value. The internal state is updated with the selected trial.
 }
 \description{
-Updates the current active trial in the internal state object using the 
-trialDbId which is associated with the given trial_name parameter.
+Updates the internal state to set the selected trial as the current active trial using the 
+associated trialDbId. This enables operations to be carried out within the context of the selected trial.
 }
 \examples{
-if(interactive()) {
-  # Configure your server connection
+if (interactive()) {
   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-
-  # Login using your account (interactive mode)
-  # You can pass your username and password as parameters (batch mode)
-  login_bms()
-
-  # Select a crop by name
-  set_crop("wheat")
-
-  # Select a breeding program by name
-  set_program("Wheat International Nurseries")
-
-  # Select a specific study/trial by name
-  set_trial("IDYT39")
+  login_bms()  # Log in to the server
+  set_crop("wheat")  # Set crop
+  set_program("Wheat International Nurseries")  # Set breeding program
+  set_trial("IDYT39")  # Set trial
 }
 
 }
 \seealso{
-\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}}
+\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}} for operations involving crops, programs, and trials.
 }
 \author{
 Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}

@@ -7,28 +7,19 @@
 gigwa_get_metadata()
 }
 \value{
-A data.frame of all metadata associated with the samples in the selected run.
+A data frame containing metadata attributes for each sample in the active run.
 }
 \description{
-This function retrieves the metadata of the current active run
-as configured in the internal state object using the `gigwa_set_run()` function.
+Retrieve metadata associated with the samples in the current active run, set using the `gigwa_set_run()` function.
+The metadata provides additional information about the samples in the selected run.
 }
 \examples{
 if (interactive()) {
-  # Configure your GIGWA connection
   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-
-  # Select a database by name
   gigwa_set_db("3kG_10M")
-
-  # Select a project by name
   gigwa_set_project("3003_ind")
-  
-  # Select a specific run by name
   gigwa_set_run("1")
-  
-  # Get a list of all samples in the selected run
   metadata <- gigwa_get_metadata()
 }
 }

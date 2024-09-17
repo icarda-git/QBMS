@@ -7,25 +7,18 @@
 gigwa_get_sequences()
 }
 \value{
-A vector of all sequences in the selected project.
+A vector of sequence names (e.g., chromosome names) for the selected project.
 }
 \description{
-This function retrieves the list sequences of the current active project
-as configured in the internal state object using the `gigwa_set_project()` function.
+Retrieve the list of sequences (e.g., chromosomes) associated with the currently
+active project in GIGWA, which has been set using the `gigwa_set_project()` function.
 }
 \examples{
 if (interactive()) {
-  # Configure your GIGWA connection
   set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
                   time_out = 300, engine = "gigwa", no_auth = TRUE)
-
-  # Select a database by name
   gigwa_set_db("Sorghum-JGI_v1")
-
-  # Select a project by name
   gigwa_set_project("Nelson_et_al_2011")
-  
-  # Get a list of all samples in the selected project
   chroms <- gigwa_get_sequences()
 }
 }

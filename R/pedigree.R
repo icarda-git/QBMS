@@ -3,13 +3,16 @@
 #' Get Direct Parents
 #'
 #' @description
-#' Internal helper function to split the given pedigree string that provides the parentage
-#' through which a cultivar was obtained and retrieve the pedigrees of the direct parents.
+#' Utility function to split a given pedigree string and retrieve the pedigrees of the direct parents (female and male).
+#' The function handles different formats of cross representations, such as single slashes (/), double slashes (//), 
+#' or numbered crosses (e.g., /3/). It extracts the highest cross order when available and returns the sub-pedigree 
+#' for the immediate parents.
 #'
 #' @param pedigree A string providing the parentage through which a cultivar was obtained.
 #' 
 #' @return 
-#' A vector of two items, representing the direct female and male parents.
+#' A vector of two items representing the direct female and male parents. If parent information is unavailable or unknown, 
+#' `NA` is returned for the respective parent.
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -60,15 +63,19 @@ get_parents <- function(pedigree) {
 #' Building Pedigree Table Recursively
 #'
 #' @description
-#' Internal helper function to build the pedigree table recursively.
+#' Recursively builds a pedigree table by extracting and tracking parents for each genotype/germplasm in the provided list. 
+#' The function handles backcross cases and updates the pedigree data frame with parent information for multiple generations.
 #'
-#' @param geno_list A list of genotypes/germplasm names.
-#' @param pedigree_list A list of associated pedigree strings.
-#' @param pedigree_df Pedigree data.frame as per the previous call/iteration.
+#' @param geno_list A character vector of genotype/germplasm names.
+#' @param pedigree_list A character vector of associated pedigree strings, corresponding to the genotypes in \code{geno_list}.
+#' @param pedigree_df A data frame of pedigrees from a previous iteration, used to accumulate pedigree data. If NULL, a new data frame is created.
 #' 
 #' @return 
-#' A data.frame with three columns corresponding to the identifiers for the 
-#' individual, female parent, and male parent, respectively.
+#' A data frame with three columns: 
+#'   - `Variety`: The identifier for the individual genotype.
+#'   - `Female`: The identifier for the female parent.
+#'   - `Male`: The identifier for the male parent.
+#' The pedigree is built recursively, with individuals listed before any appearance as a parent.
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -151,46 +158,35 @@ build_pedigree_table <- function(geno_list = NULL, pedigree_list = NULL, pedigre
 #' Get the Pedigree Table
 #'
 #' @description
-#' Retrieve the pedigree table starting from the current germplasm list and associated
-#' pedigree string that provides the parentage through which a cultivar was obtained.
+#' Retrieves a comprehensive pedigree table for the given dataset, which contains genotype names and pedigree strings. 
+#' The function recursively traces parentage across generations and builds a pedigree table where each row corresponds 
+#' to an individual, with columns for the female and male parents. It also handles cases of similar genotype names 
+#' by standardizing them.
 #'
-#' @param data Germplasm dataset as a data.frame.
-#' @param geno_column Name of the column that identifies the genotype/germplasm names.
-#' @param pedigree_column Name of the column that identifies the pedigree strings.
+#' @param data A data frame containing genotype/germplasm data, including names and pedigree strings.
+#' @param geno_column The name of the column that identifies the genotype/germplasm names.
+#' @param pedigree_column The name of the column that contains the pedigree strings.
 #' 
 #' @return 
-#' A data.frame with three columns corresponding to the identifiers for the individual,
-#' female parent, and male parent, respectively. The row giving the pedigree of an
-#' individual appears before any row where that individual appears as a parent.
-#' Founders use NA in the parental columns.
+#' A data frame with three columns:
+#'   - `Variety`: The identifier for the individual genotype.
+#'   - `Female`: The identifier for the female parent.
+#'   - `Male`: The identifier for the male parent.
+#' The pedigree table is sorted such that individuals appear before any row where they are listed as a parent.
+#' For founders (i.e., individuals with no parent information), `NA` is used for the parental columns.
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @examples
 #' if (interactive()) {
-#'   # Configure your server connection
 #'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
-#'
-#'   # Login using your account (interactive mode)
-#'   # You can pass your username and password as parameters (batch mode)
 #'   login_bms()
-#'
-#'   # Select a crop by name
 #'   set_crop("wheat")
-#'
-#'   # Select a breeding program by name
 #'   set_program("Wheat International Nurseries")
-#'
-#'   # Select a specific study/trial by name
 #'   set_trial("IDYT39")
-#'
-#'   # Select a specific environment/location dataset
 #'   set_study("IDYT39 Environment Number 9")
-#'
-#'   # Retrieve the germplasm list of the selected environment/location
 #'   germplasm <- get_germplasm_list()
-#'
 #'   pedigree_table <- get_pedigree_table(germplasm, "germplasmName", "pedigree")
 #'
 #'   #############################
@@ -218,6 +214,7 @@ build_pedigree_table <- function(geno_list = NULL, pedigree_list = NULL, pedigre
 #'
 #'   pedigree_table <- get_pedigree_table(test, "genotype", "pedigree")
 #' }
+#' 
 #' @export
 
 get_pedigree_table <- function(data, geno_column = "germplasmName", pedigree_column = "pedigree") {
