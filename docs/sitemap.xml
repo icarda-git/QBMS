@@ -52,6 +52,12 @@
     <loc>/reference/brapi_map.html</loc>
   </url>
   <url>
+    <loc>/reference/brapi_post_search_allelematrix.html</loc>
+  </url>
+  <url>
+    <loc>/reference/brapi_post_search_call.html</loc>
+  </url>
+  <url>
     <loc>/reference/build_pedigree_table.html</loc>
   </url>
   <url>
@@ -65,6 +71,9 @@
   </url>
   <url>
     <loc>/reference/get_async_pages.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_brapi_url.html</loc>
   </url>
   <url>
     <loc>/reference/get_crop_locations.html</loc>
@@ -118,10 +127,19 @@
     <loc>/reference/get_trial_obs_ontology.html</loc>
   </url>
   <url>
+    <loc>/reference/gigwa_get_allelematrix.html</loc>
+  </url>
+  <url>
+    <loc>/reference/gigwa_get_markers.html</loc>
+  </url>
+  <url>
     <loc>/reference/gigwa_get_metadata.html</loc>
   </url>
   <url>
     <loc>/reference/gigwa_get_samples.html</loc>
+  </url>
+  <url>
+    <loc>/reference/gigwa_get_sequences.html</loc>
   </url>
   <url>
     <loc>/reference/gigwa_get_variants.html</loc>

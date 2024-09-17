@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">QBMS</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,12 +69,27 @@
           
           <code><a href="brapi_get_call.html">brapi_get_call()</a></code> 
         </dt>
-        <dd>Internal Function Used for Core BrAPI GET Calls</dd>
+        <dd>Internal Function for Core BrAPI GET Calls</dd>
       </dl><dl><dt>
           
           <code><a href="brapi_headers.html">brapi_headers()</a></code> 
         </dt>
-        <dd>Common HTTP Headers to Send</dd>
+        <dd>Generate Common HTTP Headers for API Requests</dd>
+      </dl><dl><dt>
+          
+          <code><a href="brapi_map.html">brapi_map</a></code> 
+        </dt>
+        <dd>BrAPI Mapping Table</dd>
+      </dl><dl><dt>
+          
+          <code><a href="brapi_post_search_allelematrix.html">brapi_post_search_allelematrix()</a></code> 
+        </dt>
+        <dd>Internal Function Used for Core BrAPI POST Calls (Allele Matrix Search)</dd>
+      </dl><dl><dt>
+          
+          <code><a href="brapi_post_search_call.html">brapi_post_search_call()</a></code> 
+        </dt>
+        <dd>Internal Function Used for Core BrAPI POST Calls</dd>
       </dl><dl><dt>
           
           <code><a href="build_pedigree_table.html">build_pedigree_table()</a></code> 
@@ -94,12 +109,17 @@
           
           <code><a href="get_async_page.html">get_async_page()</a></code> 
         </dt>
-        <dd>Async Version of HTTP GET Request</dd>
+        <dd>Asynchronous HTTP GET Request</dd>
       </dl><dl><dt>
           
           <code><a href="get_async_pages.html">get_async_pages()</a></code> 
         </dt>
-        <dd>Run All Supplied Pages</dd>
+        <dd>Run All Supplied Pages Asynchronously</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_brapi_url.html">get_brapi_url()</a></code> 
+        </dt>
+        <dd>Get the BrAPI Endpoint URL for a given QBMS function</dd>
       </dl><dl><dt>
           
           <code><a href="get_germplasm_attributes.html">get_germplasm_attributes()</a></code> 
@@ -114,7 +134,7 @@
           
           <code><a href="get_germplasm_id.html">get_germplasm_id()</a></code> 
         </dt>
-        <dd>Get Germplasm ID</dd>
+        <dd>Get Germplasm ID for a Specified Germplasm Name</dd>
       </dl><dl><dt>
           
           <code><a href="get_germplasm_list.html">get_germplasm_list()</a></code> 
@@ -144,12 +164,12 @@
           
           <code><a href="get_program_studies.html">get_program_studies()</a></code> 
         </dt>
-        <dd>Get the List of Trials/Studies/Locations Information of the Current Selected Program</dd>
+        <dd>Get the List of Trials, Studies, and Locations Information for the Current Selected Program</dd>
       </dl><dl><dt>
           
           <code><a href="get_program_trials.html">get_program_trials()</a></code> 
         </dt>
-        <dd>Internal Function Used to Retrieve the Rough List of Trials</dd>
+        <dd>Retrieve the List of Trials for the Active Breeding Program</dd>
       </dl><dl><dt>
           
           <code><a href="get_qbms_connection.html">get_qbms_connection()</a></code> 
@@ -182,6 +202,16 @@
         <dd>Get the Traits Ontology/Metadata of the Current Active Trial</dd>
       </dl><dl><dt>
           
+          <code><a href="gigwa_get_allelematrix.html">gigwa_get_allelematrix()</a></code> 
+        </dt>
+        <dd>Get Markers Matrix in the Selected GIGWA Run</dd>
+      </dl><dl><dt>
+          
+          <code><a href="gigwa_get_markers.html">gigwa_get_markers()</a></code> 
+        </dt>
+        <dd>Get Markers Map in the Selected GIGWA Run</dd>
+      </dl><dl><dt>
+          
           <code><a href="gigwa_get_metadata.html">gigwa_get_metadata()</a></code> 
         </dt>
         <dd>Get the Metadata of the Current Active GIGWA Run</dd>
@@ -189,7 +219,12 @@
           
           <code><a href="gigwa_get_samples.html">gigwa_get_samples()</a></code> 
         </dt>
-        <dd>Get the Samples List of the Current Active GIGWA Run</dd>
+        <dd>Get the Samples List of the Current Active GIGWA Project</dd>
+      </dl><dl><dt>
+          
+          <code><a href="gigwa_get_sequences.html">gigwa_get_sequences()</a></code> 
+        </dt>
+        <dd>Get the Sequences of the Current Active GIGWA Project</dd>
       </dl><dl><dt>
           
           <code><a href="gigwa_get_variants.html">gigwa_get_variants()</a></code> 
@@ -239,7 +274,7 @@
           
           <code><a href="list_crops.html">list_crops()</a></code> 
         </dt>
-        <dd>Get the List of Supported Crops</dd>
+        <dd>Retrieve Supported Crops from the Server</dd>
       </dl><dl><dt>
           
           <code><a href="list_locations.html">list_locations()</a></code> 
@@ -249,7 +284,7 @@
           
           <code><a href="list_programs.html">list_programs()</a></code> 
         </dt>
-        <dd>Get the List of Breeding Programs Names</dd>
+        <dd>Retrieve Breeding Programs for the Active Crop</dd>
       </dl><dl><dt>
           
           <code><a href="list_studies.html">list_studies()</a></code> 
@@ -259,7 +294,7 @@
           
           <code><a href="list_trials.html">list_trials()</a></code> 
         </dt>
-        <dd>Get the List of Trials in the Current Active Breeding Program</dd>
+        <dd>List Trials in the Current Active Breeding Program</dd>
       </dl><dl><dt>
           
           <code><a href="login_bms.html">login_bms()</a></code> 
@@ -279,7 +314,7 @@
           
           <code><a href="login_oauth2.html">login_oauth2()</a></code> 
         </dt>
-        <dd>Login Using OAuth 2.0 Authentication</dd>
+        <dd>Login using OAuth 2.0 Authentication</dd>
       </dl><dl><dt>
           
           <code><a href="rbindlistx.html">rbindlistx()</a></code> 

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">QBMS</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,6 +55,16 @@
       <small>Source: <a href="https://github.com/icarda-git/QBMS/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.2.0" id="qbms-120-2024-09-19">QBMS 1.2.0 <em>2024-09-19</em>
+<a class="anchor" aria-label="anchor" href="#qbms-120-2024-09-19"></a></h2>
+<ul><li>Add new <code><a href="../reference/gigwa_get_allelematrix.html">gigwa_get_allelematrix()</a></code> function that boosting the marker data retrieval speed by more than 10 times.</li>
+<li>Add new <code><a href="../reference/gigwa_get_markers.html">gigwa_get_markers()</a></code> function to retrieve the marker map that describe the physical positions of the markers on the chromosomes.</li>
+<li>Add new <code><a href="../reference/gigwa_get_sequences.html">gigwa_get_sequences()</a></code> function to retrieve the list of sequences in the selected GIGWA project.</li>
+<li>Improve <code><a href="../reference/get_trial_obs_ontology.html">get_trial_obs_ontology()</a></code> function performance for systems supports BrAPI v2 /search/variables endpoint.</li>
+<li>Improve package documentation with enhanced details.</li>
+<li>Implement an internal central mechanism to handle all <a href="https://plant-breeding-api.readthedocs.io/en/latest/docs/best_practices/Search_Services.html#post-search-entity" class="external-link">BrAPI POST /search</a> endpoints, including the 202 status code or searchResultsDbId response.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.0" id="qbms-100-2024-03-07">QBMS 1.0.0 <em>2024-03-07</em>
 <a class="anchor" aria-label="anchor" href="#qbms-100-2024-03-07"></a></h2><p class="text-muted">CRAN release: 2024-03-07</p>
