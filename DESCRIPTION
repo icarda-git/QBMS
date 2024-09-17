@@ -37,7 +37,8 @@ Imports:
     RSQLite,
     DBI,
     future,
-    future.apply
+    future.apply,
+    httr2
 Suggests: 
     knitr,
     rmarkdown,

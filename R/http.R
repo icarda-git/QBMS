@@ -101,12 +101,14 @@ brapi_headers <- function() {
 
 get_async_page <- function(full_url, nested) {
   future::future({
-    resp <- httr::GET(full_url, httr::add_headers(.headers = brapi_headers()))
-    httr::stop_for_status(resp)
-    jsonlite::fromJSON(rawToChar(resp$content), flatten = !nested)
+    req  <- httr2::request(full_url)
+    req  <- httr2::req_headers(req, .headers = brapi_headers())
+    req  <- httr2::req_auth_bearer_token(req, qbms_globals$state$token)
+    resp <- httr2::req_perform(req)
+    httr2::resp_check_status(resp)
+    httr2::resp_body_json(resp, simplifyVector = TRUE, flatten = !nested)
   })
 }
-
 
 #' Asynchronously Fetch Multiple API Pages
 #'
@@ -127,12 +129,14 @@ get_async_page <- function(full_url, nested) {
 
 get_async_pages <- function(pages, nested) {
   future.apply::future_lapply(pages, function(full_url) {
-    resp <- httr::GET(full_url, httr::add_headers(.headers = brapi_headers()))
-    httr::stop_for_status(resp)
-    jsonlite::fromJSON(rawToChar(resp$content), flatten = !nested)
+    req  <- httr2::request(full_url)
+    req  <- httr2::req_headers(req, .headers = brapi_headers())
+    req  <- httr2::req_auth_bearer_token(req, qbms_globals$state$token)
+    resp <- httr2::req_perform(req)
+    httr2::resp_check_status(resp)
+    httr2::resp_body_json(resp, simplifyVector = TRUE, flatten = !nested)
   })
 }
-
 
 #' Internal Function for Core BrAPI GET Calls
 #'
