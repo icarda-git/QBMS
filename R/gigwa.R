@@ -543,7 +543,7 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
 
       response <- httr2::req_perform(req)
 
-      if (rlang::is_empty(response$body)) {
+      if (length(response$body) == 0) {
         break
       }
     }
