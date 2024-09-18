@@ -12,7 +12,7 @@ authorization code for an access token. This function supports caching of tokens
     
     <a class="navbar-brand me-2" href="../index.html">QBMS</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,8 +70,7 @@ authorization code for an access token. This function supports caching of tokens
 <span>  <span class="va">access_url</span>,</span>
 <span>  <span class="va">client_id</span>,</span>
 <span>  client_secret <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  redirect_uri <span class="op">=</span> <span class="st">"http://localhost:1410"</span>,</span>
-<span>  oauth2_cache <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  redirect_uri <span class="op">=</span> <span class="st">"http://localhost:1410"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -95,11 +94,6 @@ authorization code for an access token. This function supports caching of tokens
 
 <dt>redirect_uri</dt>
 <dd><p>The URL where the user will be redirected after authorization (default is http://localhost:1410).</p></dd>
-
-
-<dt>oauth2_cache</dt>
-<dd><p>Logical or string, specifying whether to cache the token. If TRUE, the token is cached in the default 
-file `.httr-oauth`. A string can specify a custom cache file path.</p></dd>
 
 </dl></div>
     <div class="section level2">
