@@ -157,12 +157,10 @@ scan_brapi_endpoints <- function(programDbId = 0, trialDbId = 0, studyDbId = 0) 
   scan_result <- sapply(call_url, function(url) {
     # Create the request
     req <- httr2::request(url)
-    req <- httr2::req_headers(req, .headers = brapi_headers())
-
-    if (!is.na(qbms_globals$state$token)) {
-      req <- httr2::req_auth_bearer_token(req, qbms_globals$state$token)
-    }
-
+    req <- httr2::req_headers(req, "accept" = "application/json")
+    req <- httr2::req_headers(req, "Accept-Encoding" = "gzip, deflate")
+    req <- httr2::req_headers(req, "Authorization" = paste0("Bearer ", qbms_globals$state$token))
+    
     # Perform the request
     resp <- tryCatch(
       httr2::req_perform(req),
