@@ -42,45 +42,6 @@ rbindlistx <- function(x) {
   d <- as.data.frame(l)
 }
 
-#' Generate Common HTTP Headers for API Requests
-#'
-#' @description
-#' This function constructs a list of standard HTTP headers required for making API 
-#' requests, ensuring proper authentication and encoding. These headers are typically 
-#' included with each API call to provide necessary information such as authorization 
-#' tokens and content acceptance types. The function is designed to work with 
-#' authenticated APIs, including BrAPI.
-#'
-#' @return
-#' A named list of common HTTP headers, including the authorization token (Bearer), 
-#' content encoding, and accepted content types.
-#'
-#' @note
-#' Ensure that the global state contains a valid authorization token before making API 
-#' requests. This function retrieves the token from `qbms_globals$state$token`, which 
-#' should be set after a successful login or authentication process.
-#'
-#' @return 
-#' A named list containing key HTTP headers, including:
-#' \itemize{
-#'   \item \strong{Authorization:} Bearer token used for authenticated API access.
-#'   \item \strong{Accept-Encoding:} Specifies supported compression types such as gzip and deflate.
-#'   \item \strong{Accept:} Specifies that the client accepts responses in JSON format.
-#' }
-#' 
-#' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
-
-brapi_headers <- function() {
-  auth_code <- paste0("Bearer ", qbms_globals$state$token)
-  headers   <- c(
-    "Authorization" = auth_code, 
-    "Accept-Encoding" = "gzip, deflate",
-    "accept" = "application/json"
-  )
-  headers
-}
-
 
 #' Asynchronously Fetch a Single API Page
 #'
@@ -227,8 +188,6 @@ brapi_get_call <- function(call_url, nested = TRUE) {
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 
 brapi_post_search_allelematrix <- function(call_url, call_body, nested = TRUE) {
-  # Prepare headers without the 'Authorization' header
-  headers <- brapi_headers()
   call_url <- utils::URLencode(call_url)
   
   # Build the POST request
@@ -295,7 +254,6 @@ brapi_post_search_allelematrix <- function(call_url, call_body, nested = TRUE) {
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 
 brapi_post_search_call <- function(call_url, call_body, nested = TRUE) {
-  headers  <- brapi_headers()
   call_url <- utils::URLencode(call_url)
   
   page_info <- paste0('{"page": {page}, "pageToken": {page}, "pageSize": ', qbms_globals$config$page_size)
