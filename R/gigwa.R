@@ -479,10 +479,7 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
   # https://rest.ensembl.org/documentation/info/gavariants
   
   call_url <- paste0(qbms_globals$config$base_url, "/ga4gh/variants/search")
-  
-  auth_code <- paste0("Bearer ", qbms_globals$state$token)
-  headers   <- c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")
-  
+
   call_body <- list(alleleCount = "2",
                     searchMode = 0,
                     variantSetId = qbms_globals$state$study_db_id,
@@ -494,11 +491,16 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
   if (!is.null(referenceName)) call_body$referenceName <- referenceName
   if (!is.null(start)) call_body$start <- start
   if (!is.null(end)) call_body$end <- end
+
+  req <- httr2::request(utils::URLencode(call_url))
+  req <- httr2::req_method(req, "POST")
+  req <- httr2::req_body_json(req, call_body)
+  req <- httr2::req_timeout(req, qbms_globals$config$time_out)
+  req <- httr2::req_headers(req, "Accept-Encoding" = "gzip, deflate")
+  req <- httr2::req_headers(req, "Authorization" = paste0("Bearer ", qbms_globals$state$token))
   
-  response <- httr::POST(url = utils::URLencode(call_url), body = call_body, encode = "json", 
-                         httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
-  
-  results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
+  response <- httr2::req_perform(req)
+  results  <- jsonlite::fromJSON(httr2::resp_body_string(response), flatten = TRUE)
   
   total_variants <- results$count
   
@@ -532,19 +534,30 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
       # avoid MongoDB error because of a background operation is still running!
       # get the progress status of a process from its token. If no current process is associated with this token, returns null.
       # https://gigwa.southgreen.fr/gigwa/rest/swagger-ui/index.html?urls.primaryName=Gigwa%20API%20v2.5-RELEASE#/gigwa-rest-controller/getProcessProgressUsingGET
-      response <- httr::GET(url = paste0(qbms_globals$config$base_url, "/gigwa/progress"), 
-                            httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
-      
-      if (httr::content(response, as = "text", encoding = "UTF-8") == "") {
+
+      req <- httr2::request(paste0(qbms_globals$config$base_url, "/gigwa/progress"))
+      req <- httr2::req_method(req, "GET")
+      req <- httr2::req_timeout(req, qbms_globals$config$time_out)
+      req <- httr2::req_headers(req, "Accept-Encoding" = "gzip, deflate")
+      req <- httr2::req_headers(req, "Authorization" = paste0("Bearer ", qbms_globals$state$token))
+
+      response <- httr2::req_perform(req)
+
+      if (rlang::is_empty(response$body)) {
         break
       }
     }
     
-    response <- httr::POST(url = utils::URLencode(call_url), body = call_body, encode = "json", 
-                           httr::add_headers(headers), httr::timeout(qbms_globals$config$time_out))
-    
-    results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
-    
+    req <- httr2::request(utils::URLencode(call_url))
+    req <- httr2::req_method(req, "POST")
+    req <- httr2::req_body_json(req, call_body)
+    req <- httr2::req_timeout(req, qbms_globals$config$time_out)
+    req <- httr2::req_headers(req, "Accept-Encoding" = "gzip, deflate")
+    req <- httr2::req_headers(req, "Authorization" = paste0("Bearer ", qbms_globals$state$token))
+
+    response <- httr2::req_perform(req)
+    results  <- jsonlite::fromJSON(httr2::resp_body_string(response), flatten = TRUE)
+
     n <- nrow(results$variants)
     
     for(i in 1:n){

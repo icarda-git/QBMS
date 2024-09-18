@@ -76,11 +76,13 @@ set_crop <- function(crop_name) {
     stop("Your crop name is not supported in this connected BMS server! You may use the `list_crops()` function to check the available crops")
   }
 
-  qbms_globals$config$crop <- crop_name
-  
-  qbms_globals$state$programs  <- NULL
-  qbms_globals$state$locations <- NULL
-  qbms_globals$state$variables <- NULL
+  if (qbms_globals$config$engine == "bms") {
+    qbms_globals$config$crop <- crop_name
+    
+    qbms_globals$state$programs  <- NULL
+    qbms_globals$state$locations <- NULL
+    qbms_globals$state$variables <- NULL
+  }
 }
 
 
@@ -625,15 +627,18 @@ get_germplasm_list <- function() {
                        "/programs/", qbms_globals$state$program_db_id,
                        "/studies/", qbms_globals$state$trial_db_id, "/entries")
 
-    response <- httr::POST(url = utils::URLencode(call_url), body = "", encode = "json",
-                           httr::add_headers(c("X-Auth-Token" = qbms_globals$state$token), "Accept-Encoding" = "gzip, deflate"),
-                           httr::timeout(qbms_globals$config$time_out))
+    req <- httr2::request(utils::URLencode(call_url))
+    req <- httr2::req_method(req, "POST")
+    req <- httr2::req_timeout(req, qbms_globals$config$time_out)
+    req <- httr2::req_headers(req, "Accept-Encoding" = "gzip, deflate")
+    req <- httr2::req_headers(req, "X-Auth-Token" = qbms_globals$state$token)
 
-    results <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
+    response <- httr2::req_perform(req)
+    results  <- jsonlite::fromJSON(httr2::resp_body_string(response), flatten = TRUE)
 
     germplasm_list <- merge(germplasm_list, results[, c("entryNumber", "properties.8255.value", "gid")], by = "entryNumber")
 
-    germplasm_list$check <- ifelse(germplasm_list$properties.8255.value == 10180, 1, 0)
+    germplasm_list$check <- ifelse(germplasm_list$properties.8255.value == "C", 1, 0)
 
     germplasm_list[, c("synonyms", "typeOfGermplasmStorageCode", "taxonIds", "donors", "properties.8255.value")] <- list(NULL)
   }
@@ -861,16 +866,18 @@ get_program_studies <- function() {
   for (i in 1:num_trials) {
     call_url <- paste0(crop_url, "/programs/", qbms_globals$state$program_db_id, "/studies/", all_trials[i], "/entries/metadata")
 
-    response <- httr::GET(url = utils::URLencode(call_url),
-                          httr::add_headers("X-Auth-Token" = qbms_globals$state$token, "Accept-Encoding" = "gzip, deflate"),
-                          httr::timeout(qbms_globals$config$time_out))
-    
-    metadata <- jsonlite::fromJSON(httr::content(response, as = "text", encoding = "UTF-8"), flatten = TRUE)
+    req <- httr2::request(utils::URLencode(call_url))
+    req <- httr2::req_method(req, "GET")
+    req <- httr2::req_timeout(req, qbms_globals$config$time_out)
+    req <- httr2::req_headers(req, "Accept-Encoding" = "gzip, deflate")
+    req <- httr2::req_headers(req, "X-Auth-Token" = qbms_globals$state$token)
 
+    response <- httr2::req_perform(req)
+    metadata <- jsonlite::fromJSON(httr2::resp_body_string(response), flatten = TRUE)
+    
     studies[studies$trialDbId == all_trials[i], "testEntriesCount"] <- metadata$testEntriesCount
     studies[studies$trialDbId == all_trials[i], "checkEntriesCount"] <- metadata$checkEntriesCount
     
-    # update the progress bar
     utils::setTxtProgressBar(pb, i)
   }
   
@@ -968,16 +975,17 @@ get_germplasm_data <- function(germplasm_name = "") {
   crop_url  <- paste0(qbms_globals$config$base_url, "/", qbms_globals$config$crop, "/brapi/v1")
   call_url  <- paste0(crop_url, "/phenotypes-search")
   call_body <- list(germplasmDbIds = c(germplasm_db_id, ""), observationLevel = "PLOT")
-  auth_code <- paste0("Bearer ", qbms_globals$state$token)
 
-  response <- httr::POST(url = utils::URLencode(call_url), body = call_body, encode = "json",
-                         httr::add_headers(c("Authorization" = auth_code, "Accept-Encoding" = "gzip, deflate")),
-                         httr::timeout(qbms_globals$config$time_out))
+  req <- httr2::request(utils::URLencode(call_url))
+  req <- httr2::req_method(req, "POST")
+  req <- httr2::req_body_json(req, call_body)
+  req <- httr2::req_timeout(req, qbms_globals$config$time_out)
+  req <- httr2::req_headers(req, "Accept-Encoding" = "gzip, deflate")
+  req <- httr2::req_headers(req, "Authorization" = paste0("Bearer ", qbms_globals$state$token))
 
-  results <- httr::content(response)$result$data
+  response <- httr2::req_perform(req)
+  flatten_results <- jsonlite::fromJSON(httr2::resp_body_string(response), flatten = TRUE)$result$data
 
-  flatten_results <- jsonlite::fromJSON(jsonlite::toJSON(results), flatten = TRUE)
-  
   if (length(flatten_results) == 0) {
     stop("No observation data available in this crop database for the given germplasm!")
   }
