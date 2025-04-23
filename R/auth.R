@@ -151,10 +151,15 @@ login_bms <- function(username = NULL, password = NULL, encoding = "json") {
   
   call_url  <- paste0(qbms_globals$config$base_url, "/brapi/v1/token")
   call_body <- list(username = credentials["usr"], password = credentials["pwd"])
-  
+
   req <- httr2::request(utils::URLencode(call_url))
-  req <- httr2::req_body_json(req, call_body)
   req <- httr2::req_timeout(req, qbms_globals$config$time_out)
+  
+  if (encoding == "json") {
+    req <- httr2::req_body_json(req, call_body)
+  } else {
+    req <- httr2::req_body_form(req, username = credentials["usr"], password = credentials["pwd"])
+  }
   
   resp <- httr2::req_perform(req)
   
