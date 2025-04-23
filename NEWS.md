@@ -1,3 +1,8 @@
+<!--
+# QBMS 2.0.0 _2025-06-15_
+  * Fix a BreedBase login bug caused by incorrect httr2 form encoding when sending credentials.
+-->
+
 # QBMS 1.5.0 _2024-09-19_
   * Updated the core QBMS script to replace the non-CRAN [async](https://github.com/gaborcsardi/async) R package with the CRAN-standard [future](https://cran.r-project.org/package=future) and [future.apply](https://cran.r-project.org/package=future.apply) packages.
   * Updated the core QBMS script to substitute the deprecated [httr](https://httr.r-lib.org/) R package with the recommended [httr2](https://cran.r-project.org/package=httr2) package.
