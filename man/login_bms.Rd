@@ -24,8 +24,13 @@ and stores the resulting access token internally for subsequent requests.
 }
 \examples{
 if(interactive()) {
-  set_qbms_config("https://bms.icarda.org/ibpworkbench")
+  set_qbms_config("https://bms.icarda.org/ibpworkbench", engine = "bms")
+  
+  # Login using your BMS account (interactive mode)
   login_bms()
+  
+  # You can pass BMS username and password as parameters (batch mode)
+  # login_bms("username", "password")
 }
 
 }
