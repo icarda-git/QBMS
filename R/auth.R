@@ -136,8 +136,13 @@ login_oauth2 <- function(authorize_url, access_url, client_id, client_secret = N
 #' 
 #' @examples
 #' if(interactive()) {
-#'   set_qbms_config("https://bms.icarda.org/ibpworkbench")
+#'   set_qbms_config("https://bms.icarda.org/ibpworkbench", engine = "bms")
+#'   
+#'   # Login using your BMS account (interactive mode)
 #'   login_bms()
+#'   
+#'   # You can pass BMS username and password as parameters (batch mode)
+#'   # login_bms("username", "password")
 #' }
 #' 
 #' @export
@@ -191,6 +196,17 @@ login_bms <- function(username = NULL, password = NULL, encoding = "json") {
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
+#' @examples
+#' if(interactive()) {
+#'   set_qbms_config("https://cassavabase.org/", engine = "breedbase")
+#'   
+#'   # Login using your BreedBase account (interactive mode)
+#'   login_breedbase()
+#'   
+#'    # You can pass BreedBase username and password as parameters (batch mode)
+#'    # login_breedbase("username", "password")
+#' }
+#' 
 #' @export
 
 login_breedbase <- function(username = NULL, password = NULL) {
@@ -198,5 +214,120 @@ login_breedbase <- function(username = NULL, password = NULL) {
   
   if (is.null(qbms_globals$state$token)) {
     stop("Bad credentials") 
+  }
+}
+
+
+#' Login to the GIGWA Server
+#'
+#' @description
+#' Connect to the GIGWA server. If the `username` or `password` parameters are missing,
+#' a login window will be triggered to capture these details.
+#'
+#' All connection settings (server URL, port, API path, and protocol) are read from the
+#' `qbms_config` list. The function will request an authentication token from the server
+#' and update the `qbms_state` list with the token.
+#'
+#' @param username The GIGWA username (optional, default is NULL).
+#' @param password The GIGWA password (optional, default is NULL).
+#' 
+#' @return 
+#' No return value. The authentication token will be stored internally.
+#' 
+#' @author 
+#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' 
+#' @examples
+#' if (interactive()) {
+#'   set_qbms_config("http://localhost:59395/gigwa/index.jsp", time_out = 300, engine = "gigwa")
+#'
+#'   # Login using your GIGWA account (interactive mode)
+#'   login_gigwa()
+#'   
+#'   # You can pass GIGWA username and password as parameters (batch mode)
+#'   # login_gigwa("gigwadmin", "nimda")
+#' }
+#' @export
+
+login_gigwa <- function(username = NULL, password = NULL) {
+  if (is.null(username) || is.null(password)) {
+    credentials <- get_login_details()
+  } else {
+    credentials <- c(usr = username, pwd = password)
+  }
+  
+  call_url  <- paste0(qbms_globals$config$base_url, "/gigwa/generateToken")
+  call_body <- list(username = credentials["usr"], password = credentials["pwd"])
+  
+  req <- httr2::request(utils::URLencode(call_url))
+  req <- httr2::req_body_json(req, call_body)
+  req <- httr2::req_timeout(req, qbms_globals$config$time_out)
+  
+  resp <- httr2::req_perform(req)
+  
+  if (httr2::resp_status(resp) == 403 || credentials["usr"] == "" || credentials["pwd"] == "") {
+    stop("403 Forbidden")
+  }
+  
+  content <- httr2::resp_body_json(resp)
+  
+  set_token(content$token)
+}
+
+#' Login to a BrAPI DB Server
+#'
+#' @description
+#' Logs in to the DB server using a username and password. If credentials are not provided,
+#' a pop-up window will prompt the user. This function wraps around all `login_*` functions
+#' and accepts additional parameters via `...`
+#'
+#' @param username The username (optional, default is NULL).
+#' @param password The password (optional, default is NULL).
+#' @param ... Additional arguments passed to \code{\link{login_oauth2}}.
+#' 
+#' @return
+#' No return value. The access token is stored internally for future use.
+#' 
+#' @author
+#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' 
+#' @seealso \code{\link{login_oauth2}}
+#' 
+#' @export
+
+login <- function(username = NULL, password = NULL, ...) {
+  
+  if (qbms_globals$config$engine == "bms") {
+    
+    login_bms(username, password)
+    
+  } else if (qbms_globals$config$engine == "breedbase") {
+    
+    login_breedbase(username, password)
+    
+  } else if (qbms_globals$config$engine == "gigwa") {
+    
+    login_gigwa(username, password)
+    
+  } else if (qbms_globals$config$engine == "ebs") {
+    
+    # Get login_oauth2 function parameters
+    oauth2_args <- as.list(formals(login_oauth2))
+    
+    # Get names of required parameters (those with no default)
+    required_args <- names(oauth2_args)[sapply(oauth2_args, is.symbol)]
+    
+    # Capture what was actually passed via ...
+    passed_args <- list(...)
+    
+    # Check if all required arguments are present
+    missing_args <- setdiff(required_args, names(passed_args))
+    
+    if (length(missing_args) > 0) {
+      stop(paste("Missing required arguments for login_oauth2:", paste(missing_args, collapse = ", ")))
+    }
+    
+    # If all required args are present, call inner function
+    do.call(login_oauth2, passed_args)
   }
 }
