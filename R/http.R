@@ -166,6 +166,9 @@ brapi_get_call <- function(call_url, nested = TRUE) {
   qbms_globals$state$total_pages  <- result_object$metadata$pagination$totalPages
   qbms_globals$state$errors       <- result_object$errors
   
+  caller_func <- ifelse(!is.null(sys.call(-1)), sys.call(-1)[[1]], NA)
+  result_data <- engine_post_process(result_data, qbms_globals$config$engine, caller_func)
+  
   return(result_data)
 }
 

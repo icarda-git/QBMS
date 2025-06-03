@@ -371,18 +371,7 @@ list_studies <- function() {
     call_url <- get_brapi_url("list_studies")
     call_url <- sub("\\{trialDbId\\}", qbms_globals$state$trial_db_id, call_url)
     
-    # handle the case of BreedBase trials (studies) listed in the root program folder (trial)
-    if (qbms_globals$config$engine == "breedbase" && qbms_globals$state$trial_db_id == qbms_globals$state$program_db_id) {
-      call_url <- sub("\\?trialDbId\\=", '?programDbId=', call_url)
-    }
-
     trial_studies <- brapi_get_call(call_url, FALSE)$data
-    
-    # handle the case of BreedBase trials (studies) listed in the root program folder (trial)
-    if (qbms_globals$config$engine == "breedbase" && qbms_globals$state$trial_db_id == qbms_globals$state$program_db_id) {
-      trial_studies <- trial_studies[is.na(trial_studies$trialName), ]
-      rownames(trial_studies) <- NULL
-    }
     
     if (nrow(trial_studies) == 0) {
       stop("No studies in the selected trial! Please check what you have set in the `set_trial()` function")
@@ -539,11 +528,7 @@ get_study_data <- function() {
   
   study_data   <- as.data.frame(study_result$data)
   
-  if (qbms_globals$config$engine == "breedbase") {
-    study_header <- study_data[1, ]
-    study_data   <- study_data[-1, ]
-    
-  } else if (qbms_globals$config$brapi_ver == "v1") {
+  if (qbms_globals$config$brapi_ver == "v1") {
     study_header <- c(study_result$headerRow, 
                       study_result$observationVariableNames)
     

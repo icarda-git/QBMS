@@ -108,6 +108,10 @@ get_brapi_url <- function(func_name) {
                      ifelse(qbms_globals$config$crop == "", "", paste0("/", qbms_globals$config$crop)), 
                      "/brapi/", qbms_globals$config$brapi_ver, "/", 
                      brapi_map[brapi_map$func_name == func_name & brapi_map$brapi_ver == qbms_globals$config$brapi_ver, "brapi_call"])
+  
+  caller_func <- ifelse(!is.null(sys.call(-1)), sys.call(-1)[[1]], NA)
+  call_url <- engine_pre_process(call_url, qbms_globals$config$engine, caller_func)
+  
   return(call_url)
 }
 
