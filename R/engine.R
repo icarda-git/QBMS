@@ -22,6 +22,8 @@
 #'    check if the given func_name required any post-processing action for current
 #'    engine, if yes, then call engine_post_process(result_data, engine) just
 #'    before send back results list, and replace it by the updated version
+#'    
+#' NOTE: search wherever we have "qbms_globals$config$engine" condition in qbms.R
 
 
 engine_pre_process <- function(call_url, engine, func_name) {
@@ -36,20 +38,24 @@ engine_pre_process <- function(call_url, engine, func_name) {
   call_url
 }
 
-engine_post_process <- function(result_data, engine, func_name) {
+engine_post_process <- function(results, engine, func_name) {
   if (engine == "breedbase" & func_name == "get_study_data") {
-    result_data$data <- result_data$data[-1, ]
+    results$data <- results$data[-1, ]
   }
 
   if (engine == "breedbase" & func_name == "list_studies") {
 
     # handle the case of BreedBase trials (studies) listed in the root program folder (trial)
     if (qbms_globals$state$trial_db_id == qbms_globals$state$program_db_id) {
-      result_data$data <- result_data$data[is.na(result_data$data$trialName), ]
-      rownames(result_data$data) <- NULL
+      results$data <- results$data[is.na(results$data$trialName), ]
+      rownames(results$data) <- NULL
     }
   }
   
-  result_data
+  if (engine == "bms" & func_name == "list_programs") {
+    names(results$data)[names(results$data) == "name"] <- "programName"
+  }
+
+  results
 }
 

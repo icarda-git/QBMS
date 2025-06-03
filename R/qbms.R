@@ -125,12 +125,7 @@ list_programs <- function() {
 
     results <- brapi_get_call(call_url)$data
     
-    if (qbms_globals$config$engine == "bms") {
-      bms_programs <- results[c("name")]
-      colnames(bms_programs) <- c("programName")
-    } else {
-      bms_programs <- results[c("programName")]
-    }
+    bms_programs <- results[c("programName")]
 
     qbms_globals$state$programs <- cbind(bms_programs, results[c("programDbId")])
   }
