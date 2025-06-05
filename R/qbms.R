@@ -586,21 +586,6 @@ get_germplasm_list <- function() {
 
   germplasm_list <- brapi_get_call(call_url, nested = FALSE)$data
 
-  if (qbms_globals$config$engine == "ebs") {
-    germplasm_list$check <- 0
-    
-    nested_lists <- c("synonyms", "donors", "externalReferences", "germplasmOrigin",
-                      "storageTypes", "taxonIds", "documentationURL", "additionalInfo")
-
-    germplasm_list[, nested_lists] <- NULL
-    germplasm_list <- germplasm_list[, colSums(is.na(germplasm_list)) != nrow(germplasm_list)]
-  }
-  
-  if (qbms_globals$config$engine == "breedbase") {
-    germplasm_list$check <- NA
-    germplasm_list[, c("synonyms")] <- list(NULL)
-  }
-  
   if (nrow(germplasm_list) > 0 & qbms_globals$config$engine == "bms") {
     # BMS POST /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries to extract entry type (test or check)
     call_url <- paste0(qbms_globals$config$base_url, "/crops/", qbms_globals$config$crop,
