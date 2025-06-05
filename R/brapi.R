@@ -46,6 +46,10 @@ brapi_map <- rbind(brapi_map, c("get_trial_obs_ontology", "v2", "search/variable
 brapi_map <- rbind(brapi_map, c("get_germplasm_id", "v1", "germplasm?germplasmName={germplasmName}"))
 brapi_map <- rbind(brapi_map, c("get_germplasm_id", "v2", "germplasm?germplasmName={germplasmName}"))
 
+brapi_map <- rbind(brapi_map, c("list_runs", "v2", "variantsets?programDbId={programDbId}&studyDbId={studyDbId}"))
+brapi_map <- rbind(brapi_map, c("get_variants", "v2", "variantsets/{variantSetDbId}/calls"))
+
+
 # POST: germplasmDbIds, observationLevel = "PLOT"
 brapi_map <- rbind(brapi_map, c("get_germplasm_data", "v1", "phenotypes-search"))
 
@@ -332,7 +336,7 @@ set_qbms_connection <- function(env) {
 #' @param page_size The number of records per page when making API calls (default is 1000).
 #' @param time_out The maximum number of seconds to wait for a response (default is 120).
 #' @param no_auth Logical, whether the server requires authentication (default is FALSE).
-#' @param engine The backend system (default is "bms"). Options include "bms", "gigwa", "breedbase", "ebs".
+#' @param engine The backend system (default is "bms"). Options include "bms", "gigwa", "breedbase", "ebs", "germinate".
 #' @param brapi_ver The version of BrAPI to use, either "v1" or "v2" (default is "v1").
 #' @param verbose Logical, indicating whether to display progress information when making API calls (default is TRUE).
 #'
@@ -355,7 +359,8 @@ set_qbms_config <- function(url = "http://localhost",
     if (engine == "bms") { path = "bmsapi" }
     if (engine == "breedbase") { path = "" }
     if (engine == "gigwa") { path = "gigwa/rest"; brapi_ver = "v2"}
-    if (engine == "ebs") { path = "" }
+    if (engine == "ebs") { path = ""; brapi_ver = "v2" }
+    if (engine == "germinate") { path = "api"; brapi_ver = "v2"}
   }
   
   qbms_globals$config <- list(crop = "")
