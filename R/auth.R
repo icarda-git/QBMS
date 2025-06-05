@@ -18,6 +18,7 @@ get_login_details <- function() {
   if (qbms_globals$config$engine == "bms") { server <- "BMS" }
   if (qbms_globals$config$engine == "breedbase") { server <- "BreedBase" }
   if (qbms_globals$config$engine == "gigwa") { server <- "GIGWA" }
+  if (qbms_globals$config$engine == "germinate") { server <- "Germinate" }
   
   tt <- tcltk::tktoplevel()
   tcltk::tkwm.title(tt, paste("Login", server, "Server"))
@@ -180,6 +181,49 @@ login_bms <- function(username = NULL, password = NULL, encoding = "json") {
 }
 
 
+#' Login to the Germinate Server
+#'
+#' @param username The username (optional, default is NULL).
+#' @param password The password (optional, default is NULL).
+#' 
+#' @return
+#' No return value. The access token is stored internally for future use.
+#' 
+#' @author
+#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' 
+#' @export
+
+login_germinate <- function(username = NULL, password = NULL) {
+  if (is.null(username) || is.null(password)) {
+    credentials <- get_login_details()
+  } else {
+    credentials <- c(usr = username, pwd = password)
+  }
+  
+  call_url  <- paste0(qbms_globals$config$base_url, "/token")
+  call_body <- list(username = credentials["usr"], password = credentials["pwd"])
+  
+  req <- httr2::request(utils::URLencode(call_url))
+  req <- httr2::req_timeout(req, qbms_globals$config$time_out)
+  
+  req <- httr2::req_body_json(req, call_body)
+
+  resp <- httr2::req_perform(req)
+  
+  content <- httr2::resp_body_json(resp)
+  
+  if (!is.null(content$errors)) {
+    stop(content$errors[[1]]$message)
+  }
+  
+  content$expires_in <- content$createdOn + content$lifetime
+  
+  set_token(content$token,
+            content$username,
+            content$expires_in)
+}
+
 #' Login to the BreedBase Server
 #'
 #' @description
@@ -308,6 +352,10 @@ login <- function(username = NULL, password = NULL, ...) {
   } else if (qbms_globals$config$engine == "gigwa") {
     
     login_gigwa(username, password)
+    
+  } else if (qbms_globals$config$engine == "germinate") {
+    
+    login_germinate(username, password)
     
   } else if (qbms_globals$config$engine == "ebs") {
     
