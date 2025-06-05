@@ -47,4 +47,4 @@ VignetteBuilder:
 Encoding: UTF-8
 LazyData: FALSE
 NeedsCompilation: no
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
