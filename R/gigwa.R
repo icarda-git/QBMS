@@ -819,3 +819,105 @@ gigwa_get_metadata <- function() {
   
   return(metadata)
 }
+
+
+#' Get the List of the Variant Sets Available in the Selected Study
+#'
+#' @description
+#' Retrieve the list of available variant sets in the currently active study, 
+#' set using `set_study()`. If no study is selected, an error will be raised.
+#'
+#' @return 
+#' A list of set names associated with the selected study.
+#' 
+#' @author 
+#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' 
+#' @seealso 
+#' \code{\link{set_qbms_config}}, \code{\link{set_study}}
+#' 
+#' @export
+
+list_runs <- function() {
+  if (is.null(qbms_globals$state$study_db_id)) {
+    stop("No study has been selected yet! You have to set your study first using the `set_study()` function")
+  }
+  
+  if (!is.null(qbms_globals$state$variant_sets)) {
+    variant_sets <- qbms_globals$state$variant_sets
+  } else {
+    call_url <- get_brapi_url("list_runs")
+    call_url <- sub("\\{programDbId\\}", qbms_globals$state$program_db_id, call_url)
+    call_url <- sub("\\{studyDbId\\}", qbms_globals$state$study_db_id, call_url)
+    
+    variant_sets <- brapi_get_call(call_url)$data
+    
+    variant_sets <- variant_sets[, c("variantSetName", "variantSetDbId")]
+    
+    qbms_globals$state$variant_sets <- variant_sets
+  }
+  
+  return(variant_sets[c("variantSetName")])
+}
+
+
+#' Set the Current Active Variant Set
+#'
+#' @description
+#' Select a variant set from the active study and set it as the current active 
+#' variant set in the internal state, enabling further data retrieval operations.
+#'
+#' @param set_name The name of the variant set to be active.
+#' 
+#' @return 
+#' No return value. Updates the internal state with the selected variant set.
+#' 
+#' @author 
+#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' 
+#' @seealso 
+#' \code{\link{set_qbms_config}}, \code{\link{set_study}}, \code{\link{list_runs}}
+#' 
+#' @export
+
+set_run <- function(run_name) {
+  valid_runs <- list_runs()
+  
+  if (!run_name %in% unlist(valid_runs)) {
+    stop("Your variant set name is not exists in this study! You may use the `list_runs()` function to check the available variant sets")
+  }
+  
+  variant_sets <- qbms_globals$state$variant_sets
+  
+  qbms_globals$state$variant_set_db_id <- variant_sets[variant_sets$variantSetName == run_name, "variantSetDbId"]
+}
+
+
+#' @author 
+#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' 
+#' @seealso 
+#' \code{\link{set_qbms_config}}, \code{\link{set_run}}
+#' 
+#' @export
+
+get_variants <- function() {
+  if (is.null(qbms_globals$state$variant_set_db_id)) {
+    stop("No variant set has been selected yet! You have to select your variant set first using the `set_run()` function")
+  }
+  
+  if (!is.null(qbms_globals$state$variants)) {
+    variants <- qbms_globals$state$variants
+  } else {
+    call_url <- get_brapi_url("get_variants")
+    call_url <- sub("\\{variantSetDbId\\}", qbms_globals$state$variant_set_db_id, call_url)
+
+    variants <- brapi_get_call(call_url)$data
+    
+    variants <- with(variants, tapply(genotypeValue, list(variantName, callSetName), function(x) if(length(x)) x else NA))
+
+    qbms_globals$state$variants <- variants
+  }
+  
+  return(variants)
+}
