@@ -360,7 +360,7 @@ set_qbms_config <- function(url = "http://localhost",
     if (engine == "breedbase") { path = "" }
     if (engine == "gigwa") { path = "gigwa/rest"; brapi_ver = "v2"}
     if (engine == "ebs") { path = ""; brapi_ver = "v2" }
-    if (engine == "germinate") { path = "api"; brapi_ver = "v2"}
+    if (engine == "germinate") { path = sub("^https?://[^/]+/?", "", sub("(/#.*|/*$)", "/api", url)); brapi_ver = "v2"}
   }
   
   qbms_globals$config <- list(crop = "")
@@ -372,7 +372,7 @@ set_qbms_config <- function(url = "http://localhost",
   qbms_globals$config$path      <- path
   qbms_globals$config$page_size <- page_size
   qbms_globals$config$time_out  <- time_out
-  qbms_globals$config$base_url  <- paste0(qbms_globals$config$server, ifelse(path == "", "", paste0("/", path)))
+  qbms_globals$config$base_url  <- paste0(qbms_globals$config$server, ifelse(path == "", "", ifelse(substr(path, 1, 1) == "/", path, paste0("/", path))))
   qbms_globals$config$engine    <- engine
   qbms_globals$config$brapi_ver <- brapi_ver
   qbms_globals$config$verbose   <- verbose
