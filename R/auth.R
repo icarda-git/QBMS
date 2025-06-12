@@ -91,6 +91,7 @@ set_token <- function(token, user = '', expires_in = 3600) {
 #' @param client_id The client ID (consumer key) provided by the authorization server.
 #' @param client_secret The client secret provided by the authorization server (optional).
 #' @param redirect_uri The URL where the user will be redirected after authorization (default is http://localhost:1410).
+#' @param scope Scopes to be requested from the resource owner.
 #' 
 #' @return
 #' No return value. Updates the internal state with the access token and additional details.
@@ -99,7 +100,7 @@ set_token <- function(token, user = '', expires_in = 3600) {
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' @export
 
-login_oauth2 <- function(authorize_url, access_url, client_id, client_secret = NULL, redirect_uri = "http://localhost:1410") {
+login_oauth2 <- function(authorize_url, access_url, client_id, client_secret = NULL, redirect_uri = "http://localhost:1410", scope = NULL) {
   client <- httr2::oauth_client(
     id = client_id,
     secret = client_secret,
@@ -110,7 +111,8 @@ login_oauth2 <- function(authorize_url, access_url, client_id, client_secret = N
   token <- httr2::oauth_flow_auth_code(
     client = client,
     auth_url = authorize_url,
-    redirect_uri = redirect_uri
+    redirect_uri = redirect_uri,
+    scope = scope
   )
   
   set_token(token$id_token, '', token$expires_in)
