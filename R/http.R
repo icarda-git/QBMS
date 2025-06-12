@@ -65,8 +65,11 @@ get_async_page <- function(full_url, nested) {
     req <- httr2::request(full_url)
     req <- httr2::req_headers(req, "accept" = "application/json")
     req <- httr2::req_headers(req, "Accept-Encoding" = "gzip, deflate")
-    req <- httr2::req_headers(req, "Authorization" = paste0("Bearer ", qbms_globals$state$token))
-
+    
+    if (!is.na(qbms_globals$state$token)) {
+      req <- httr2::req_headers(req, "Authorization" = paste0("Bearer ", qbms_globals$state$token))
+    }
+    
     resp <- httr2::req_perform(req)
     httr2::resp_check_status(resp)
     httr2::resp_body_json(resp, simplifyVector = TRUE, flatten = !nested)
@@ -95,7 +98,10 @@ get_async_pages <- function(pages, nested) {
     req <- httr2::request(full_url)
     req <- httr2::req_headers(req, "accept" = "application/json")
     req <- httr2::req_headers(req, "Accept-Encoding" = "gzip, deflate")
-    req <- httr2::req_headers(req, "Authorization" = paste0("Bearer ", qbms_globals$state$token))
+    
+    if (!is.na(qbms_globals$state$token)) {
+      req <- httr2::req_headers(req, "Authorization" = paste0("Bearer ", qbms_globals$state$token))
+    }
     
     resp <- httr2::req_perform(req)
     httr2::resp_check_status(resp)
@@ -197,9 +203,12 @@ brapi_post_search_allelematrix <- function(call_url, call_body, nested = TRUE) {
   req <- httr2::request(call_url)
   req <- httr2::req_headers(req, "accept" = "application/json")
   req <- httr2::req_headers(req, "Accept-Encoding" = "gzip, deflate")
-  req <- httr2::req_headers(req, "Authorization" = paste0("Bearer ", qbms_globals$state$token))
   req <- httr2::req_timeout(req, seconds = qbms_globals$config$time_out)
   req <- httr2::req_body_raw(req, call_body, type = "application/json")
+  
+  if (!is.na(qbms_globals$state$token)) {
+    req <- httr2::req_headers(req, "Authorization" = paste0("Bearer ", qbms_globals$state$token))
+  }
   
   # Perform the POST request
   resp <- httr2::req_perform(req)
@@ -220,9 +229,12 @@ brapi_post_search_allelematrix <- function(call_url, call_body, nested = TRUE) {
       get_req <- httr2::request(get_url)
       get_req <- httr2::req_headers(get_req, "accept" = "application/json")
       get_req <- httr2::req_headers(get_req, "Accept-Encoding" = "gzip, deflate")
-      get_req <- httr2::req_headers(get_req, "Authorization" = paste0("Bearer ", qbms_globals$state$token))
       get_req <- httr2::req_timeout(get_req, seconds = qbms_globals$config$time_out)
-
+      
+      if (!is.na(qbms_globals$state$token)) {
+        get_req <- httr2::req_headers(get_req, "Authorization" = paste0("Bearer ", qbms_globals$state$token))
+      }
+      
       # Perform the GET request
       resp <- httr2::req_perform(get_req)
       httr2::resp_check_status(resp)
@@ -271,9 +283,12 @@ brapi_post_search_call <- function(call_url, call_body, nested = TRUE) {
     req <- httr2::request(call_url)
     req <- httr2::req_headers(req, "accept" = "application/json")
     req <- httr2::req_headers(req, "Accept-Encoding" = "gzip, deflate")
-    req <- httr2::req_headers(req, "Authorization" = paste0("Bearer ", qbms_globals$state$token))
     req <- httr2::req_timeout(req, seconds = qbms_globals$config$time_out)
     req <- httr2::req_body_raw(req, page_body, type = "application/json")
+    
+    if (!is.na(qbms_globals$state$token)) {
+      req <- httr2::req_headers(req, "Authorization" = paste0("Bearer ", qbms_globals$state$token))
+    }      
 
     # Perform the POST request
     resp <- httr2::req_perform(req)
@@ -294,8 +309,11 @@ brapi_post_search_call <- function(call_url, call_body, nested = TRUE) {
         get_req <- httr2::request(get_url)
         get_req <- httr2::req_headers(get_req, "accept" = "application/json")
         get_req <- httr2::req_headers(get_req, "Accept-Encoding" = "gzip, deflate")
-        get_req <- httr2::req_headers(get_req, "Authorization" = paste0("Bearer ", qbms_globals$state$token))
         get_req <- httr2::req_timeout(get_req, seconds = qbms_globals$config$time_out)
+        
+        if (!is.na(qbms_globals$state$token)) {
+          get_req <- httr2::req_headers(get_req, "Authorization" = paste0("Bearer ", qbms_globals$state$token))
+        }
 
         # Perform the GET request
         resp <- httr2::req_perform(get_req)
