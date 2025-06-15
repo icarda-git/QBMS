@@ -1,6 +1,7 @@
 <!--
 # QBMS 2.0.0 _2025-06-15_
   * Add [Germinate](https://germinateplatform.github.io/get-germinate/) support using BrAPI v2 calls.
+  * Add [DeltaBreed](https://breedinginsight.org/learning-hub/deltabreed/) support using BrAPI v2 calls.
   * Add generic login() function wraps around all engine specific `login_*` functions.
   * Fix a BreedBase login bug caused by incorrect httr2 form encoding when sending credentials.
 -->

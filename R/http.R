@@ -96,7 +96,7 @@ get_async_page <- function(full_url, nested) {
 get_async_pages <- function(pages, nested) {
   future.apply::future_lapply(pages, function(full_url) {
     req <- httr2::request(full_url)
-    req <- httr2::req_headers(req, "accept" = "application/json")
+    req <- httr2::req_headers(req, "Accept" = "application/json")
     req <- httr2::req_headers(req, "Accept-Encoding" = "gzip, deflate")
     
     if (!is.na(qbms_globals$state$token)) {
@@ -142,38 +142,42 @@ brapi_get_call <- function(call_url, nested = TRUE) {
   result_data   <- as.data.frame(result_object$result$data)
   total_pages   <- result_object$metadata$pagination$totalPages
   
-  if (total_pages > 1) {
-    pages <- seq(1, total_pages - 1)
-    full_urls <- paste0(call_url, separator, "page=", pages, "&pageSize=", qbms_globals$config$page_size)
-    
-    # Fetch remaining pages asynchronously
-    all_pages <- get_async_pages(full_urls, nested)
-    
-    # Combine data from all pages
-    for (n in seq_along(all_pages)) {
-      page_data <- as.data.frame(all_pages[[n]]$result$data)
-      result_data <- rbindx(result_data, page_data)
+  if (!is.null(total_pages)) {
+    if (total_pages > 1) {
+      pages <- seq(1, total_pages - 1)
+      full_urls <- paste0(call_url, separator, "page=", pages, "&pageSize=", qbms_globals$config$page_size)
+      
+      # Fetch remaining pages asynchronously
+      all_pages <- get_async_pages(full_urls, nested)
+      
+      # Combine data from all pages
+      for (n in seq_along(all_pages)) {
+        page_data <- as.data.frame(all_pages[[n]]$result$data)
+        result_data <- rbindx(result_data, page_data)
+      }
     }
-  }
-  
-  # Finalize the result data
-  if (ncol(result_data) == 1) {
-    result_object$result$data <- result_data[, 1]
+    
+    # Finalize the result data
+    if (ncol(result_data) == 1) {
+      result_object$result$data <- result_data[, 1]
+    } else {
+      result_object$result$data <- result_data
+    }
+    
+    result_data <- result_object$result
+    
+    # Update global state with pagination info
+    qbms_globals$state$current_page <- result_object$metadata$pagination$currentPage
+    qbms_globals$state$page_size    <- result_object$metadata$pagination$pageSize
+    qbms_globals$state$total_count  <- result_object$metadata$pagination$totalCount
+    qbms_globals$state$total_pages  <- result_object$metadata$pagination$totalPages
+    qbms_globals$state$errors       <- result_object$errors
+    
+    caller_func <- ifelse(!is.null(sys.call(-1)), sys.call(-1)[[1]], NA)
+    result_data <- engine_post_process(result_data, qbms_globals$config$engine, caller_func)
   } else {
-    result_object$result$data <- result_data
+    result_data <- NULL
   }
-  
-  result_data <- result_object$result
-  
-  # Update global state with pagination info
-  qbms_globals$state$current_page <- result_object$metadata$pagination$currentPage
-  qbms_globals$state$page_size    <- result_object$metadata$pagination$pageSize
-  qbms_globals$state$total_count  <- result_object$metadata$pagination$totalCount
-  qbms_globals$state$total_pages  <- result_object$metadata$pagination$totalPages
-  qbms_globals$state$errors       <- result_object$errors
-  
-  caller_func <- ifelse(!is.null(sys.call(-1)), sys.call(-1)[[1]], NA)
-  result_data <- engine_post_process(result_data, qbms_globals$config$engine, caller_func)
   
   return(result_data)
 }
