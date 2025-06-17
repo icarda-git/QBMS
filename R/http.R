@@ -163,7 +163,9 @@ brapi_get_call <- function(call_url, nested = TRUE) {
     } else {
       result_object$result$data <- result_data
     }
-    
+  }
+  
+  if (!is.null(result_object$result)) {
     result_data <- result_object$result
     
     # Update global state with pagination info
