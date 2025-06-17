@@ -838,7 +838,7 @@ gigwa_get_metadata <- function() {
 #' 
 #' @export
 
-list_runs <- function() {
+list_variantsets <- function() {
   if (is.null(qbms_globals$state$study_db_id)) {
     stop("No study has been selected yet! You have to set your study first using the `set_study()` function")
   }
@@ -867,7 +867,7 @@ list_runs <- function() {
 #' Select a variant set from the active study and set it as the current active 
 #' variant set in the internal state, enabling further data retrieval operations.
 #'
-#' @param set_name The name of the variant set to be active.
+#' @param variantset_name The name of the variant set to be active.
 #' 
 #' @return 
 #' No return value. Updates the internal state with the selected variant set.
@@ -876,15 +876,15 @@ list_runs <- function() {
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso 
-#' \code{\link{set_qbms_config}}, \code{\link{set_study}}, \code{\link{list_runs}}
+#' \code{\link{set_qbms_config}}, \code{\link{set_study}}, \code{\link{list_variantsets}}
 #' 
 #' @export
 
-set_run <- function(run_name) {
-  valid_runs <- list_runs()
+set_variantset <- function(variantset_name) {
+  valid_variantsets <- list_variantsets()
   
-  if (!run_name %in% unlist(valid_runs)) {
-    stop("Your variant set name is not exists in this study! You may use the `list_runs()` function to check the available variant sets")
+  if (!variantset_name %in% unlist(valid_variantsets)) {
+    stop("Your variant set name is not exists in this study! You may use the `list_variantsets()` function to check the available variant sets")
   }
   
   variant_sets <- qbms_globals$state$variant_sets
@@ -903,7 +903,7 @@ set_run <- function(run_name) {
 
 get_variants <- function() {
   if (is.null(qbms_globals$state$variant_set_db_id)) {
-    stop("No variant set has been selected yet! You have to select your variant set first using the `set_run()` function")
+    stop("No variant set has been selected yet! You have to select your variant set first using the `set_variantset()` function")
   }
   
   if (!is.null(qbms_globals$state$variants)) {
@@ -931,9 +931,9 @@ get_variants <- function() {
 #' 
 #' @export
 
-get_variant_set <- function() {
+get_variantset <- function() {
   if (is.null(qbms_globals$state$variant_set_db_id)) {
-    stop("No variant set has been selected yet! You have to select your variant set first using the `set_run()` function")
+    stop("No variant set has been selected yet! You have to select your variant set first using the `set_variantset()` function")
   }
   
   if (!is.null(qbms_globals$state$variantset)) {
