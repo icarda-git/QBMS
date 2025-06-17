@@ -921,3 +921,51 @@ get_variants <- function() {
   
   return(variants)
 }
+
+
+#' @author 
+#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' 
+#' @seealso 
+#' \code{\link{set_qbms_config}}, \code{\link{set_run}}
+#' 
+#' @export
+
+get_variant_set <- function() {
+  if (is.null(qbms_globals$state$variant_set_db_id)) {
+    stop("No variant set has been selected yet! You have to select your variant set first using the `set_run()` function")
+  }
+  
+  if (!is.null(qbms_globals$state$variantset)) {
+    variantset <- qbms_globals$state$variantset
+  } else {
+    call_url <- get_brapi_url("get_variant_set")
+    call_url <- sub("\\{variantSetDbId\\}", qbms_globals$state$variant_set_db_id, call_url)
+    
+    variantset <- brapi_get_call(call_url)
+    
+    i <- which(variantset$availableFormats$dataFormat == "Flapjack")
+    
+    if (length(i) > 0) {
+      req <- httr2::request(variantset$availableFormats$fileURL[i])
+      req <- httr2::req_headers(req, "Accept-Encoding" = "gzip, deflate")
+      
+      if (!is.na(qbms_globals$state$token)) {
+        req <- httr2::req_headers(req, "Authorization" = paste0("Bearer ", qbms_globals$state$token))
+      }
+      
+      resp <- httr2::req_perform(req)
+      httr2::resp_check_status(resp)
+      
+      content <- gsub("#.+\\n", "", httr2::resp_body_string(resp), perl = TRUE)
+      
+      variantset <- read.delim(text = content, row.names = 1, check.names = FALSE)
+    } else {
+      variantset <- NULL
+    }
+
+    qbms_globals$state$variantset <- variantset
+  }
+  
+  return(variantset)
+}

@@ -48,6 +48,7 @@ brapi_map <- rbind(brapi_map, c("get_germplasm_id", "v2", "germplasm?germplasmNa
 
 brapi_map <- rbind(brapi_map, c("list_runs", "v2", "variantsets?programDbId={programDbId}&studyDbId={studyDbId}"))
 brapi_map <- rbind(brapi_map, c("get_variants", "v2", "variantsets/{variantSetDbId}/calls"))
+brapi_map <- rbind(brapi_map, c("get_variant_set", "v2", "variantsets/{variantSetDbId}"))
 
 
 # POST: germplasmDbIds, observationLevel = "PLOT"
