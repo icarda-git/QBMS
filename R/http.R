@@ -340,7 +340,7 @@ brapi_post_search_call <- function(call_url, call_body, nested = TRUE) {
       results$metadata$pagination$totalPages <- with(results$metadata$pagination, ceiling(totalCount / pageSize))
     }
     
-    if (results$metadata$pagination$totalPages == 1) {
+    if (results$metadata$pagination$totalPages <= 1) {
       break
     } else {
       if (results$metadata$pagination$currentPage == 0) {
