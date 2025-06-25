@@ -9,6 +9,11 @@ engine_pre_process <- function(call_url, engine, func_name) {
     }
   }
   
+  # if (engine == "germinate" & func_name == "get_study_data") {
+  #   # currently no pagination info returns in the metadata block of the sponse
+  #   call_url <- gsub("&pageSize=[0-9]+", "", call_url)
+  # }
+  
   call_url
 }
 
