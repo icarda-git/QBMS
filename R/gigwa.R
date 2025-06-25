@@ -889,7 +889,7 @@ set_variantset <- function(variantset_name) {
   
   variant_sets <- qbms_globals$state$variant_sets
   
-  qbms_globals$state$variant_set_db_id <- variant_sets[variant_sets$variantSetName == run_name, "variantSetDbId"]
+  qbms_globals$state$variant_set_db_id <- variant_sets[variant_sets$variantSetName == variant_sets, "variantSetDbId"]
 }
 
 
