@@ -1,3 +1,7 @@
+# Why Germinate:
+# - CGIAR use it to host fingerprint data
+# - LMF project use it
+
 # install the latest development version of QBMS from the GitHub repository
 if (!require("remotes")) install.packages("remotes")
 remotes::install_github("icarda-git/QBMS")
@@ -8,7 +12,7 @@ library(QBMS)
 # https://germinate.hutton.ac.uk/demo/api/brapi/v2/serverinfo
 
 # configure your Germinate server connection
-set_qbms_config(url = "https://germinate.hutton.ac.uk/demo/#/home", engine = "germinate", no_auth = TRUE)
+set_qbms_config(url = "https://germinate.hutton.ac.uk/demo/#/home", engine = "germinate", no_auth = TRUE, page_size = 9999)
 
 # login("username", "password")
 # login()
@@ -80,14 +84,14 @@ snps <- get_variantset()
 
 # Germinate dose not support collection, familyCode, binomialName, programDbId, 
 # includeSiblings, externalReferenceId and externalReferenceSource
-#
 # /pedigree?germplasmDbId=1&includeFullTree=true&includeParents=true&includeProgeny=true
-# /pedigree?studyDbId=9&includeFullTree=true&includeParents=true
 
-# select a specific trial by name
-set_trial("GWAS data")
+# /pedigree?trialDbId=8&includeFullTree=true&includeParents=true
+set_trial("Default pedigree experiment")
 
-# list all studies (environments/locations) in the selected trial
-list_studies()
+# TODO
+ped <- get_trial_pedigree()
 
-set_study("Sample Genotype Data Subset 2")
+# BrAPI v1.3 pedigree endpoint
+# /germplasm/{germplasmDbId}/pedigree
+# https://app.swaggerhub.com/apis/PlantBreedingAPI/BrAPI/1.3#/Germplasm/get_germplasm__germplasmDbId__pedigree
