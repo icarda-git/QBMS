@@ -50,7 +50,6 @@ brapi_map <- rbind(brapi_map, c("list_runs", "v2", "variantsets?programDbId={pro
 brapi_map <- rbind(brapi_map, c("get_variants", "v2", "variantsets/{variantSetDbId}/calls"))
 brapi_map <- rbind(brapi_map, c("get_variant_set", "v2", "variantsets/{variantSetDbId}"))
 
-
 # POST: germplasmDbIds, observationLevel = "PLOT"
 brapi_map <- rbind(brapi_map, c("get_germplasm_data", "v1", "phenotypes-search"))
 
@@ -356,7 +355,7 @@ set_qbms_config <- function(url = "http://localhost",
   if (is.null(path)) {
     if (engine == "bms") { path = "bmsapi" }
     if (engine == "breedbase") { path = "" }
-    if (engine == "gigwa") { path = "gigwa/rest"; brapi_ver = "v2"}
+    if (engine == "gigwa") { path = paste0(sub("^https?://[^/]+/([^/]+).*", "\\1", url), "/rest"); brapi_ver = "v2"}
     if (engine == "ebs") { path = ""; brapi_ver = "v2" }
     if (engine == "germinate") { path = sub("^https?://[^/]+/?", "", sub("(/#.*|/*$)", "/api", url)); brapi_ver = "v2"}
   }
