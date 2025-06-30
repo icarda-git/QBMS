@@ -57,14 +57,10 @@ geno <- get_germplasm_list()
 # retrieve attributes for a specified germplasm
 attr <- get_germplasm_attributes("CACTUAR-3")
 
-# Germinate does not implement the /observation/table BrAPI endpoint yet
-# TO DO: use the /search/observations endpoint as a replacement
-#
-# https://germinate.hutton.ac.uk/demo/api/brapi/v2/observations/table?studyDbId=5
-# header Accept application/json
+# retrieve study data
 data <- get_study_data()
 
-# still need to test
+# get observation variable ontology in the selected study/trial
 ontology <- get_trial_obs_ontology()
 
 
