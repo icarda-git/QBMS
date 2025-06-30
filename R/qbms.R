@@ -1031,3 +1031,57 @@ get_germplasm_attributes <- function(germplasm_name = "") {
 
   return(results)
 }
+
+
+#' @author 
+#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' 
+#' @export
+
+get_trial_pedigree <- function() {
+  if (is.null(qbms_globals$state$trial_db_id)) {
+    stop("No trial has been selected yet! You have to set your trial first using the `set_trial()` function")
+  }
+  
+  if (!is.null(qbms_globals$state$pedigree)) {
+    pedigree <- qbms_globals$state$pedigree
+  } else {
+    call_url <- get_brapi_url("get_trial_pedigree")
+    call_url <- sub("\\{trialDbId\\}", qbms_globals$state$trial_db_id, call_url)
+    
+    pedigree <- brapi_get_call(call_url, FALSE)$data
+    
+    if (nrow(pedigree) == 0) {
+      stop("No pedigree data in the selected trial! Please check what you have set in the `set_trial()` function")
+    }
+    
+    # flatten pedigree table
+    pedigree <- do.call(rbind, lapply(seq_len(nrow(pedigree)), function(i) {
+      # get parents information
+      parents <- pedigree$parents[[i]]
+      
+      # ensure exactly 2 parents exist
+      if (is.null(parents) || nrow(parents) != 2) return(NULL)
+      
+      # create one row with germplasm info and both parents flattened
+      data.frame(
+        germplasmDbId = pedigree$germplasmDbId[i],
+        germplasmName = pedigree$germplasmName[i],
+        
+        parent1DbId = parents$germplasmDbId[1],
+        parent1Name = parents$germplasmName[1],
+        parent1Type = parents$parentType[1],
+        
+        parent2DbId = parents$germplasmDbId[2],
+        parent2Name = parents$germplasmName[2],
+        parent2Type = parents$parentType[2],
+        
+        stringsAsFactors = FALSE
+      )
+    }))
+
+    qbms_globals$state$pedigree <- pedigree
+  }
+  
+  return(pedigree)
+}

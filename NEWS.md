@@ -3,7 +3,7 @@
   * Add [Germinate](https://germinateplatform.github.io/get-germinate/) support using BrAPI v2 calls.
   * Add [DeltaBreed](https://breedinginsight.org/learning-hub/deltabreed/) support using BrAPI v2 calls.
   * Add new generic genotyping functions including `list_variantsets()`, `set_variantset()`, `get_variants()`, and `get_variantset()`.
-  * (TODO) Add new `get_trial_pedigree()` function supports db compliance with BrAPI v2.
+  * Add new `get_trial_pedigree()` function supports db compliance with BrAPI v2.
   * Add new generic `login()` function wraps around all engine specific `login_*` functions.
   * Fix a BreedBase login bug caused by incorrect httr2 form encoding when sending credentials.
   * (TODO) Improve the `scan_brapi_endpoints()` function using the BrAPI /serverinfo endpoint.

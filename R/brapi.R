@@ -46,6 +46,8 @@ brapi_map <- rbind(brapi_map, c("get_trial_obs_ontology", "v2", "search/variable
 brapi_map <- rbind(brapi_map, c("get_germplasm_id", "v1", "germplasm?germplasmName={germplasmName}"))
 brapi_map <- rbind(brapi_map, c("get_germplasm_id", "v2", "germplasm?germplasmName={germplasmName}"))
 
+brapi_map <- rbind(brapi_map, c("get_trial_pedigree", "v2", "pedigree?trialDbId={trialDbId}&includeFullTree=true&includeParents=true"))
+
 brapi_map <- rbind(brapi_map, c("list_runs", "v2", "variantsets?programDbId={programDbId}&studyDbId={studyDbId}"))
 brapi_map <- rbind(brapi_map, c("get_variants", "v2", "variantsets/{variantSetDbId}/calls"))
 brapi_map <- rbind(brapi_map, c("get_variant_set", "v2", "variantsets/{variantSetDbId}"))
