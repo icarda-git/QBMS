@@ -82,16 +82,14 @@ snps <- get_variantset()
 
 ### Pedigree Data ##############################################################
 
-# Germinate dose not support collection, familyCode, binomialName, programDbId, 
-# includeSiblings, externalReferenceId and externalReferenceSource
-# /pedigree?germplasmDbId=1&includeFullTree=true&includeParents=true&includeProgeny=true
-
-# /pedigree?trialDbId=8&includeFullTree=true&includeParents=true
 set_trial("Default pedigree experiment")
 
-# TODO
+# Germinate dose not support collection, familyCode, binomialName, programDbId, 
+# includeSiblings, externalReferenceId and externalReferenceSource
+# /pedigree?trialDbId=8&includeFullTree=true&includeParents=true
 ped <- get_trial_pedigree()
 
 # BrAPI v1.3 pedigree endpoint
 # /germplasm/{germplasmDbId}/pedigree
 # https://app.swaggerhub.com/apis/PlantBreedingAPI/BrAPI/1.3#/Germplasm/get_germplasm__germplasmDbId__pedigree
+
