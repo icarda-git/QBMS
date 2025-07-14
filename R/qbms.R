@@ -112,10 +112,6 @@ set_crop <- function(crop_name) {
 #' @export
 
 list_programs <- function() {
-  if (is.null(qbms_globals$state$token)) {
-    stop("No server has been connected yet! You have to connect a server first using the `login_bms()` function")
-  }
-
   if (is.null(qbms_globals$config$crop)) {
     stop("No crop has been selected yet! You have to set your crop first using the `set_crop()` function")
   }
