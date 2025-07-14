@@ -49,7 +49,7 @@ install.packages("QBMS")
 
 ```r
 if (!require("remotes")) install.packages("remotes")
-remotes::install_github("icarda-git/QBMS")
+remotes::install_github("icarda/QBMS")
 ```
 
 ## Getting Started
