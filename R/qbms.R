@@ -120,7 +120,7 @@ list_programs <- function() {
     call_url <- get_brapi_url("list_programs")
 
     results <- brapi_get_call(call_url)$data
-    
+
     bms_programs <- results[c("programName")]
 
     qbms_globals$state$programs <- cbind(bms_programs, results[c("programDbId")])

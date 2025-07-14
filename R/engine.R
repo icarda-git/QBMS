@@ -1,4 +1,8 @@
-#' NOTE: search wherever we have "qbms_globals$config$engine" condition in qbms.R
+
+#' @author
+#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' 
+#' @export
 
 engine_pre_process <- function(call_url, engine, func_name) {
   if (engine == "breedbase" & func_name == "list_studies") {
@@ -16,6 +20,11 @@ engine_pre_process <- function(call_url, engine, func_name) {
   
   call_url
 }
+
+#' @author
+#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' 
+#' @export
 
 engine_post_process <- function(results, engine, func_name) {
   if (engine == "breedbase" & func_name == "get_study_data") {
