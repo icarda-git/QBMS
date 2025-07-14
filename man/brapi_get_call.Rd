@@ -4,7 +4,7 @@
 \alias{brapi_get_call}
 \title{Internal Function for Core BrAPI GET Calls}
 \usage{
-brapi_get_call(call_url, nested = TRUE)
+brapi_get_call(call_url, nested = TRUE, caller_func = NA)
 }
 \arguments{
 \item{call_url}{Character string specifying the base URL of the API endpoint to request.}

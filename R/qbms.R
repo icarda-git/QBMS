@@ -34,7 +34,7 @@ list_crops <- function() {
   } else {
     call_url  <- get_brapi_url("list_crops")
 
-    bms_crops <- brapi_get_call(call_url)$data
+    bms_crops <- brapi_get_call(call_url, caller_func = "list_crops")$data
 
     qbms_globals$state$crops <- bms_crops
   }
@@ -119,7 +119,7 @@ list_programs <- function() {
   if (is.null(qbms_globals$state$programs)) {
     call_url <- get_brapi_url("list_programs")
 
-    results <- brapi_get_call(call_url)$data
+    results <- brapi_get_call(call_url, caller_func = "list_programs")$data
 
     bms_programs <- results[c("programName")]
 
@@ -196,7 +196,7 @@ get_program_trials <- function() {
     call_url <- get_brapi_url("get_program_trials")
     call_url <- sub("\\{programDbId\\}", qbms_globals$state$program_db_id, call_url)
     
-    bms_program_trials <- brapi_get_call(call_url, FALSE)$data
+    bms_program_trials <- brapi_get_call(call_url, FALSE, caller_func = "get_program_trials")$data
     
     qbms_globals$state$trials <- bms_program_trials
   }
@@ -362,7 +362,7 @@ list_studies <- function() {
     call_url <- get_brapi_url("list_studies")
     call_url <- sub("\\{trialDbId\\}", qbms_globals$state$trial_db_id, call_url)
     
-    trial_studies <- brapi_get_call(call_url, FALSE)$data
+    trial_studies <- brapi_get_call(call_url, FALSE, caller_func = "list_studies")$data
     
     if (nrow(trial_studies) == 0) {
       stop("No studies in the selected trial! Please check what you have set in the `set_trial()` function")
@@ -458,7 +458,7 @@ get_study_info <- function() {
   call_url <- get_brapi_url("get_study_info")
   call_url <- sub("\\{studyDbId\\}", qbms_globals$state$study_db_id, call_url)
 
-  study_info <- brapi_get_call(call_url)
+  study_info <- brapi_get_call(call_url, caller_func = "get_study_info")
   
   if (is.null(study_info)) {
     study_info_df <- NULL
@@ -509,7 +509,7 @@ get_study_data <- function() {
   call_url <- get_brapi_url("get_study_data")
   call_url <- sub("\\{studyDbId\\}", qbms_globals$state$study_db_id, call_url)
 
-  study_result <- brapi_get_call(call_url)
+  study_result <- brapi_get_call(call_url, caller_func = "get_study_data")
   
   if (qbms_globals$config$brapi_ver == "v1") {
     qbms_globals$state$observationVariableDbIds <- study_result$observationVariableDbIds
@@ -580,7 +580,7 @@ get_germplasm_list <- function() {
   call_url <- get_brapi_url("get_germplasm_list")
   call_url <- sub("\\{studyDbId\\}", qbms_globals$state$study_db_id, call_url)
 
-  germplasm_list <- brapi_get_call(call_url, nested = FALSE)$data
+  germplasm_list <- brapi_get_call(call_url, nested = FALSE, caller_func = "get_germplasm_list")$data
 
   if (nrow(germplasm_list) > 0 & qbms_globals$config$engine == "bms") {
     # BMS POST /crops/{cropName}/programs/{programUUID}/studies/{studyId}/entries to extract entry type (test or check)
@@ -696,7 +696,7 @@ get_trial_obs_ontology <- function() {
     call_url <- get_brapi_url("get_trial_obs_ontology")
     
     if (qbms_globals$config$brapi_ver == "v1") {
-      ontology <- brapi_get_call(call_url)$data
+      ontology <- brapi_get_call(call_url, caller_func = "get_trial_obs_ontology")$data
       
       ontology <- ontology[ontology$observationVariableDbId %in% qbms_globals$state$observationVariableDbIds, ]
 
@@ -743,7 +743,7 @@ list_locations <- function() {
   } else {
     call_url <- get_brapi_url("list_locations")
 
-    location_list <- brapi_get_call(call_url, FALSE)$data
+    location_list <- brapi_get_call(call_url, FALSE, caller_func = "list_locations")$data
 
     qbms_globals$state$locations <- location_list
   }
@@ -878,7 +878,7 @@ get_germplasm_id <- function(germplasm_name = "") {
   call_url <- sub("\\{germplasmName\\}", germplasm_name, call_url)
 
   # this BrAPI call return all germplasm records start with the given name NOT exactly match!
-  results <- brapi_get_call(call_url, FALSE)$data
+  results <- brapi_get_call(call_url, FALSE, caller_func = "get_germplasm_id")$data
   
   if (length(results) == 0) {
     stop("No germplasm in this crop database start with your filtering name!")
@@ -1023,7 +1023,7 @@ get_germplasm_attributes <- function(germplasm_name = "") {
   call_url <- get_brapi_url("get_germplasm_attributes")
   call_url <- sub("\\{germplasmDbId\\}", germplasm_db_id, call_url)
   
-  results <- brapi_get_call(call_url)$data
+  results <- brapi_get_call(call_url, caller_func = "get_germplasm_attributes")$data
 
   return(results)
 }
@@ -1045,7 +1045,7 @@ get_trial_pedigree <- function() {
     call_url <- get_brapi_url("get_trial_pedigree")
     call_url <- sub("\\{trialDbId\\}", qbms_globals$state$trial_db_id, call_url)
     
-    pedigree <- brapi_get_call(call_url, FALSE)$data
+    pedigree <- brapi_get_call(call_url, FALSE, caller_func = "get_trial_pedigree")$data
     
     if (nrow(pedigree) == 0) {
       stop("No pedigree data in the selected trial! Please check what you have set in the `set_trial()` function")

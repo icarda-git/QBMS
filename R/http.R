@@ -132,11 +132,11 @@ get_async_pages <- function(pages, nested) {
 #' @author
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 
-brapi_get_call <- function(call_url, nested = TRUE) {
+brapi_get_call <- function(call_url, nested = TRUE, caller_func = NA) {
   separator <- if (grepl("\\?", call_url)) "&" else "?"
   full_url  <- paste0(call_url, separator, "page=0&pageSize=", qbms_globals$config$page_size)
 
-  caller_func <- ifelse(is.call(sys.call(-1)) && identical(sys.call(-1)[[1]], as.symbol("::")), sys.call(-1)[[3]], sys.call(-1))
+  # caller_func <- ifelse(is.call(sys.call(-1)) && identical(sys.call(-1)[[1]], as.symbol("::")), sys.call(-1)[[3]], sys.call(-1))
   full_url <- engine_pre_process(full_url, qbms_globals$config$engine, caller_func)
 
   # Fetch the first page synchronously to get total number of pages
@@ -178,7 +178,7 @@ brapi_get_call <- function(call_url, nested = TRUE) {
     qbms_globals$state$total_pages  <- result_object$metadata$pagination$totalPages
     qbms_globals$state$errors       <- result_object$errors
     
-    caller_func <- ifelse(is.call(sys.call(-1)) && identical(sys.call(-1)[[1]], as.symbol("::")), sys.call(-1)[[3]], sys.call(-1))
+    # caller_func <- ifelse(is.call(sys.call(-1)) && identical(sys.call(-1)[[1]], as.symbol("::")), sys.call(-1)[[3]], sys.call(-1))
     result_data <- engine_post_process(result_data, qbms_globals$config$engine, caller_func)
   } else {
     result_data <- NULL

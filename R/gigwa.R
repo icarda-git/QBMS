@@ -31,7 +31,7 @@ gigwa_list_dbs <- function() {
   
   call_url <- get_brapi_url("gigwa_list_dbs")
   
-  gigwa_dbs <- brapi_get_call(call_url)$data
+  gigwa_dbs <- brapi_get_call(call_url, caller_func = "gigwa_list_dbs")$data
   
   return(gigwa_dbs)
 }
@@ -114,7 +114,7 @@ gigwa_list_projects <- function() {
     call_url <- get_brapi_url("gigwa_list_projects")
     call_url <- sub("\\{programDbId\\}", qbms_globals$config$db, call_url)
     
-    gigwa_projects <- brapi_get_call(call_url)$data
+    gigwa_projects <- brapi_get_call(call_url, caller_func = "gigwa_list_projects")$data
     
     gigwa_projects <- gigwa_projects[, c("studyName", "studyDbId")]
     
@@ -850,7 +850,7 @@ list_variantsets <- function() {
     call_url <- sub("\\{programDbId\\}", qbms_globals$state$program_db_id, call_url)
     call_url <- sub("\\{studyDbId\\}", qbms_globals$state$study_db_id, call_url)
     
-    variant_sets <- brapi_get_call(call_url)$data
+    variant_sets <- brapi_get_call(call_url, caller_func = "list_variantsets")$data
     
     variant_sets <- variant_sets[, c("variantSetName", "variantSetDbId")]
     
@@ -912,7 +912,7 @@ get_variants <- function() {
     call_url <- get_brapi_url("get_variants")
     call_url <- sub("\\{variantSetDbId\\}", qbms_globals$state$variant_set_db_id, call_url)
 
-    variants <- brapi_get_call(call_url)$data
+    variants <- brapi_get_call(call_url, caller_func = "get_variants")$data
     
     variants <- with(variants, tapply(genotypeValue, list(variantName, callSetName), function(x) if(length(x)) x else NA))
 
@@ -942,7 +942,7 @@ get_variantset <- function() {
     call_url <- get_brapi_url("get_variant_set")
     call_url <- sub("\\{variantSetDbId\\}", qbms_globals$state$variant_set_db_id, call_url)
     
-    variantset <- brapi_get_call(call_url)
+    variantset <- brapi_get_call(call_url, caller_func = "get_variantset")
     
     i <- which(variantset$availableFormats$dataFormat == "Flapjack")
     
