@@ -2,8 +2,6 @@
 
 export(calc_biovars)
 export(debug_qbms)
-export(engine_post_process)
-export(engine_pre_process)
 export(get_germplasm_attributes)
 export(get_germplasm_data)
 export(get_germplasm_list)
