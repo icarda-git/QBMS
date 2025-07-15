@@ -69,9 +69,9 @@ gigwa_set_db <- function(db_name) {
     stop("Your database name is not exists in this connected GIGWA server! You may use the `gigwa_list_dbs()` function to check the available databases")
   }
   
-  qbms_globals$config$db <- db_name
+  qbms_globals$state$program_db_id <- db_name
   
-  qbms_globals$state$gigwa_projects <- NULL
+  qbms_globals$state$studies <- NULL
 }
 
 
@@ -104,24 +104,24 @@ gigwa_list_projects <- function() {
     stop("No server has been connected yet! You have to connect a GIGWA server first using the `login_gigwa()` function")
   }
   
-  if (is.null(qbms_globals$config$db)) {
+  if (is.null(qbms_globals$state$program_db_id)) {
     stop("No database has been selected yet! You have to set your database first using the `gigwa_set_db()` function")
   }
   
-  if (!is.null(qbms_globals$state$gigwa_projects)) {
-    gigwa_projects <- qbms_globals$state$gigwa_projects
+  if (!is.null(qbms_globals$state$studies)) {
+    studies <- qbms_globals$state$studies
   } else {
     call_url <- get_brapi_url("gigwa_list_projects")
-    call_url <- sub("\\{programDbId\\}", qbms_globals$config$db, call_url)
+    call_url <- sub("\\{programDbId\\}", qbms_globals$state$program_db_id, call_url)
     
-    gigwa_projects <- brapi_get_call(call_url, caller_func = "gigwa_list_projects")$data
+    studies <- brapi_get_call(call_url, caller_func = "gigwa_list_projects")$data
     
-    gigwa_projects <- gigwa_projects[, c("studyName", "studyDbId")]
+    studies <- studies[, c("studyName", "studyDbId")]
     
-    qbms_globals$state$gigwa_projects <- gigwa_projects
+    qbms_globals$state$studies <- studies
   }
   
-  return(gigwa_projects[c("studyName")])
+  return(studies[c("studyName")])
 }
 
 
@@ -158,15 +158,15 @@ gigwa_set_project <- function(project_name) {
     stop("Your project name is not exists in this database! You may use the `gigwa_list_projects()` function to check the available projects")
   }
   
-  gigwa_projects <- qbms_globals$state$gigwa_projects
+  studies <- qbms_globals$state$studies
   
-  project_row <- which(gigwa_projects$studyName == project_name)
+  project_row <- which(studies$studyName == project_name)
   
-  qbms_globals$state$study_db_id <- gigwa_projects[project_row, "studyDbId"]
+  qbms_globals$state$study_db_id <- studies[project_row, "studyDbId"]
   
-  qbms_globals$state$gigwa_runs      <- NULL
-  qbms_globals$state$gigwa_samples   <- NULL
-  qbms_globals$state$gigwa_sequences <- NULL
+  qbms_globals$state$variant_sets <- NULL
+  qbms_globals$state$samples      <- NULL
+  qbms_globals$state$references   <- NULL
 }
 
 
@@ -200,20 +200,20 @@ gigwa_list_runs <- function() {
     stop("No project has been selected yet! You have to set your project first using the `gigwa_set_project()` function")
   }
   
-  if (!is.null(qbms_globals$state$gigwa_runs)) {
-    gigwa_runs <- qbms_globals$state$gigwa_runs
+  if (!is.null(qbms_globals$state$variant_sets)) {
+    variant_sets <- qbms_globals$state$variant_sets
   } else {
     call_url  <- get_brapi_url("gigwa_list_runs")
     call_body <- paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}')
     
     results <- brapi_post_search_call(call_url, call_body, FALSE)
     
-    gigwa_runs <- as.data.frame(results$result$data[, c("variantSetName", "variantSetDbId")])
+    variant_sets <- as.data.frame(results$result$data[, c("variantSetName", "variantSetDbId")])
     
-    qbms_globals$state$gigwa_runs <- gigwa_runs
+    qbms_globals$state$variant_sets <- variant_sets
   }
   
-  return(gigwa_runs[c("variantSetName")])
+  return(variant_sets[c("variantSetName")])
 }
 
 
@@ -251,9 +251,9 @@ gigwa_set_run <- function(run_name) {
     stop("Your run name is not exists in this project! You may use the `gigwa_list_runs()` function to check the available runs")
   }
   
-  gigwa_runs <- qbms_globals$state$gigwa_runs
+  variant_sets <- qbms_globals$state$variant_sets
   
-  qbms_globals$state$variant_set_db_id <- gigwa_runs[gigwa_runs$variantSetName == run_name, "variantSetDbId"]
+  qbms_globals$state$variant_set_db_id <- variant_sets[variant_sets$variantSetName == run_name, "variantSetDbId"]
 }
 
 
@@ -287,20 +287,20 @@ gigwa_get_samples <- function() {
     stop("No project has been selected yet! You have to set your project first using the `gigwa_set_project()` function")
   }
   
-  if (!is.null(qbms_globals$state$gigwa_samples)) {
-    gigwa_samples <- qbms_globals$state$gigwa_samples
+  if (!is.null(qbms_globals$state$samples)) {
+    samples <- qbms_globals$state$samples
   } else {
     call_url  <- get_brapi_url("gigwa_get_samples")
     call_body <- paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}')
     
     results <- brapi_post_search_call(call_url, call_body, FALSE)
     
-    gigwa_samples <- results$result$data[, c("sampleDbId", "germplasmDbId")]
+    samples <- results$result$data[, c("sampleDbId", "germplasmDbId")]
     
-    qbms_globals$state$gigwa_samples <- gigwa_samples
+    qbms_globals$state$samples <- samples
   }
 
-  germplasmName <- sub(".*\u00A7", "", gigwa_samples$germplasmDbId)
+  germplasmName <- sub(".*\u00A7", "", samples$germplasmDbId)
   
   return(germplasmName)
 }
@@ -336,20 +336,20 @@ gigwa_get_sequences <- function() {
     stop("No project has been selected yet! You have to set your project first using the `gigwa_set_project()` function")
   }
   
-  if (!is.null(qbms_globals$state$gigwa_sequences)) {
-    gigwa_sequences <- qbms_globals$state$gigwa_sequences
+  if (!is.null(qbms_globals$state$references)) {
+    references <- qbms_globals$state$references
   } else {
     call_url  <- get_brapi_url("gigwa_get_sequences")
     call_body <- paste0('{"studyDbIds": ["', qbms_globals$state$study_db_id, '"]}')
     
     results <- brapi_post_search_call(call_url, call_body, FALSE)
     
-    gigwa_sequences <- results$result$data$referenceName
+    references <- results$result$data$referenceName
     
-    qbms_globals$state$gigwa_sequences <- gigwa_sequences
+    qbms_globals$state$references <- references
   }
   
-  return(gigwa_sequences)
+  return(references)
 }
 
 
@@ -589,11 +589,11 @@ gigwa_get_allelematrix <- function(samples = NULL, start = 0, end = "", chrom = 
   }
   
   germplasmNames <- samples
-  germplasmDbIds <- paste0('"', paste0(paste0(qbms_globals$config$db, "\u00A7", germplasmNames), collapse = '","'), '"')
+  germplasmDbIds <- paste0('"', paste0(paste0(qbms_globals$state$program_db_id, "\u00A7", germplasmNames), collapse = '","'), '"')
   
   if (!is.null(snps)) {
     variantNames <- snps
-    variantDbIds <- paste0('"', paste0(paste0(qbms_globals$config$db, "\u00A7", variantNames), collapse = '","'), '"')
+    variantDbIds <- paste0('"', paste0(paste0(qbms_globals$state$program_db_id, "\u00A7", variantNames), collapse = '","'), '"')
   }
   
   if (is.null(chrom)) {
@@ -700,10 +700,10 @@ gigwa_get_allelematrix <- function(samples = NULL, start = 0, end = "", chrom = 
     geno_data <- geno_data + 1
   }
   
-  temp <- merge(resultCallSetDbIds, qbms_globals$state$gigwa_samples, by.x = 1, by.y = "sampleDbId", sort = FALSE)
+  temp <- merge(resultCallSetDbIds, qbms_globals$state$samples, by.x = 1, by.y = "sampleDbId", sort = FALSE)
 
   colnames(geno_data) <- sub(".*\u00A7", "", temp$germplasmDbId)
-  rownames(geno_data) <- sub(paste0(qbms_globals$config$db, "\u00A7"), "", resultVariantNames)
+  rownames(geno_data) <- sub(paste0(qbms_globals$state$program_db_id, "\u00A7"), "", resultVariantNames)
   
   return(geno_data)
 }
@@ -807,7 +807,7 @@ gigwa_get_metadata <- function() {
   }
   
   gigwa_get_samples()
-  germplasmDbIds <- paste(qbms_globals$state$gigwa_samples$germplasmDbId, collapse = '","')
+  germplasmDbIds <- paste(qbms_globals$state$samples$germplasmDbId, collapse = '","')
   
   call_url  <- get_brapi_url("gigwa_get_metadata")
   call_body <- paste0('{"germplasmDbIds": ["', germplasmDbIds, '"]}')
