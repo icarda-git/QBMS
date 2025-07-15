@@ -101,7 +101,7 @@ times, as demonstrated by benchmark tests.
 
 ```r
 # Configure your GIGWA connection
-set_qbms_config("https://gigwa.southgreen.fr/gigwa/", 
+set_qbms_config("https://gigwa-dev.southgreen.fr/gigwaV2/", page_size = 50000,
                 time_out = 300, engine = "gigwa", no_auth = TRUE)
 
 # Select a database by name
@@ -138,5 +138,10 @@ geno_data <- gigwa_get_allelematrix(start = 0,                  # default is 0
                                     # snps_pageSize = 10000,
                                     # samples_pageSize = 100,
                                     )
+
+### Get The Whole Variant Set ##################################################
+
+?get_variantset
+snps <- get_variantset()
 
 ```

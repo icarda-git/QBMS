@@ -770,7 +770,7 @@ gigwa_get_markers <- function(start = NULL, end = NULL, chrom = NULL, simplify =
     colnames(geno_map) <- c("rs#", "alleles", "chrom", "pos")
     rownames(geno_map) <- NULL
   }
-  
+
   return(geno_map)
 }
 
@@ -949,17 +949,32 @@ get_variantset <- function() {
     if (length(i) > 0) {
       req <- httr2::request(variantset$availableFormats$fileURL[i])
       req <- httr2::req_headers(req, "Accept-Encoding" = "gzip, deflate")
-      
+
       if (!is.na(qbms_globals$state$token)) {
         req <- httr2::req_headers(req, "Authorization" = paste0("Bearer ", qbms_globals$state$token))
       }
       
-      resp <- httr2::req_perform(req)
+      resp <- suppressWarnings(httr2::req_perform(req))
       httr2::resp_check_status(resp)
       
-      content <- gsub("#.+\\n", "", httr2::resp_body_string(resp), perl = TRUE)
+      content <- gsub("#.+\\n+", "", httr2::resp_body_string(resp), perl = TRUE)
       
-      variantset <- read.delim(text = content, row.names = 1, check.names = FALSE)
+      # if (startsWith(content, qbms_globals$state$study_db_id)) {
+      if (qbms_globals$config$engine == "gigwa") {
+        gigwa_get_samples()
+        geno_map <- gigwa_get_markers()
+
+        variantset <- matrix(unlist(strsplit(content, "\t"))[-1], ncol = nrow(qbms_globals$state$samples), byrow = FALSE)
+
+        colnames(variantset) <- sub(".*\u00A7", "", qbms_globals$state$samples$germplasmDbId)
+        rownames(variantset) <- geno_map$`rs#`
+        
+        variantset <- as.data.frame(variantset)
+        
+      } else {
+        variantset <- read.delim(text = content, row.names = 1, check.names = FALSE)
+      }
+      
     } else {
       variantset <- NULL
     }
