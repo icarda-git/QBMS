@@ -3,6 +3,7 @@
 [![CRAN checks](https://badges.cranchecks.info/summary/QBMS.svg)](https://cran.r-project.org/web/checks/check_results_QBMS.html)
 [![CRAN version](https://www.r-pkg.org/badges/version/QBMS)](https://cran.r-project.org/package=QBMS)
 [![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/QBMS)](https://cran.r-project.org/package=QBMS)
+[![CRAN monthly](https://cranlogs.r-pkg.org/badges/QBMS)](https://cran.r-project.org/package=QBMS)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13784769.svg)](https://doi.org/10.5281/zenodo.13784769)
 [![CRAN license](https://img.shields.io/github/license/icarda-git/QBMS)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![GitHub commits](https://img.shields.io/github/last-commit/icarda-git/QBMS)](https://github.com/icarda-git/QBMS/commits/master)
