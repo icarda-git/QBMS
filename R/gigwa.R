@@ -821,14 +821,15 @@ gigwa_get_metadata <- function() {
 }
 
 
-#' Get the List of the Variant Sets Available in the Selected Study
+#' List Variant Sets in the Selected Study
 #'
 #' @description
-#' Retrieve the list of available variant sets in the currently active study, 
-#' set using `set_study()`. If no study is selected, an error will be raised.
+#' Retrieves the names of all variant sets available in the currently selected 
+#' study, as set by `set_study`. If no study is selected, the function returns 
+#' an error.
 #'
 #' @return 
-#' A list of set names associated with the selected study.
+#' A list of the names of variant sets associated with the selected study.
 #' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
@@ -861,11 +862,12 @@ list_variantsets <- function() {
 }
 
 
-#' Set the Current Active Variant Set
+#' Set the Active Variant Set
 #'
 #' @description
-#' Select a variant set from the active study and set it as the current active 
-#' variant set in the internal state, enabling further data retrieval operations.
+#' Selects a variant set by name from the currently active study and updates the 
+#' internal state to make it the active variant set. This selection is required 
+#' for subsequent data retrieval operations related to variant sets.
 #'
 #' @param variantset_name The name of the variant set to be active.
 #' 
@@ -893,6 +895,8 @@ set_variantset <- function(variantset_name) {
 }
 
 
+#' Gets a list of Calls associated with a Variant Set
+#'
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
@@ -923,11 +927,23 @@ get_variants <- function() {
 }
 
 
+#' Retrieve Marker Matrix from the Active Variant Set
+#'
+#' @description
+#' Downloads a two-dimensional marker matrix for all samples in the currently 
+#' active variant set, using the efficient Flapjack file format from the server. 
+#' Row names correspond to marker IDs and column names correspond to unique 
+#' sample IDs. Genotype calls are returned in character format.
+#'
+#' @return
+#' A data frame of genotype calls in character format, with markers as rows and 
+#' samples as columns.
+#' 
 #' @author 
 #' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
 #' 
 #' @seealso 
-#' \code{\link{set_qbms_config}}, \code{\link{set_run}}
+#' \code{\link{set_qbms_config}}, \code{\link{set_variantset}}
 #' 
 #' @export
 
