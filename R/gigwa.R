@@ -988,7 +988,7 @@ get_variantset <- function() {
         variantset <- as.data.frame(variantset)
         
       } else {
-        variantset <- read.delim(text = content, row.names = 1, check.names = FALSE)
+        variantset <- t(read.delim(text = content, row.names = 1, check.names = FALSE))
       }
       
     } else {
