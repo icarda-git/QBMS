@@ -21,5 +21,5 @@ This function is used internally to execute POST calls to BrAPI endpoints and
 retrieve the results while handling pagination and long-running tasks.
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

@@ -11,7 +11,7 @@ A list of run names associated with the selected project.
 }
 \description{
 Retrieve the list of available runs in the currently active GIGWA project, set using
-`gigwa_set_project()`. If no project is selected, an error will be raised.
+\code{gigwa_set_project()}. If no project is selected, an error will be raised.
 }
 \examples{
 if (interactive()) {
@@ -26,5 +26,5 @@ if (interactive()) {
 \code{\link{set_qbms_config}}, \code{\link{gigwa_set_project}}
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

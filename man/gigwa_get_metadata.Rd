@@ -10,8 +10,9 @@ gigwa_get_metadata()
 A data frame containing metadata attributes for each sample in the active run.
 }
 \description{
-Retrieve metadata associated with the samples in the current active run, set using the `gigwa_set_run()` function.
-The metadata provides additional information about the samples in the selected run.
+Retrieve metadata associated with the samples in the current active run, set 
+using the \code{gigwa_set_run()} function. The metadata provides additional 
+information about the samples in the selected run.
 }
 \examples{
 if (interactive()) {
@@ -27,5 +28,5 @@ if (interactive()) {
 \code{\link{set_qbms_config}}, \code{\link{gigwa_set_run}}
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

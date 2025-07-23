@@ -2,7 +2,7 @@
 % Please edit documentation in R/gigwa.R
 \name{set_variantset}
 \alias{set_variantset}
-\title{Set the Current Active Variant Set}
+\title{Set the Active Variant Set}
 \usage{
 set_variantset(variantset_name)
 }
@@ -13,12 +13,13 @@ set_variantset(variantset_name)
 No return value. Updates the internal state with the selected variant set.
 }
 \description{
-Select a variant set from the active study and set it as the current active 
-variant set in the internal state, enabling further data retrieval operations.
+Selects a variant set by name from the currently active study and updates the 
+internal state to make it the active variant set. This selection is required 
+for subsequent data retrieval operations related to variant sets.
 }
 \seealso{
 \code{\link{set_qbms_config}}, \code{\link{set_study}}, \code{\link{list_variantsets}}
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

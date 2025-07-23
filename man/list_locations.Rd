@@ -14,8 +14,8 @@ Retrieves a list of locations associated with the current active crop, as
 configured in the internal state object using the \code{\link{set_crop}} function.
 }
 \seealso{
-\code{\link{login_bms}}, \code{\link{set_crop}} for related crop operations.
+\code{\link{login}}, \code{\link{set_crop}} for related crop operations.
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

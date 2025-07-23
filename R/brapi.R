@@ -107,7 +107,7 @@ colnames(brapi_map) <- c("func_name", "brapi_ver", "brapi_call")
 #' A string representing the BrAPI endpoint URL.
 #'
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 
 get_brapi_url <- function(func_name) {
   call_url <- paste0(qbms_globals$config$base_url, 
@@ -133,7 +133,7 @@ get_brapi_url <- function(func_name) {
 #' A data frame listing the QBMS function, BrAPI endpoint URL, and availability status for each endpoint.
 #'
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #'
 #' @export
 
@@ -208,7 +208,7 @@ qbms_globals$state  <- list(token = NULL)
 #' An environment object that holds the current QBMS configuration and state.
 #'
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #'
 #' @examples
 #' if (interactive()) {
@@ -235,7 +235,7 @@ debug_qbms <- function() {
 #' A list containing the current QBMS configuration and state.
 #'
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #'
 #' @seealso \code{\link{set_qbms_connection}}
 #'
@@ -279,7 +279,7 @@ get_qbms_connection <- function() {
 #' @param env A list containing the saved connection configuration and state.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #'
 #' @seealso \code{\link{get_qbms_connection}}
 #'
@@ -340,7 +340,7 @@ set_qbms_connection <- function(env) {
 #' @param verbose Logical, indicating whether to display progress information when making API calls (default is TRUE).
 #'
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #'
 #' @return
 #' No return value.

@@ -58,7 +58,7 @@ rbindlistx <- function(x) {
 #' It retrieves the content from the specified URL, checks for HTTP errors, and parses the JSON response.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 
 get_async_page <- function(full_url, nested) {
   future::future({
@@ -91,7 +91,7 @@ get_async_page <- function(full_url, nested) {
 #' It retrieves and parses the JSON responses from each URL provided.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 
 get_async_pages <- function(pages, nested) {
   future.apply::future_lapply(pages, function(full_url) {
@@ -130,7 +130,7 @@ get_async_pages <- function(pages, nested) {
 #' It relies on global variables from \code{qbms_globals} to manage state and configuration.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 
 brapi_get_call <- function(call_url, nested = TRUE, caller_func = NA) {
   separator <- if (grepl("\\?", call_url)) "&" else "?"
@@ -203,7 +203,7 @@ brapi_get_call <- function(call_url, nested = TRUE, caller_func = NA) {
 #' A list of results obtained from the BrAPI POST call.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 
 brapi_post_search_allelematrix <- function(call_url, call_body, nested = TRUE) {
   call_url <- utils::URLencode(call_url)
@@ -275,7 +275,7 @@ brapi_post_search_allelematrix <- function(call_url, call_body, nested = TRUE) {
 #' A list of results obtained from the BrAPI POST call.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 
 brapi_post_search_call <- function(call_url, call_body, nested = TRUE) {
   call_url <- utils::URLencode(call_url)

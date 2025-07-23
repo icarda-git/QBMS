@@ -26,9 +26,9 @@ if (interactive()) {
 
 }
 \seealso{
-\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, 
+\code{\link{login}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, 
 \code{\link{get_study_data}} for retrieving study observations.
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

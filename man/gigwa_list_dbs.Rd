@@ -24,5 +24,5 @@ if (interactive()) {
 \code{\link{set_qbms_config}}
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

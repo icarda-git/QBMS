@@ -32,5 +32,5 @@ if (interactive()) {
 \code{\link{get_hwsd2}}
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

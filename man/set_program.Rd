@@ -27,8 +27,8 @@ if (interactive()) {
 
 }
 \seealso{
-\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{list_programs}} for related operations in the crop and program selection process.
+\code{\link{login}}, \code{\link{set_crop}}, \code{\link{list_programs}} for related operations in the crop and program selection process.
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

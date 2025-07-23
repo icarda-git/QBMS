@@ -11,8 +11,8 @@ login_bms(username = NULL, password = NULL, encoding = "json")
 
 \item{password}{The password (optional, default is NULL). If not provided, the pop-up window is triggered.}
 
-\item{encoding}{Specifies how the request body should be encoded: `form` (application/x-www-form-urlencoded), 
-`multipart` (multipart/form-data), or `json` (application/json). Default is "json".}
+\item{encoding}{Specifies how the request body should be encoded: \code{form} (application/x-www-form-urlencoded), 
+\code{multipart} (multipart/form-data), or \code{json} (application/json). Default is "json".}
 }
 \value{
 No return value. The access token is stored internally for future use.
@@ -35,5 +35,5 @@ if(interactive()) {
 
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

@@ -23,8 +23,8 @@ if (interactive()) {
 
 }
 \seealso{
-\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{list_crops}} for managing server connection and crop selection.
+\code{\link{login}}, \code{\link{set_crop}}, \code{\link{list_crops}} for managing server connection and crop selection.
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

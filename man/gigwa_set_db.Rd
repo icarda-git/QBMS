@@ -27,5 +27,5 @@ if (interactive()) {
 \code{\link{set_qbms_config}}, \code{\link{gigwa_list_dbs}}
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

@@ -5,10 +5,10 @@
 #' The window title and prompt message adapt based on the type of server being used (e.g., BMS, GIGWA).
 #'
 #' @return
-#' A vector containing the inserted username and password, with names `usr` and `pwd` respectively.
+#' A vector containing the inserted username and password, with names \code{usr} and \code{pwd} respectively.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 
 get_login_details <- function() {
   if (is.null(qbms_globals$config$engine)) {
@@ -67,7 +67,7 @@ get_login_details <- function() {
 #' No return value. Updates the internal state with the token info.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @export
 
@@ -97,7 +97,7 @@ set_token <- function(token, user = '', expires_in = 3600) {
 #' No return value. Updates the internal state with the access token and additional details.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' @export
 
 login_oauth2 <- function(authorize_url, access_url, client_id, client_secret = NULL, redirect_uri = "http://localhost:1410", scope = NULL) {
@@ -128,14 +128,14 @@ login_oauth2 <- function(authorize_url, access_url, client_id, client_secret = N
 #'
 #' @param username The username (optional, default is NULL). If not provided, the pop-up window is triggered.
 #' @param password The password (optional, default is NULL). If not provided, the pop-up window is triggered.
-#' @param encoding Specifies how the request body should be encoded: `form` (application/x-www-form-urlencoded), 
-#'                 `multipart` (multipart/form-data), or `json` (application/json). Default is "json".
+#' @param encoding Specifies how the request body should be encoded: \code{form} (application/x-www-form-urlencoded), 
+#'                 \code{multipart} (multipart/form-data), or \code{json} (application/json). Default is "json".
 #' 
 #' @return
 #' No return value. The access token is stored internally for future use.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @examples
 #' if(interactive()) {
@@ -192,7 +192,7 @@ login_bms <- function(username = NULL, password = NULL, encoding = "json") {
 #' No return value. The access token is stored internally for future use.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @export
 
@@ -230,8 +230,8 @@ login_germinate <- function(username = NULL, password = NULL) {
 #'
 #' @description
 #' Logs in to the BreedBase server using a username and password. If credentials are not provided,
-#' a pop-up window will prompt the user. The function is a wrapper around the `login_bms()` function,
-#' with encoding set to `form`.
+#' a pop-up window will prompt the user. The function is a wrapper around the \code{login_bms()} function,
+#' with encoding set to \code{form}.
 #'
 #' @param username The username (optional, default is NULL).
 #' @param password The password (optional, default is NULL).
@@ -240,7 +240,7 @@ login_germinate <- function(username = NULL, password = NULL) {
 #' No return value. The access token is stored internally for future use.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @examples
 #' if(interactive()) {
@@ -267,12 +267,12 @@ login_breedbase <- function(username = NULL, password = NULL) {
 #' Login to the GIGWA Server
 #'
 #' @description
-#' Connect to the GIGWA server. If the `username` or `password` parameters are missing,
+#' Connect to the GIGWA server. If the \code{username} or \code{password} parameters are missing,
 #' a login window will be triggered to capture these details.
 #'
 #' All connection settings (server URL, port, API path, and protocol) are read from the
-#' `qbms_config` list. The function will request an authentication token from the server
-#' and update the `qbms_state` list with the token.
+#' \code{qbms_config()} list. The function will request an authentication token from the server
+#' and update the \code{qbms_state()} list with the token.
 #'
 #' @param username The GIGWA username (optional, default is NULL).
 #' @param password The GIGWA password (optional, default is NULL).
@@ -281,7 +281,7 @@ login_breedbase <- function(username = NULL, password = NULL) {
 #' No return value. The authentication token will be stored internally.
 #' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @examples
 #' if (interactive()) {
@@ -320,22 +320,23 @@ login_gigwa <- function(username = NULL, password = NULL) {
   set_token(content$token)
 }
 
-#' Login to a BrAPI DB Server
+#' Login to a BrAPI Server
 #'
 #' @description
-#' Logs in to the DB server using a username and password. If credentials are not provided,
-#' a pop-up window will prompt the user. This function wraps around all `login_*` functions
-#' and accepts additional parameters via `...`
+#' Authenticates with a BrAPI server using a username and password. If credentials 
+#' are not provided, interactive prompt will request them from the user. This 
+#' function serves as a wrapper for all \code{login_*} authentication methods and 
+#' accepts additional parameters via \code{...}
 #'
 #' @param username The username (optional, default is NULL).
 #' @param password The password (optional, default is NULL).
 #' @param ... Additional arguments passed to \code{\link{login_oauth2}}.
 #' 
 #' @return
-#' No return value. The access token is stored internally for future use.
+#' No return value. On success, the access token is stored internally for future use.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso \code{\link{login_oauth2}}
 #' 

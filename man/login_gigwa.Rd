@@ -15,12 +15,12 @@ login_gigwa(username = NULL, password = NULL)
 No return value. The authentication token will be stored internally.
 }
 \description{
-Connect to the GIGWA server. If the `username` or `password` parameters are missing,
+Connect to the GIGWA server. If the \code{username} or \code{password} parameters are missing,
 a login window will be triggered to capture these details.
 
 All connection settings (server URL, port, API path, and protocol) are read from the
-`qbms_config` list. The function will request an authentication token from the server
-and update the `qbms_state` list with the token.
+\code{qbms_config()} list. The function will request an authentication token from the server
+and update the \code{qbms_state()} list with the token.
 }
 \examples{
 if (interactive()) {
@@ -34,5 +34,5 @@ if (interactive()) {
 }
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

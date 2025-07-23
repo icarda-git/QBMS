@@ -28,5 +28,5 @@ This function performs the following steps:
 It relies on global variables from \code{qbms_globals} to manage state and configuration.
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

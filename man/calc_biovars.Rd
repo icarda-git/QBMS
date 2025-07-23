@@ -67,7 +67,7 @@ Atlas of elapid snakes of Australia. Australian Flora and Fauna Series 7.
 Australian Government Publishing Service, Canberra.
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 
 Robert Hijmans, Museum of Vertebrate Zoology, UC Berkeley
 }

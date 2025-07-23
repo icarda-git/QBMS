@@ -2,20 +2,21 @@
 % Please edit documentation in R/gigwa.R
 \name{list_variantsets}
 \alias{list_variantsets}
-\title{Get the List of the Variant Sets Available in the Selected Study}
+\title{List Variant Sets in the Selected Study}
 \usage{
 list_variantsets()
 }
 \value{
-A list of set names associated with the selected study.
+A list of the names of variant sets associated with the selected study.
 }
 \description{
-Retrieve the list of available variant sets in the currently active study, 
-set using `set_study()`. If no study is selected, an error will be raised.
+Retrieves the names of all variant sets available in the currently selected 
+study, as set by \code{set_study()}. If no study is selected, the function returns 
+an error.
 }
 \seealso{
 \code{\link{set_qbms_config}}, \code{\link{set_study}}
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

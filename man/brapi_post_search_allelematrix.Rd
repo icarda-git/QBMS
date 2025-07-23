@@ -22,5 +22,5 @@ via BrAPI. It handles the post request, waits for the results asynchronously if 
 and processes the results.
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

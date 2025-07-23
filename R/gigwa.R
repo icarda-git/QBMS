@@ -11,7 +11,7 @@
 #' A list of databases available on the connected GIGWA server.
 #' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso 
 #' \code{\link{set_qbms_config}}
@@ -49,7 +49,7 @@ gigwa_list_dbs <- function() {
 #' No return value. Updates the internal configuration with the selected database.
 #' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso 
 #' \code{\link{set_qbms_config}}, \code{\link{gigwa_list_dbs}}
@@ -79,13 +79,13 @@ gigwa_set_db <- function(db_name) {
 #'
 #' @description
 #' Retrieve the list of projects available in the currently active GIGWA database, set
-#' using `gigwa_set_db()`. If no database is selected, the function will throw an error.
+#' using \code{gigwa_set_db()}. If no database is selected, the function will throw an error.
 #'
 #' @return 
 #' A list of project names in the selected database.
 #' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso 
 #' \code{\link{set_qbms_config}}, \code{\link{gigwa_set_db}}
@@ -137,7 +137,7 @@ gigwa_list_projects <- function() {
 #' No return value. Updates the internal state with the selected project.
 #' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso 
 #' \code{\link{set_qbms_config}}, \code{\link{gigwa_set_db}}, \code{\link{gigwa_list_projects}}
@@ -174,13 +174,13 @@ gigwa_set_project <- function(project_name) {
 #'
 #' @description
 #' Retrieve the list of available runs in the currently active GIGWA project, set using
-#' `gigwa_set_project()`. If no project is selected, an error will be raised.
+#' \code{gigwa_set_project()}. If no project is selected, an error will be raised.
 #'
 #' @return 
 #' A list of run names associated with the selected project.
 #' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso 
 #' \code{\link{set_qbms_config}}, \code{\link{gigwa_set_project}}
@@ -229,7 +229,7 @@ gigwa_list_runs <- function() {
 #' No return value. Updates the internal state with the selected run.
 #' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso 
 #' \code{\link{set_qbms_config}}, \code{\link{gigwa_set_project}}, \code{\link{gigwa_list_runs}}
@@ -261,13 +261,13 @@ gigwa_set_run <- function(run_name) {
 #'
 #' @description
 #' Retrieve the list of samples associated with the currently active GIGWA project,
-#' set using `gigwa_set_project()`.
+#' set using \code{gigwa_set_project()}.
 #'
 #' @return 
 #' A vector of sample names in the selected project.
 #' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso 
 #' \code{\link{set_qbms_config}}, \code{\link{gigwa_set_project}}
@@ -316,7 +316,7 @@ gigwa_get_samples <- function() {
 #' A vector of sequence names (e.g., chromosome names) for the selected project.
 #' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso 
 #' \code{\link{set_qbms_config}}, \code{\link{gigwa_set_project}}
@@ -371,7 +371,7 @@ gigwa_get_sequences <- function() {
 #' and subsequent columns contain numerical genotyping information (0 for reference allele, 1 for heterozygous, and 2 for minor allele).
 #' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @examples
 #' if (interactive()) {
@@ -559,7 +559,7 @@ gigwa_get_variants <- function(max_missing = 1, min_maf = 0.5, samples = NULL, s
 #' Values are numeric codings (0: reference allele, 1: heterozygous, 2: alternative allele).
 #' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @examples
 #' if (interactive()) {
@@ -724,7 +724,7 @@ gigwa_get_allelematrix <- function(samples = NULL, start = 0, end = "", chrom = 
 #' A data frame of SNP markers, optionally simplified to include rs#, alleles, chromosome, and position.
 #' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @examples
 #' if (interactive()) {
@@ -778,14 +778,15 @@ gigwa_get_markers <- function(start = NULL, end = NULL, chrom = NULL, simplify =
 #' Get the Metadata of the Current Active GIGWA Run
 #'
 #' @description
-#' Retrieve metadata associated with the samples in the current active run, set using the `gigwa_set_run()` function.
-#' The metadata provides additional information about the samples in the selected run.
+#' Retrieve metadata associated with the samples in the current active run, set 
+#' using the \code{gigwa_set_run()} function. The metadata provides additional 
+#' information about the samples in the selected run.
 #'
 #' @return 
 #' A data frame containing metadata attributes for each sample in the active run.
 #'  
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso 
 #' \code{\link{set_qbms_config}}, \code{\link{gigwa_set_run}}
@@ -825,14 +826,14 @@ gigwa_get_metadata <- function() {
 #'
 #' @description
 #' Retrieves the names of all variant sets available in the currently selected 
-#' study, as set by `set_study`. If no study is selected, the function returns 
+#' study, as set by \code{set_study()}. If no study is selected, the function returns 
 #' an error.
 #'
 #' @return 
 #' A list of the names of variant sets associated with the selected study.
 #' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso 
 #' \code{\link{set_qbms_config}}, \code{\link{set_study}}
@@ -875,7 +876,7 @@ list_variantsets <- function() {
 #' No return value. Updates the internal state with the selected variant set.
 #' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso 
 #' \code{\link{set_qbms_config}}, \code{\link{set_study}}, \code{\link{list_variantsets}}
@@ -897,10 +898,19 @@ set_variantset <- function(variantset_name) {
 }
 
 
-#' Gets a list of Calls associated with a Variant Set
+#' Get Marker Matrix from the Selected Variant Set
+#'
+#' @description
+#' Get a two-dimensional marker matrix for all samples in the currently active 
+#' variant set. This function is used as an alternative to the \code{get_variantset()} 
+#' function when the server does not support it.
+#'
+#' Note: This approach is significantly slower than \code{\link{get_variantset}} 
+#' because it fetches data page by page through the BrAPI API, rather than 
+#' downloading the full matrix in one Falpjack format file.
 #'
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso 
 #' \code{\link{set_qbms_config}}, \code{\link{set_run}}
@@ -929,7 +939,7 @@ get_variants <- function() {
 }
 
 
-#' Retrieve Marker Matrix from the Active Variant Set
+#' Get Marker Matrix from the Selected Variant Set
 #'
 #' @description
 #' Downloads a two-dimensional marker matrix for all samples in the currently 
@@ -942,7 +952,7 @@ get_variants <- function() {
 #' samples as columns.
 #' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso 
 #' \code{\link{set_qbms_config}}, \code{\link{set_variantset}}

@@ -18,5 +18,5 @@ crop, and BrAPI version. The function name is mapped to the corresponding BrAPI 
 internal mapping.
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

@@ -1,6 +1,6 @@
 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 
 engine_pre_process <- function(call_url, engine, func_name) {
   if (engine == "breedbase" & func_name == "list_studies") {
@@ -20,7 +20,7 @@ engine_pre_process <- function(call_url, engine, func_name) {
 }
 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 
 engine_post_process <- function(results, engine, func_name) {
   if (engine == "breedbase" & func_name == "get_study_data") {

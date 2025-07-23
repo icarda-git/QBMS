@@ -34,5 +34,5 @@ Performs OAuth 2.0 authentication by sending the user to the authorization URL a
 authorization code for an access token. This function supports caching of tokens for subsequent requests.
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

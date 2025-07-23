@@ -10,10 +10,10 @@
 #' A character vector containing the names of supported crops.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}} to configure and set the current active crop.
+#' \code{\link{login}}, \code{\link{set_crop}} to configure and set the current active crop.
 #'
 #' @examples
 #' if (interactive()) {
@@ -55,10 +55,10 @@ list_crops <- function() {
 #' No return value. The function updates the global state with the selected crop.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{list_crops}} to validate and retrieve the list of supported crops.
+#' \code{\link{login}}, \code{\link{list_crops}} to validate and retrieve the list of supported crops.
 #'
 #' @examples
 #' if (interactive()) {
@@ -96,10 +96,10 @@ set_crop <- function(crop_name) {
 #' A data frame containing the names of breeding programs available for the active crop.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{list_crops}} for managing server connection and crop selection.
+#' \code{\link{login}}, \code{\link{set_crop}}, \code{\link{list_crops}} for managing server connection and crop selection.
 #'
 #' @examples
 #' if (interactive()) {
@@ -143,10 +143,10 @@ list_programs <- function() {
 #' No return value. The internal state is updated with the selected program.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{list_programs}} for related operations in the crop and program selection process.
+#' \code{\link{login}}, \code{\link{set_crop}}, \code{\link{list_programs}} for related operations in the crop and program selection process.
 #'
 #' @examples
 #' if (interactive()) {
@@ -184,10 +184,10 @@ set_program <- function(program_name) {
 #' A data frame containing information on trials for the active breeding program.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}}
+#' \code{\link{login}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}}
 
 get_program_trials <- function() {
   if (!is.null(qbms_globals$state$trials)) {
@@ -222,10 +222,10 @@ get_program_trials <- function() {
 #' The year filter is only supported for BMS databases.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}} for related operations involving crop and program selection.
+#' \code{\link{login}}, \code{\link{set_crop}}, \code{\link{set_program}} for related operations involving crop and program selection.
 #'
 #' @examples
 #' if (interactive()) {
@@ -287,10 +287,10 @@ list_trials <- function(year = NULL) {
 #' No return value. The internal state is updated with the selected trial.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}} for operations involving crops, programs, and trials.
+#' \code{\link{login}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}} for operations involving crops, programs, and trials.
 #'
 #' @examples
 #' if (interactive()) {
@@ -334,10 +334,10 @@ set_trial <- function(trial_name) {
 #' This function must be called after a trial has been set using \code{\link{set_trial}}.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}} for related operations on crops, programs, and trials.
+#' \code{\link{login}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}} for related operations on crops, programs, and trials.
 #'
 #' @examples
 #' if (interactive()) {
@@ -389,10 +389,10 @@ list_studies <- function() {
 #' No return value. The internal state is updated with the selected study.
 #'  
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{list_studies}} for related operations on crops, programs, trials, and studies.
+#' \code{\link{login}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, \code{\link{list_studies}} for related operations on crops, programs, trials, and studies.
 #'
 #' @examples
 #' if (interactive()) {
@@ -431,10 +431,10 @@ set_study <- function(study_name) {
 #' if no study metadata is available.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, 
+#' \code{\link{login}}, \code{\link{set_crop}}, \code{\link{set_program}}, 
 #' \code{\link{set_trial}}, \code{\link{set_study}} for related crop and study management.
 #'
 #' @examples
@@ -481,10 +481,10 @@ get_study_info <- function() {
 #' if no data is available.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, 
+#' \code{\link{login}}, \code{\link{set_crop}}, \code{\link{set_program}}, 
 #' \code{\link{set_trial}}, \code{\link{set_study}} for related study operations.
 #'
 #' @examples
@@ -548,10 +548,10 @@ get_study_data <- function() {
 #' A data frame containing the germplasm list for the active study.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, 
+#' \code{\link{login}}, \code{\link{set_crop}}, \code{\link{set_program}}, 
 #' \code{\link{set_trial}}, \code{\link{set_study}} for related operations on crops and studies.
 #'
 #' @examples
@@ -620,10 +620,10 @@ get_germplasm_list <- function() {
 #' A data frame containing the combined observations data from all studies in the active trial.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
+#' \code{\link{login}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}
 #'
 #' @examples
 #' if (interactive()) {
@@ -667,10 +667,10 @@ get_trial_data <- function() {
 #' variables used in the current trial.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, 
+#' \code{\link{login}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}}, 
 #' \code{\link{get_study_data}} for retrieving study observations.
 #'
 #' @examples
@@ -728,10 +728,10 @@ get_trial_obs_ontology <- function() {
 #' A data frame containing information about locations relevant to the current crop.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}} for related crop operations.
+#' \code{\link{login}}, \code{\link{set_crop}} for related crop operations.
 
 list_locations <- function() {
   if (is.null(qbms_globals$config$crop)) {
@@ -764,10 +764,10 @@ list_locations <- function() {
 #' including trial names, study names, location information, and entry counts.
 #' 
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #'
 #' @seealso
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}
+#' \code{\link{login}}, \code{\link{set_crop}}, \code{\link{set_program}}
 #'
 #' @examples
 #' if (interactive()) {
@@ -860,7 +860,7 @@ get_program_studies <- function() {
 #' A string representing the germplasm's unique ID (germplasmDbId).
 #' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso 
 #' \code{\link{set_crop}}, \code{\link{get_germplasm_data}}, \code{\link{get_germplasm_attributes}}
@@ -906,10 +906,10 @@ get_germplasm_id <- function(germplasm_name = "") {
 #' A data frame containing all available observations data for the specified germplasm.
 #' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso 
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{get_germplasm_attributes}}
+#' \code{\link{login}}, \code{\link{set_crop}}, \code{\link{get_germplasm_attributes}}
 #' 
 #' @examples
 #' if (interactive()) {
@@ -1003,7 +1003,7 @@ get_germplasm_data <- function(germplasm_name = "") {
 #' Johan Steven Aparicio, \email{j.aparicio@cgiar.org}
 #' 
 #' @seealso 
-#' \code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{get_germplasm_data}}
+#' \code{\link{login}}, \code{\link{set_crop}}, \code{\link{get_germplasm_data}}
 #' 
 #' @examples
 #' if (interactive()) {
@@ -1029,8 +1029,21 @@ get_germplasm_attributes <- function(germplasm_name = "") {
 }
 
 
+#' Get the Pedigree table for the Selected Trial
+#'
+#' @description
+#' Get the pedigree table representing the pedigree tree for the currently active 
+#' trial. Each row corresponds to a germplasm entry and includes identifiers and 
+#' details for both parents.
+#' 
+#' @return 
+#' A data frame with germplasm and parent details for the selected trial.
+#' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
+#' 
+#' @seealso 
+#' \code{\link{login}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{set_trial}} for related operations on crops, programs, and trials.
 #' 
 #' @export
 

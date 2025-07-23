@@ -11,7 +11,7 @@ A list of project names in the selected database.
 }
 \description{
 Retrieve the list of projects available in the currently active GIGWA database, set
-using `gigwa_set_db()`. If no database is selected, the function will throw an error.
+using \code{gigwa_set_db()}. If no database is selected, the function will throw an error.
 }
 \examples{
 if (interactive()) {
@@ -25,5 +25,5 @@ if (interactive()) {
 \code{\link{set_qbms_config}}, \code{\link{gigwa_set_db}}
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

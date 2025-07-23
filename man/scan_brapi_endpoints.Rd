@@ -21,5 +21,5 @@ Scans the available BrAPI endpoints on the configured source server and checks t
 This function allows users to verify which BrAPI endpoints are available based on the provided IDs.
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

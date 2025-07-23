@@ -2,7 +2,7 @@
 % Please edit documentation in R/auth.R
 \name{login}
 \alias{login}
-\title{Login to a BrAPI DB Server}
+\title{Login to a BrAPI Server}
 \usage{
 login(username = NULL, password = NULL, ...)
 }
@@ -14,16 +14,17 @@ login(username = NULL, password = NULL, ...)
 \item{...}{Additional arguments passed to \code{\link{login_oauth2}}.}
 }
 \value{
-No return value. The access token is stored internally for future use.
+No return value. On success, the access token is stored internally for future use.
 }
 \description{
-Logs in to the DB server using a username and password. If credentials are not provided,
-a pop-up window will prompt the user. This function wraps around all `login_*` functions
-and accepts additional parameters via `...`
+Authenticates with a BrAPI server using a username and password. If credentials 
+are not provided, interactive prompt will request them from the user. This 
+function serves as a wrapper for all \code{login_*} authentication methods and 
+accepts additional parameters via \code{...}
 }
 \seealso{
 \code{\link{login_oauth2}}
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

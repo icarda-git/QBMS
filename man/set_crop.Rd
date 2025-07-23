@@ -25,8 +25,8 @@ if (interactive()) {
 
 }
 \seealso{
-\code{\link{login_bms}}, \code{\link{list_crops}} to validate and retrieve the list of supported crops.
+\code{\link{login}}, \code{\link{list_crops}} to validate and retrieve the list of supported crops.
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

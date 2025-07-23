@@ -15,8 +15,8 @@ and crop combination. The crop and program must be set using \code{\link{set_cro
 \code{\link{set_program}} prior to calling this function.
 }
 \seealso{
-\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}}
+\code{\link{login}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}}
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

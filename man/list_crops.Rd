@@ -23,8 +23,8 @@ if (interactive()) {
 
 }
 \seealso{
-\code{\link{login_bms}}, \code{\link{set_crop}} to configure and set the current active crop.
+\code{\link{login}}, \code{\link{set_crop}} to configure and set the current active crop.
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

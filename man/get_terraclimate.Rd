@@ -81,5 +81,5 @@ global dataset of monthly climate and climatic water balance from 1958-2015.
 \code{\link{ini_terraclimate}}, \code{\link{calc_biovars}}
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

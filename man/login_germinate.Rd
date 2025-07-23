@@ -18,5 +18,5 @@ No return value. The access token is stored internally for future use.
 Login to the Germinate Server
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

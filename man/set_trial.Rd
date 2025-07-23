@@ -27,8 +27,8 @@ if (interactive()) {
 
 }
 \seealso{
-\code{\link{login_bms}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}} for operations involving crops, programs, and trials.
+\code{\link{login}}, \code{\link{set_crop}}, \code{\link{set_program}}, \code{\link{list_trials}} for operations involving crops, programs, and trials.
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

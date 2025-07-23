@@ -11,7 +11,7 @@ A vector of sample names in the selected project.
 }
 \description{
 Retrieve the list of samples associated with the currently active GIGWA project,
-set using `gigwa_set_project()`.
+set using \code{gigwa_set_project()}.
 }
 \examples{
 if (interactive()) {
@@ -26,5 +26,5 @@ if (interactive()) {
 \code{\link{set_qbms_config}}, \code{\link{gigwa_set_project}}
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

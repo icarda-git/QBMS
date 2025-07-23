@@ -46,7 +46,7 @@
 #' Each data frame is in a format ready for further analysis in R.
 #' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso 
 #' \code{\link{ini_terraclimate}}, \code{\link{calc_biovars}}
@@ -277,7 +277,7 @@ get_terraclimate <- function(lat, lon, from = '1958-01-01', to = '2022-12-31', c
 #' Australian Government Publishing Service, Canberra.
 #'
 #' @author
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @author
 #' Robert Hijmans, Museum of Vertebrate Zoology, UC Berkeley
@@ -462,7 +462,7 @@ calc_biovars <- function(data) {
 #' coordinate or set of coordinates.
 #'  
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso 
 #' \code{\link{get_terraclimate}}

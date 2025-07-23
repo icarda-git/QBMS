@@ -17,7 +17,7 @@
 #'   - `sqlite`: Connection to the HWSDv2 SQLite database.
 #' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso 
 #' \code{\link{get_hwsd2}}
@@ -109,7 +109,7 @@ ini_hwsd2 <- function(data_path = './data/', timeout = 300){
 #' The data frame includes additional columns such as `smu_id`, `SEQUENCE`, `LAYER`, and other soil attributes.
 #' 
 #' @author 
-#' Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso 
 #' \code{\link{ini_hwsd2}}

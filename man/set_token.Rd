@@ -21,5 +21,5 @@ Stores the access token and associated details (such as username and expiration 
 The token is typically retrieved from the server during login and used for subsequent API requests.
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }

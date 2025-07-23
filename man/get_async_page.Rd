@@ -22,5 +22,5 @@ This function uses \code{future::future()} to perform the HTTP GET request async
 It retrieves the content from the specified URL, checks for HTTP errors, and parses the JSON response.
 }
 \author{
-Khaled Al-Shamaa, \email{k.el-shamaa@cgiar.org}
+Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 }
