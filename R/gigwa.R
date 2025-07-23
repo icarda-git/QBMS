@@ -991,6 +991,7 @@ get_variantset <- function() {
         
       } else {
         variantset <- t(read.delim(text = content, row.names = 1, check.names = FALSE))
+        variantset[variantset == ""] <- NA
       }
       
     } else {
