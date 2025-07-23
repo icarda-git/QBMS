@@ -54,6 +54,10 @@ engine_post_process <- function(results, engine, func_name) {
   if (engine == "bms" & func_name == "list_programs") {
     names(results$data)[names(results$data) == "name"] <- "programName"
   }
+  
+  if (engine == "germinate" & func_name == "get_variants") {
+    results$data$genotypeValue <- gsub("^(.+)null(.+)$", "\\1/\\2", results$data$genotypeValue)
+  }
 
   results
 }
