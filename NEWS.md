@@ -6,7 +6,7 @@
   * Add new `get_trial_pedigree()` function supports db compliance with BrAPI v2.
   * Add new generic `login()` function wraps around all engine specific `login_*` functions.
   * Fix a BreedBase login bug caused by incorrect httr2 form encoding when sending credentials.
-  * (TODO) Improve the `scan_brapi_endpoints()` function using the BrAPI /serverinfo endpoint.
+  * (TODO) Improve the `scan_brapi_endpoints()` function using the BrAPI /brapi/v2/serverinfo endpoint.
   * Move special-case processing from qbms.R (before/after API calls) into the new engine.R module script.
 -->
 

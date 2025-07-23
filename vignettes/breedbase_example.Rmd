@@ -28,7 +28,7 @@ library(QBMS)
 # Cassava BreedBase server
 set_qbms_config("https://cassavabase.org/", no_auth = TRUE, engine = "breedbase")
 
-# login_breedbase("username", "password")
+# login("username", "password")
 
 # list supported crops in the current BreedBase server
 list_crops()

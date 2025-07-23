@@ -1058,6 +1058,10 @@ get_trial_pedigree <- function() {
     call_url <- get_brapi_url("get_trial_pedigree")
     call_url <- sub("\\{trialDbId\\}", qbms_globals$state$trial_db_id, call_url)
     
+    # BrAPI v1.3 pedigree endpoint
+    # /germplasm/{germplasmDbId}/pedigree
+    # https://app.swaggerhub.com/apis/PlantBreedingAPI/BrAPI/1.3#/Germplasm/get_germplasm__germplasmDbId__pedigree
+    
     pedigree <- brapi_get_call(call_url, FALSE, caller_func = "get_trial_pedigree")$data
     
     if (nrow(pedigree) == 0) {

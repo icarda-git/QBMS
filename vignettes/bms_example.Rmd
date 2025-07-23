@@ -31,7 +31,7 @@ set_qbms_config("https://bms.icarda.org/ibpworkbench/controller/auth/login")
 
 # login using your BMS account (interactive mode)
 # or pass your BMS username and password as parameters (batch mode)
-login_bms()
+login()
 
 # list supported crops in the current bms server
 list_crops()
