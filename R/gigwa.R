@@ -858,7 +858,7 @@ list_variantsets <- function() {
     qbms_globals$state$variant_sets <- variant_sets
   }
   
-  return(variant_sets[c("variantSetName")])
+  return(variant_sets$variantSetName)
 }
 
 
