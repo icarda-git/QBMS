@@ -16,7 +16,7 @@ because it fetches data page by page through the BrAPI API, rather than
 downloading the full matrix in one Falpjack format file.
 }
 \seealso{
-\code{\link{set_qbms_config}}, \code{\link{set_run}}
+\code{\link{set_qbms_config}}, \code{\link{set_variantset}}
 }
 \author{
 Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})

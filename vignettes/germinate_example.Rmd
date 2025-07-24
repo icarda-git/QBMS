@@ -96,6 +96,9 @@ set_variantset("Sample Genotype Data Subset 2")
 # retrieve the selected variant set marker matrix
 snps <- get_variantset()
 
+# get marker position information
+map <- get_marker_map()
+
 ```
 
 ## _Work with Pedigree Data_

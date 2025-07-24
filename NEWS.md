@@ -2,7 +2,7 @@
 # QBMS 2.0.0 _2025-06-15_
   * Add [Germinate](https://germinateplatform.github.io/get-germinate/) support using BrAPI v2 calls.
   * Add [DeltaBreed](https://breedinginsight.org/learning-hub/deltabreed/) support using BrAPI v2 calls.
-  * Add new generic genotyping functions including `list_variantsets()`, `set_variantset()`, `get_variantset()`, and `get_variants()`.
+  * Add new generic genotyping functions including `list_variantsets()`, `set_variantset()`, `get_variantset()`, `get_variants()`, and `get_marker_map()`.
   * Add new `get_trial_pedigree()` function supports db compliance with BrAPI v2.
   * Add new generic `login()` function wraps around all engine specific `login_*` functions.
   * Fix a BreedBase login bug caused by incorrect httr2 form encoding when sending credentials.

@@ -52,6 +52,10 @@ brapi_map <- rbind(brapi_map, c("list_runs", "v2", "variantsets?programDbId={pro
 brapi_map <- rbind(brapi_map, c("get_variants", "v2", "variantsets/{variantSetDbId}/calls"))
 brapi_map <- rbind(brapi_map, c("get_variant_set", "v2", "variantsets/{variantSetDbId}"))
 
+brapi_map <- rbind(brapi_map, c("get_map", "v2", "maps?studyDbId={studyDbId}"))
+brapi_map <- rbind(brapi_map, c("get_marker_map", "v2", "markerpositions?mapDbId={mapDbId}"))
+
+
 # POST: germplasmDbIds, observationLevel = "PLOT"
 brapi_map <- rbind(brapi_map, c("get_germplasm_data", "v1", "phenotypes-search"))
 

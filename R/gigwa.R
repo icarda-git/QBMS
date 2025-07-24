@@ -913,7 +913,7 @@ set_variantset <- function(variantset_name) {
 #' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
 #' 
 #' @seealso 
-#' \code{\link{set_qbms_config}}, \code{\link{set_run}}
+#' \code{\link{set_qbms_config}}, \code{\link{set_variantset}}
 #' 
 #' @export
 
@@ -1012,4 +1012,52 @@ get_variantset <- function() {
   }
   
   return(variantset)
+}
+
+#' Get marker position information
+#'
+#' @description
+#' Retrieves the genetic marker map associated with the currently active study.
+#' This includes the marker name, chromosome (or linkage group), and position.
+#'
+#' @return
+#' A data frame with three columns:
+#' \describe{
+#'   \item{rs#}{Marker name (variant name)}
+#'   \item{chrom}{Chromosome or linkage group name}
+#'   \item{pos}{Genetic or physical position of the marker}
+#' }
+#'  
+#' @author 
+#' Khaled Al-Shamaa (\email{k.el-shamaa@cgiar.org})
+#' 
+#' @seealso 
+#' \code{\link{set_qbms_config}}, \code{\link{set_study}}
+#' 
+#' @export
+get_marker_map <- function() {
+  if (is.null(qbms_globals$state$study_db_id)) {
+    stop("No study has been selected yet! You have to set your study first using the `set_study()` function")
+  }
+  
+  if (!is.null(qbms_globals$state$marker_map)) {
+    marker_map <- qbms_globals$state$marker_map
+  } else {
+    call_url <- get_brapi_url("get_map")
+    call_url <- sub("\\{studyDbId\\}", qbms_globals$state$study_db_id, call_url)
+    
+    map_db_id <- brapi_get_call(call_url, caller_func = "get_marker_map")$data$mapDbId
+    
+    call_url <- get_brapi_url("get_marker_map")
+    call_url <- sub("\\{mapDbId\\}", map_db_id, call_url)
+    
+    marker_map <- brapi_get_call(call_url, caller_func = "get_marker_map")$data
+    marker_map <- marker_map[, c("variantName", "linkageGroupName", "position")]
+    
+    colnames(marker_map) <- c("rs#", "chrom", "pos")
+    
+    qbms_globals$state$marker_map <- marker_map
+  }
+  
+  return(marker_map)
 }

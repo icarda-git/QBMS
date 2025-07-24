@@ -5,7 +5,7 @@
 \alias{brapi_map}
 \title{BrAPI Mapping Table}
 \format{
-An object of class \code{data.frame} with 35 rows and 3 columns.
+An object of class \code{data.frame} with 37 rows and 3 columns.
 }
 \usage{
 brapi_map
