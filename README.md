@@ -151,7 +151,7 @@ dump$state$token
 ```r
 Sys.setenv("R_REMOTES_NO_ERRORS_FROM_WARNINGS" = TRUE)
 
-remotes::install_github("icarda-git/QBMS", upgrade = "always")
+remotes::install_github("icarda/QBMS", upgrade = "always")
 ```
 
 3. If you get an error related to list or set runs in GIGWA (i.e., `gigwa_list_runs()` and `gigwa_set_run()` functions), you can try to ensure that your R session system locale is using UTF-8 character set encoding. You may consider overwriting your system locale with the following command to resolve this issue:
